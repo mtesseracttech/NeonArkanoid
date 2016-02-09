@@ -1,6 +1,4 @@
-using System;
-
-namespace GXPEngine.Core
+namespace GXPEngine.GXPEngine.Core
 {
 	public class Collider
 	{

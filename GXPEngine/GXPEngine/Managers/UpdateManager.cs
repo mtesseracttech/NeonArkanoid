@@ -1,8 +1,8 @@
 using System;
-using System.Reflection;
 using System.Collections.Generic;
+using System.Reflection;
 
-namespace GXPEngine.Managers
+namespace GXPEngine.GXPEngine.Managers
 {
 	public class UpdateManager
 	{

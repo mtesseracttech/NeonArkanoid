@@ -1,13 +1,10 @@
 using System;
 using System.Collections;
-
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Drawing.Drawing2D;
+using GXPEngine.GXPEngine.OpenGL;
 
-using GXPEngine.OpenGL;
-
-namespace GXPEngine.Core
+namespace GXPEngine.GXPEngine.Core
 {
 	public class Texture2D
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
-using GXPEngine.Core;
+using GXPEngine.GXPEngine;
 
-namespace GXPEngine
+namespace GXPEngine.Physics
 {
     public class Vec2
     {

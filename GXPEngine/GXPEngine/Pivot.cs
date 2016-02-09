@@ -1,6 +1,4 @@
-using System;
-
-namespace GXPEngine
+namespace GXPEngine.GXPEngine
 {
 	/// <summary>
 	/// This is an 'empty' GameObject. You can use it as a container for other sprites (parent).

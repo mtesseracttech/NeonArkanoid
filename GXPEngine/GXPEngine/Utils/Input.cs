@@ -1,7 +1,6 @@
-using System;
-using GXPEngine.Core;
+using GXPEngine.GXPEngine.Core;
 
-namespace GXPEngine
+namespace GXPEngine.GXPEngine.Utils
 {
 	/// <summary>
 	/// The Input class contains functions for reading keys and mouse

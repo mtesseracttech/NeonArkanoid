@@ -1,7 +1,6 @@
-﻿using System;
-using GXPEngine.Core;
+﻿using GXPEngine.GXPEngine.Core;
 
-namespace GXPEngine
+namespace GXPEngine.GXPEngine.Utils
 {
 	/**
 	 * Simple MouseHandler interface between the Input class and your own code, that turns the Input.mouseX Input.mouseY

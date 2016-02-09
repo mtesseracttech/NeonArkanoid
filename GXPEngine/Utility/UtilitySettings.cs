@@ -1,4 +1,4 @@
-﻿namespace NeonArkanoid.Utility
+﻿namespace GXPEngine.Utility
 {
     class UtilitySettings
     {

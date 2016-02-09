@@ -1,7 +1,7 @@
 ﻿using System;
-using GXPEngine.OpenGL;
+using GXPEngine.GXPEngine.OpenGL;
 
-namespace GXPEngine
+namespace GXPEngine.GXPEngine.Core
 {
 	/// <summary>
 	/// Defines different BlendModes, only two present now, but you can add your own.

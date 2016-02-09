@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace NeonArkanoid.Utility
+namespace GXPEngine.Utility
 {
     internal class FileReader
     {

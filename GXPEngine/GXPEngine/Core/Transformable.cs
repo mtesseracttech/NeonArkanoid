@@ -1,7 +1,4 @@
-using System;
-using GXPEngine.Core;
-
-namespace GXPEngine
+namespace GXPEngine.GXPEngine.Core
 {
 	/// <summary>
 	/// The Transformable class contains all positional data of GameObjects.

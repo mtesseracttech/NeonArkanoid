@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
-using GXPEngine.Core;
+using GXPEngine.GXPEngine.Core;
 
-namespace GXPEngine
+namespace GXPEngine.GXPEngine
 {
 	/// <summary>
 	/// GameObject is the base class for all display objects. 

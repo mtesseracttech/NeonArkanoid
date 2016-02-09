@@ -1,4 +1,4 @@
-﻿namespace NeonArkanoid
+﻿namespace GXPEngine.Utility
 {
     internal class UtilStrings
     {
