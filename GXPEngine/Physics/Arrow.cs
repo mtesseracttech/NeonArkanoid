@@ -1,7 +1,7 @@
-﻿using GXPEngine.GXPEngine;
-using GXPEngine.GXPEngine.Core;
+﻿using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine.Physics
+namespace NeonArkanoid.Physics
 {
     public class Arrow : GameObject
     {

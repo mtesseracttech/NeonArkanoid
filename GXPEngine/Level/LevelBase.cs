@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using GXPEngine.GXPEngine;
-using GXPEngine.GXPEngine.Utils;
-using GXPEngine.UI.Menu;
+using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.UI.Menu;
 
-namespace GXPEngine.Level
+namespace NeonArkanoid.Level
 {
     internal abstract class LevelBase : GameObject
     {

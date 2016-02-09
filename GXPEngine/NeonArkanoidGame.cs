@@ -1,8 +1,8 @@
 using System;
-using GXPEngine.GXPEngine;
-using GXPEngine.UI.Menu;
+using NeonArkanoid.GXPEngine;
+using NeonArkanoid.UI.Menu;
 
-namespace GXPEngine
+namespace NeonArkanoid
 {
     public class NeonArkanoidGame : Game
     {

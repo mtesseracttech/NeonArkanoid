@@ -1,7 +1,7 @@
-﻿using GXPEngine.GXPEngine;
-using GXPEngine.Utility;
+﻿using NeonArkanoid.GXPEngine;
+using NeonArkanoid.Utility;
 
-namespace GXPEngine.UI.Menu
+namespace NeonArkanoid.UI.Menu
 {
     internal class Button : AnimationSprite
     {

@@ -1,8 +1,8 @@
-using GXPEngine.GXPEngine;
-using GXPEngine.GXPEngine.Core;
-using GXPEngine.GXPEngine.OpenGL;
+using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Core;
+using NeonArkanoid.GXPEngine.OpenGL;
 
-namespace GXPEngine.Physics
+namespace NeonArkanoid.Physics
 {
     /// <summary>
     ///     Implements an OpenGL line

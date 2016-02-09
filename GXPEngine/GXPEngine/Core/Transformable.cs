@@ -1,4 +1,4 @@
-namespace GXPEngine.GXPEngine.Core
+namespace NeonArkanoid.GXPEngine.Core
 {
 	/// <summary>
 	/// The Transformable class contains all positional data of GameObjects.

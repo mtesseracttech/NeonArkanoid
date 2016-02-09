@@ -1,7 +1,7 @@
 ﻿using System;
-using GXPEngine.GXPEngine.OpenGL;
+using NeonArkanoid.GXPEngine.OpenGL;
 
-namespace GXPEngine.GXPEngine.Core
+namespace NeonArkanoid.GXPEngine.Core
 {
 	/// <summary>
 	/// Defines different BlendModes, only two present now, but you can add your own.

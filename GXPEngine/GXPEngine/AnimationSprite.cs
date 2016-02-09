@@ -1,7 +1,7 @@
 using System;
-using GXPEngine.GXPEngine.Core;
+using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine.GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// Animated Sprite. Has all the functionality of a regular sprite, but supports multiple animation frames/subimages.

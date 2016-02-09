@@ -1,9 +1,9 @@
-﻿using GXPEngine.GXPEngine;
-using GXPEngine.GXPEngine.Utils;
-using GXPEngine.Level;
-using GXPEngine.Utility;
+﻿using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Level;
+using NeonArkanoid.Utility;
 
-namespace GXPEngine.UI.Menu
+namespace NeonArkanoid.UI.Menu
 {
     internal class Pause : GameObject
     {

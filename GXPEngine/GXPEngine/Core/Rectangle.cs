@@ -1,4 +1,4 @@
-namespace GXPEngine.GXPEngine.Core
+namespace NeonArkanoid.GXPEngine.Core
 {
 	public struct Rectangle
 	{

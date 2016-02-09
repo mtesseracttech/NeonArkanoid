@@ -1,8 +1,8 @@
-﻿using GXPEngine.GXPEngine;
-using GXPEngine.GXPEngine.Utils;
-using GXPEngine.Utility;
+﻿using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Utility;
 
-namespace GXPEngine.UI.Menu
+namespace NeonArkanoid.UI.Menu
 {
     internal class MainMenu : GameObject
     {

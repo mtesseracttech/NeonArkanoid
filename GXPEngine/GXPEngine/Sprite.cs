@@ -1,7 +1,7 @@
 using System;
-using GXPEngine.GXPEngine.Core;
+using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine.GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// The Sprite class holds 2D images that can be used as objects in your game.

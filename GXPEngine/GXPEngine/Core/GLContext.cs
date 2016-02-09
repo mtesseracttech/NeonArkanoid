@@ -1,8 +1,8 @@
 using System;
-using GXPEngine.GXPEngine.OpenGL;
-using GXPEngine.GXPEngine.Utils;
+using NeonArkanoid.GXPEngine.OpenGL;
+using NeonArkanoid.GXPEngine.Utils;
 
-namespace GXPEngine.GXPEngine.Core {
+namespace NeonArkanoid.GXPEngine.Core {
 
 	class WindowSize {
 		public static WindowSize instance = new WindowSize();

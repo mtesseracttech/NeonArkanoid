@@ -1,4 +1,4 @@
-namespace GXPEngine.GXPEngine.Utils
+namespace NeonArkanoid.GXPEngine.Utils
 {
 	/// <summary>
 	/// Contains various time related functions.

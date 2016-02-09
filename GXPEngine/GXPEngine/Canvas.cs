@@ -1,7 +1,7 @@
 using System.Drawing;
-using GXPEngine.GXPEngine.Core;
+using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine.GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// The Canvas object can be used for drawing 2D visuals at runtime.

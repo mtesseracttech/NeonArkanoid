@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
-using GXPEngine.GXPEngine;
+using NeonArkanoid.GXPEngine;
 
-namespace GXPEngine.Physics
+namespace NeonArkanoid.Physics
 {
     public class Ball : Canvas
     {

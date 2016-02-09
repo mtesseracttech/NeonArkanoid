@@ -1,6 +1,6 @@
-﻿using GXPEngine.GXPEngine.Core;
+﻿using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine.GXPEngine.Utils
+namespace NeonArkanoid.GXPEngine.Utils
 {
 	/**
 	 * Simple MouseHandler interface between the Input class and your own code, that turns the Input.mouseX Input.mouseY

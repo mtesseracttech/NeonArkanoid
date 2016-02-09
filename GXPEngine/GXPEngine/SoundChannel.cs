@@ -1,4 +1,4 @@
-﻿namespace GXPEngine.GXPEngine
+﻿namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// This class represents a sound channel on the soundcard.

@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace GXPEngine.GXPEngine.FMOD
+namespace NeonArkanoid.GXPEngine.FMOD
 {
 	public class FMOD
 	{

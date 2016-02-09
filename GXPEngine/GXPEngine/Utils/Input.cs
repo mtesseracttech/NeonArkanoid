@@ -1,6 +1,6 @@
-using GXPEngine.GXPEngine.Core;
+using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine.GXPEngine.Utils
+namespace NeonArkanoid.GXPEngine.Utils
 {
 	/// <summary>
 	/// The Input class contains functions for reading keys and mouse

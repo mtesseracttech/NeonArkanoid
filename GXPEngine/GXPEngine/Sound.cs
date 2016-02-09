@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GXPEngine.GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// The Sound Class represents a Sound resource in memory

@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace GXPEngine.GXPEngine.OpenGL {
+namespace NeonArkanoid.GXPEngine.OpenGL {
 	
 	public class GL
 	{

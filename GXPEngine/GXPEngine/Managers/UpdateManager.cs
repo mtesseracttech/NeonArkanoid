@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace GXPEngine.GXPEngine.Managers
+namespace NeonArkanoid.GXPEngine.Managers
 {
 	public class UpdateManager
 	{
