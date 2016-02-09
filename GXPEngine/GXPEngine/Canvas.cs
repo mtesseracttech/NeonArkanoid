@@ -1,8 +1,7 @@
-using System;
 using System.Drawing;
-using GXPEngine.Core;
+using GXPEngine.GXPEngine.Core;
 
-namespace GXPEngine
+namespace GXPEngine.GXPEngine
 {
 	/// <summary>
 	/// The Canvas object can be used for drawing 2D visuals at runtime.

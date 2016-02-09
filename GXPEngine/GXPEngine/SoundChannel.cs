@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GXPEngine
+﻿namespace GXPEngine.GXPEngine
 {
 	/// <summary>
 	/// This class represents a sound channel on the soundcard.
@@ -25,12 +23,12 @@ namespace GXPEngine
 			get 
 			{
 				float frequency;
-				FMOD.Channel_GetFrequency( _id, out frequency );
+				FMOD.FMOD.Channel_GetFrequency( _id, out frequency );
 				return frequency;
 			}
 			set
 			{
-				FMOD.Channel_SetFrequency( _id, value );
+				FMOD.FMOD.Channel_SetFrequency( _id, value );
 			}
 		}
 
@@ -45,12 +43,12 @@ namespace GXPEngine
 			get 
 			{
 				bool mute;
-				FMOD.Channel_GetMute( _id, out mute );
+				FMOD.FMOD.Channel_GetMute( _id, out mute );
 				return mute;
 			}
 			set
 			{
-				FMOD.Channel_SetMute( _id, value );
+				FMOD.FMOD.Channel_SetMute( _id, value );
 			}
 		}
 
@@ -62,12 +60,12 @@ namespace GXPEngine
 			get 
 			{
 				float pan;
-				FMOD.Channel_GetPan( _id, out pan );
+				FMOD.FMOD.Channel_GetPan( _id, out pan );
 				return pan;
 			}
 			set
 			{
-				FMOD.Channel_SetPan( _id, value );
+				FMOD.FMOD.Channel_SetPan( _id, value );
 			}
 		}		
 
@@ -82,12 +80,12 @@ namespace GXPEngine
 			get 
 			{
 				bool paused;
-				FMOD.Channel_GetPaused( _id, out paused );
+				FMOD.FMOD.Channel_GetPaused( _id, out paused );
 				return paused;
 			}
 			set
 			{
-				FMOD.Channel_SetPaused( _id, value );
+				FMOD.FMOD.Channel_SetPaused( _id, value );
 			}
 		}
 
@@ -102,7 +100,7 @@ namespace GXPEngine
 			get 
 			{
 				bool playing;
-				FMOD.Channel_IsPlaying( _id, out playing );
+				FMOD.FMOD.Channel_IsPlaying( _id, out playing );
 				return playing;
 			}
 		}		
@@ -112,7 +110,7 @@ namespace GXPEngine
 		/// </summary>
 		public void Stop()
 		{
-			FMOD.Channel_Stop( _id );
+			FMOD.FMOD.Channel_Stop( _id );
 			_id = 0;
 		}
 	
@@ -127,12 +125,12 @@ namespace GXPEngine
 			get 
 			{
 				float volume;
-				FMOD.Channel_GetVolume( _id, out volume );
+				FMOD.FMOD.Channel_GetVolume( _id, out volume );
 				return volume;
 			}
 			set
 			{
-				FMOD.Channel_SetVolume( _id, value );
+				FMOD.FMOD.Channel_SetVolume( _id, value );
 			}
 		}
 		

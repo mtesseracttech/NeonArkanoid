@@ -1,6 +1,4 @@
-using System;
-
-namespace GXPEngine
+namespace GXPEngine.GXPEngine.Utils
 {
 	/// <summary>
 	/// Contains key definitions for usage with Input.GetKey and Input.GetKeyDown.

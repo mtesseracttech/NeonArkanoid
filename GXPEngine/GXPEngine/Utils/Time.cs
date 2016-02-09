@@ -1,7 +1,4 @@
-using System.Diagnostics;
-using System;
-
-namespace GXPEngine
+namespace GXPEngine.GXPEngine.Utils
 {
 	/// <summary>
 	/// Contains various time related functions.

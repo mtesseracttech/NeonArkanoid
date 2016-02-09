@@ -1,11 +1,12 @@
 ﻿using System.Drawing;
+using GXPEngine.GXPEngine;
 
-namespace GXPEngine
+namespace GXPEngine.Physics
 {
     public class Ball : Canvas
     {
         //public but still readonly, can only be assigned once and cannot be overwritten after this
-        public readonly int radius;
+        public readonly int Radius;
         private Vec2 _acceleration;
         private Color _ballColor;
         private Vec2 _position;
@@ -23,7 +24,7 @@ namespace GXPEngine
             : base(pRadius*2, pRadius*2)
         {
             Physics = physics;
-            radius = pRadius;
+            Radius = pRadius;
             Position = position;
             Velocity = velocity;
             Acceleration = acceleration;
@@ -34,8 +35,11 @@ namespace GXPEngine
             _ballColor = pColor ?? Color.Blue;
 
             Draw();
-            x = Position.x;
-            y = Position.y;
+            if (Position != null)
+            {
+                x = Position.x;
+                y = Position.y;
+            }
         }
 
         public Vec2 Position
@@ -70,11 +74,11 @@ namespace GXPEngine
 
         private void Draw()
         {
-            SetOrigin(radius, radius);
+            SetOrigin(Radius, Radius);
 
             graphics.FillEllipse(
                 new SolidBrush(_ballColor),
-                0, 0, 2*radius, 2*radius
+                0, 0, 2*Radius, 2*Radius
                 );
         }
 

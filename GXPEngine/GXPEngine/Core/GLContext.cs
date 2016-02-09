@@ -1,7 +1,8 @@
 using System;
-using GXPEngine.OpenGL;
+using GXPEngine.GXPEngine.OpenGL;
+using GXPEngine.GXPEngine.Utils;
 
-namespace GXPEngine.Core {
+namespace GXPEngine.GXPEngine.Core {
 
 	class WindowSize {
 		public static WindowSize instance = new WindowSize();

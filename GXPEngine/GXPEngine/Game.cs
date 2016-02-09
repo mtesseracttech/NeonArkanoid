@@ -1,9 +1,9 @@
 using System;
-using GXPEngine.Core;
-using GXPEngine.Managers;
 using System.Collections.Generic;
+using GXPEngine.GXPEngine.Core;
+using GXPEngine.GXPEngine.Managers;
 
-namespace GXPEngine
+namespace GXPEngine.GXPEngine
 {
 	/// <summary>
 	/// The Game class represents the Game window.

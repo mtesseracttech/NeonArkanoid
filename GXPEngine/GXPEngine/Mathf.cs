@@ -1,6 +1,6 @@
 using System;
 
-namespace GXPEngine
+namespace GXPEngine.GXPEngine
 {
 	/// <summary>
 	/// Contains several functions for doing floating point Math
