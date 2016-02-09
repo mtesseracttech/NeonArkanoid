@@ -4,12 +4,13 @@ using NeonArkanoid.UI.Menu;
 
 public class NeonArkanoidGame : Game
 {
-    private MainMenu _menu;
+    private MainMenu _menu; 
 
     private string _state;
 
     public NeonArkanoidGame() : base(1280, 720, false, false)
     {
+        
     }
 
     private static void Main()
