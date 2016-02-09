@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="left-down" width="12" height="8" tilewidth="100" tileheight="100" nextobjectid="19">
+ <tileset firstgid="1" name="crap sheet" tilewidth="100" tileheight="100" tilecount="10">
+  <image source="../../../../../../../../../../../../Users/mtesseract/Documents/sheet.png" width="500" height="200"/>
+ </tileset>
+ <objectgroup name="polygons">
+  <object id="16" x="174" y="199">
+   <polygon points="0,0 0,97 94,46"/>
+  </object>
+  <object id="17" x="399" y="229">
+   <polygon points="0,0 -30,91 72,72"/>
+  </object>
+  <object id="18" x="328" y="408">
+   <polygon points="0,0 39,91 106,5"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="images">
+  <object id="12" gid="1" x="172" y="295" width="100" height="100"/>
+  <object id="13" gid="2" x="329" y="504" width="100" height="100"/>
+  <object id="14" gid="2" x="336.498" y="302.428" width="100" height="100" rotation="40.5978"/>
+ </objectgroup>
+</map>

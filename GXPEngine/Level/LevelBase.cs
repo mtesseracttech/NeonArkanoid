@@ -8,9 +8,7 @@ namespace NeonArkanoid.Level
     internal abstract class LevelBase : GameObject
     {
         protected Sprite Background;
-
         protected List<GameObject> Enemies;
-
         protected bool Finished = false;
         protected NeonArkanoidGame Game;
         protected Sound Music;
@@ -34,6 +32,7 @@ namespace NeonArkanoid.Level
 
         private void UpdateUnpaused()
         {
+
         }
 
         public void PauseToggle()
