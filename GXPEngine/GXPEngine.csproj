@@ -35,7 +35,8 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyGame.cs" />
+    <Compile Include="Level\LevelBase.cs" />
+    <Compile Include="NeonArkanoidGame.cs" />
     <Compile Include="GXPEngine\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />
     <Compile Include="GXPEngine\GameObject.cs" />
@@ -62,8 +63,16 @@
     <Compile Include="GXPEngine\Utils\MouseHandler.cs" />
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
+    <Compile Include="Physics\Arrow.cs" />
+    <Compile Include="Physics\Ball.cs" />
+    <Compile Include="Physics\LineSegment.cs" />
+    <Compile Include="Physics\Vec2.cs" />
+    <Compile Include="UI\Menu\Button.cs" />
+    <Compile Include="UI\Menu\MainMenu.cs" />
+    <Compile Include="UI\Menu\Pause.cs" />
+    <Compile Include="Utility\FileReader.cs" />
+    <Compile Include="Utility\UtilitySettings.cs" />
+    <Compile Include="Utility\UtilStrings.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GXPEngine\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
