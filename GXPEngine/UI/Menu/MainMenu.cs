@@ -8,43 +8,45 @@ namespace NeonArkanoid.UI.Menu
     {
         private readonly Button[] _buttons;
         private readonly NeonArkanoidGame _game;
-        private Sprite _header, _background;
-        private readonly SoundChannel _musicChannel;
-        private readonly Sound _selectedSound;
+        //private Sprite _header, _background;
+       // private readonly SoundChannel _musicChannel;
+       // private readonly Sound _selectedSound;
 
         private int _selection;
 
         public MainMenu(NeonArkanoidGame game)
         {
             _game = game;
-            SetBackground();
-            SetHeader();
+            //SetBackground();
+           // SetHeader();
             _buttons = new[]
             {
-                new Button(UtilStrings.SpritesMenu + "button_newgame.png", 2, game.width/2, 350, "Level1"),
-                new Button(UtilStrings.SpritesMenu + "button_highscore.png", 2, game.width/2, 450, "HighScores"),
-                new Button(UtilStrings.SpritesMenu + "button_credits.png", 2, game.width/2, 550, "Credits"),
-                new Button(UtilStrings.SpritesMenu + "button_exit.png", 2, game.width/2, 650, "Exit")
+                new Button(UtilStrings.SpritesMenu + "Start.png", 2, game.width/2, 50, "MainMenu"),
+                new Button(UtilStrings.SpritesMenu + "Score.png", 2, game.width/2, 250, "HighScores"),
+                new Button(UtilStrings.SpritesMenu + "option.png", 2, game.width/2, 450, "Option"),
+                new Button(UtilStrings.SpritesMenu + "quit.png", 2, game.width/2, 650, "Exit")
             };
-
             foreach (var button in _buttons)
             {
                 AddChild(button);
             }
-
+            /**
             _selectedSound = new Sound(UtilStrings.SoundsMenu + "sound_selected.wav");
             var music = new Sound(UtilStrings.SoundsMenu + "music_menu.mp3", true, true);
             _musicChannel = music.Play();
 
             _buttons[0].Selected();
+            /**/
         }
-
+        /**
         private void SetBackground()
         {
             _background = new Sprite(UtilStrings.SpritesMenu + "background.png");
             AddChild(_background);
         }
+        /**/
 
+        /**
         private void SetHeader()
         {
             _header = new Sprite(UtilStrings.SpritesMenu + "header_logo.png");
@@ -52,17 +54,18 @@ namespace NeonArkanoid.UI.Menu
             _header.SetXY(game.width/2, 120);
             AddChild(_header);
         }
+        /**/
 
         private void Update()
         {
-            if (Input.GetKeyDown(Key.UP) || Input.GetKeyDown(Key.W)) SelectionUp();
+            if (Input.GetKeyDown(Key.UP) || Input.GetKeyDown(Key.W))  SelectionUp();
             if (Input.GetKeyDown(Key.DOWN) || Input.GetKeyDown(Key.S)) SelectionDown();
             if (Input.GetKeyDown(Key.ENTER) || Input.GetKeyDown(Key.SPACE)) Select();
         }
 
         private void SelectionDown()
         {
-            _selectedSound.Play();
+           // _selectedSound.Play();
             _buttons[_selection].DeSelect();
             if (_selection < _buttons.Length - 1) _selection++;
             else _selection = 0;
@@ -71,7 +74,7 @@ namespace NeonArkanoid.UI.Menu
 
         private void SelectionUp()
         {
-            _selectedSound.Play();
+           // _selectedSound.Play();
             _buttons[_selection].DeSelect();
             if (_selection > 0) _selection--;
             else _selection = _buttons.Length - 1;
@@ -85,7 +88,7 @@ namespace NeonArkanoid.UI.Menu
 
         public void StopMusic()
         {
-            _musicChannel.Stop();
+           // _musicChannel.Stop();
         }
     }
 }

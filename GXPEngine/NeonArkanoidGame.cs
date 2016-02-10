@@ -12,17 +12,20 @@ namespace NeonArkanoid
 
         private string _state;
 
-        public NeonArkanoidGame() : base(1280, 720, false, false)
+        public NeonArkanoidGame() : base(1280, 800, false, false)
         {
             //Sprite Test = new Sprite(Utility.UtilStrings.SpritesDebug + "colors.png");
             //Test.SetXY(100, 100);
             //AddChild(Test);
+            SetState("MainMenu");
         }
         private static void Main()
         {
+            /**
             TMXParser tmxParser = new TMXParser();
             tmxParser.Parse("Polytest.tmx");
             Console.Read();
+            /**/
             new NeonArkanoidGame().Start();
         }
 
