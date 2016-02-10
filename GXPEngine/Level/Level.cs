@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.Physics;
 using TiledParser;
+using Polygon = NeonArkanoid.Physics.Polygon;
 
 namespace NeonArkanoid.Level
 {
     internal class Level : GameObject
     {
-        private string _tilesheetName;
+        private readonly Map _map;
+        private readonly List<Polygon> _polyList;
         private string _levelName; //useless for now
-        private Map _map;
-        private List<Polygon> _polyList; 
+        private string _tilesheetName;
 
 
         public Level(string filename)
@@ -21,17 +23,17 @@ namespace NeonArkanoid.Level
 
             _tilesheetName = _map.TileSet.Image.Source;
 
-            for (int i = 0; i < _map.ObjectGroup.Length; i++)
+            for (var i = 0; i < _map.ObjectGroup.Length; i++)
             {
                 if (_map.ObjectGroup[i].Name == "polygons")
                 {
+                    _polyList = new List<Polygon>();
                     CreatePolygons(_map.ObjectGroup[i]);
                 }
-
-                if (_map.ObjectGroup[i].Name == "images")
-                {
-                    throw new NotImplementedException();
-                }
+            }
+            foreach (var polygon in _polyList)
+            {
+                AddChild(polygon);
             }
         }
 
@@ -41,12 +43,33 @@ namespace NeonArkanoid.Level
             {
                 if (tiledObject.Polygon != null)
                 {
-                    throw new NotImplementedException();
+                    var pointArr = tiledObject.Polygon.Points.Split(' ');
+                    var vectorArray = new Vec2[pointArr.Length];
+                    for (var i = 0; i < pointArr.Length; i++)
+                    {
+                        var pointCoords = pointArr[i].Split(',');
+                        vectorArray[i] = new Vec2(int.Parse(pointCoords[0]), int.Parse(pointCoords[1]));
+                    }
 
+                    string polyID = null;
+                    if (tiledObject.Properties != null)
+                    {
+                        foreach (var property in tiledObject.Properties)
+                        {
+                            if (property.Property.Name == "id")
+                            {
+                                polyID = property.Property.Value;
+                            }
+                        }
+                        if (polyID != null) _polyList.Add(new Polygon(vectorArray, polyID));
+                        else
+                        {
+                            Console.WriteLine("NO ID WAS GIVEN FOR THE POLYGON");
+                        }
+                    }
                 }
             }
         }
-
 
         public string GetLevelName()
         {
