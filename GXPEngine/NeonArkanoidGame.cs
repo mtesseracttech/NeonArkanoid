@@ -1,8 +1,8 @@
 using System;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.Level;
 using NeonArkanoid.UI.Menu;
-using TiledParser;
 
 namespace NeonArkanoid
 {
@@ -14,15 +14,12 @@ namespace NeonArkanoid
 
         public NeonArkanoidGame() : base(1280, 720, false, false)
         {
-            //Sprite Test = new Sprite(Utility.UtilStrings.SpritesDebug + "colors.png");
-            //Test.SetXY(100, 100);
-            //AddChild(Test);
+            Level.Level level = new Level.Level("polytest.tmx");
         }
         private static void Main()
         {
             TMXParser tmxParser = new TMXParser();
             tmxParser.Parse("Polytest.tmx");
-            Console.Read();
             new NeonArkanoidGame().Start();
         }
 

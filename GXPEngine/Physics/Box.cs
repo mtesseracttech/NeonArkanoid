@@ -1,10 +1,9 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
+using NeonArkanoid;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
 
-
-namespace NeonArkanoid.Physics
+namespace GXPEngine.Physics
 {
     public class Box : Canvas
     {

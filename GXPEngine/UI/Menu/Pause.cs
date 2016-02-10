@@ -9,13 +9,13 @@ namespace NeonArkanoid.UI.Menu
     {
         private readonly Button[] _buttons;
         private readonly NeonArkanoidGame _game;
-        private readonly LevelBase _level;
+        private readonly Level.Level _level;
         private bool _open;
         private readonly Sound _openSound;
         private readonly Sound _selectedSound;
         private int _selection;
 
-        public Pause(NeonArkanoidGame game, LevelBase level)
+        public Pause(NeonArkanoidGame game, Level.Level level)
         {
             _level = level;
             _game = game;
@@ -95,10 +95,10 @@ namespace NeonArkanoid.UI.Menu
             _openSound.Play();
             if (_open)
             {
-                _level.PauseMusic(true);
+                //_level.PauseMusic(true);
                 _selection = 0;
             }
-            else _level.PauseMusic(false);
+            //else _level.PauseMusic(false);
         }
 
         private void Select()
@@ -106,7 +106,7 @@ namespace NeonArkanoid.UI.Menu
             switch (_selection)
             {
                 case 0:
-                    _level.PauseToggle();
+                    //_level.PauseToggle();
                     break;
                 case 1:
                     _game.SetState(_buttons[_selection].Pressed(), true);

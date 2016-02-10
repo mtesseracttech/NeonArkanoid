@@ -10,13 +10,11 @@ namespace GXPEngine.Utility.TiledParser
         public Map Parse(string filename)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Map));
-
             TextReader reader = new StreamReader(filename);
             Map map = serializer.Deserialize(reader) as Map;
             reader.Close();
             Console.WriteLine(map);
             return map;
-
         }
     }
 }

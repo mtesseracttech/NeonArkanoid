@@ -102,9 +102,9 @@ namespace TiledParser
 
         [XmlAttribute("width")] public int Width;
 
-        [XmlAttribute("x")] public int X;
+        [XmlAttribute("x")] public float X;
 
-        [XmlAttribute("y")] public int Y;
+        [XmlAttribute("y")] public float Y;
     }
 
 
