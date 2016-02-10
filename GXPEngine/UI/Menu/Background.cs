@@ -4,18 +4,30 @@ using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Utility;
 using System.Drawing;
 
-namespace GXPEngine.UI.Menu
+namespace NeonArkanoid.UI.Menu
 {
-     public class Background : Canvas
+     public class Background : Sprite
     {
-        public Background(int width, int height, Color color) : base(width, height)
+        private float speed;
+        private bool _flicker;
+
+        public Background(string filename, bool flicker) : base(filename)
         {
-            graphics.FillRectangle(new SolidBrush(color), new Rectangle(0, 0, width, height));
+            SetOrigin(game.width, game.height);
+            SetXY(width-170, height-50);
+            _flicker = flicker;
         }
 
-        private void drawBackground()
+        void Update()
         {
-            
+            if (_flicker)
+            {
+                float r = Mathf.Abs(Mathf.Cos(Time.time / 100.0f));
+                float g = Mathf.Abs(Mathf.Cos(Time.time / 1100.0f));
+                float b = Mathf.Abs(Mathf.Cos(Time.time / 1700.0f));
+                color = (uint)(((int)(r * 255)) << 16 | ((int)(g * 255)) << 8 | ((int)(b * 255)));
+                speed += 1.0f;
+            }
         }
     }
 }

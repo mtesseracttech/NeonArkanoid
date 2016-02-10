@@ -14,9 +14,9 @@ namespace NeonArkanoid
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
         {
-            Level.Level level = new Level.Level("polytest.tmx");
-            AddChild(level);
-            //SetState("MainMenu");
+            //Level.Level level = new Level.Level("polytest.tmx");
+            //AddChild(level);
+            SetState("MainMenu");
         }
         private static void Main()
         {
