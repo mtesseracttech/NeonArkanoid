@@ -4,7 +4,7 @@
     {
         //C:\Users\MTesseracT\Documents\Visual Studio 2015\Projects\Saxion\NeonArkanoid\GXPEngine\assets
 
-        private static readonly string AssetPath = ".../assets/";
+        private static readonly string AssetPath = "../assets/";
 
         //SPRITES
         public static readonly string SpritesPlayer = AssetPath + "sprite/player/";

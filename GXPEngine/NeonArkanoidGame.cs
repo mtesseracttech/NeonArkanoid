@@ -9,13 +9,12 @@ namespace NeonArkanoid
     public class NeonArkanoidGame : Game
     {
         private MainMenu _menu;
+        private Level.Level _level;
 
         private string _state;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
         {
-            //Level.Level level = new Level.Level("polytest.tmx");
-            //AddChild(level);
             SetState("MainMenu");
         }
         private static void Main()
@@ -49,6 +48,10 @@ namespace NeonArkanoid
                 case "MainMenu":
                     _menu = new MainMenu(this);
                     AddChild(_menu);
+                    break;
+                case "Level1":
+                    _level = new Level.Level("polytest.tmx");
+                    AddChild(_level);
                     break;
                 case "Exit":
                     Environment.Exit(0);

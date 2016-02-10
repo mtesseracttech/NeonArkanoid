@@ -13,13 +13,7 @@ namespace TiledParser
 
         public override string ToString()
         {
-            var returnString =
-                "Map Version: " + Version +
-                "\n\nTileset Name: " + TileSet.Name +
-                "\nTileset Source File: " + TileSet.Image.Source +
-                "\nTileset FirstGID: " + TileSet.FirstGID +
-                "\nTileset Tile Size: " + TileSet.TileHeight + "x" + TileSet.TileWidth + "\n";
-
+            string returnString = "";
             foreach (var objectGroup in ObjectGroup)
             {
                 returnString += "\n\nObjectlayer: " + objectGroup.Name + "\n";

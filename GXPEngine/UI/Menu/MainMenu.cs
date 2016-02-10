@@ -26,7 +26,7 @@ namespace NeonArkanoid.UI.Menu
            // SetHeader();
             _buttons = new[]
             {
-                new Button(UtilStrings.SpritesMenu + "Start.png", 2, game.width/2, 50, "MainMenu"),
+                new Button(UtilStrings.SpritesMenu + "Start.png", 2, game.width/2, 50, "Level1"),
                 new Button(UtilStrings.SpritesMenu + "Score.png", 2, game.width/2, 250, "HighScores"),
                 new Button(UtilStrings.SpritesMenu + "option.png", 2, game.width/2, 450, "Option"),
                 new Button(UtilStrings.SpritesMenu + "quit.png", 2, game.width/2, 650, "Exit")
@@ -35,12 +35,11 @@ namespace NeonArkanoid.UI.Menu
             {
                 AddChild(button);
             }
+            _buttons[0].Selected();
             /**
             _selectedSound = new Sound(UtilStrings.SoundsMenu + "sound_selected.wav");
             var music = new Sound(UtilStrings.SoundsMenu + "music_menu.mp3", true, true);
             _musicChannel = music.Play();
-
-            _buttons[0].Selected();
             /**/
         }
         /**/

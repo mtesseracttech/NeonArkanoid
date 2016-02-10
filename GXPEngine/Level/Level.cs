@@ -14,14 +14,12 @@ namespace NeonArkanoid.Level
     {
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
-        private NeonArkanoidGame _game;
         private string _levelName; //useless for now
         //private string _tilesheetName;
 
 
-        public Level(string filename, NeonArkanoidGame game)
+        public Level(string filename)
         {
-            _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
 
@@ -64,11 +62,6 @@ namespace NeonArkanoid.Level
                         {
                             if (property.Property.Name.ToLower() == "colour")
                             {
-                                //List<char> chars = property.Property.Value.ToUpper().ToCharArray().ToList();
-                                //chars.Insert(2, 'F');
-                                //chars.Insert(3, 'F');
-                                //string polyString = new String(chars.ToArray());
-
                                 polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
                             }
                         }
