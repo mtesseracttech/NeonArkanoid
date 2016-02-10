@@ -1,15 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
+using TiledParser;
 
-namespace TiledParser
+namespace GXPEngine.Utility.TiledParser
 {
     class TMXParser
     {
-        public TMXParser()
-        {
-        }
-
         public Map Parse(string filename)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(Map));

@@ -8,11 +8,11 @@ namespace NeonArkanoid.Physics
 {
     public class Box : Canvas
     {
-        private NeonArkanoidGame _neon;
+        private NeonArkanoidGame _game;
         private Color _boxCollor;
 
-        private int _height;
-        private int _width;
+        private readonly int _height;
+        private readonly int _width;
         private float _xSpeed = 4f;
         private float _ySpeed = 4f;
         
@@ -22,16 +22,13 @@ namespace NeonArkanoid.Physics
             boundaries();
         }
 
-        public Box(NeonArkanoidGame pNeon, int pWidth, int pHeight, Color pColor) : base(pWidth, pHeight) 
+        public Box(NeonArkanoidGame game, int pWidth, int pHeight, Color color) : base(pWidth, pHeight) 
         {
-
-            _boxCollor = pColor;
-            _neon = pNeon;
-            _height = pHeight;
-            _width = pWidth;
+            _boxCollor = color;
+            _game = game;
+            _height = height;
+            _width = width;
             SetOrigin(_width, _height);
-
-
         }
 
         private void draw()
