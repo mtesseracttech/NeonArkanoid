@@ -1,6 +1,8 @@
 ﻿using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Utility;
+using NeonArkanoid.UI.Menu;
+using System.Drawing;
 
 namespace NeonArkanoid.UI.Menu
 {
@@ -8,9 +10,11 @@ namespace NeonArkanoid.UI.Menu
     {
         private readonly Button[] _buttons;
         private readonly NeonArkanoidGame _game;
-        //private Sprite _header, _background;
-       // private readonly SoundChannel _musicChannel;
-       // private readonly Sound _selectedSound;
+        // private Sprite _header, _background;
+        private Color _color;
+
+        // private readonly SoundChannel _musicChannel;
+        // private readonly Sound _selectedSound;
 
         private int _selection;
 
@@ -38,11 +42,11 @@ namespace NeonArkanoid.UI.Menu
             _buttons[0].Selected();
             /**/
         }
-        /**
+        /**/
         private void SetBackground()
         {
-            _background = new Sprite(UtilStrings.SpritesMenu + "background.png");
-            AddChild(_background);
+            //_background = new Sprite(UtilStrings.SpritesMenu + "background.png");
+            //AddChild(_background);
         }
         /**/
 

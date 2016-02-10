@@ -11,7 +11,7 @@ namespace NeonArkanoid.UI.Menu
         public Button(string filename, int rows, int x, int y, string state) : base(filename, 1, rows)
         {
             DeSelect();
-            SetOrigin(game.width/2, height/2);
+            SetOrigin(game.width/2 - 60, height/2 - 30);
             SetXY(x, y);
             _state = state;
 

@@ -75,6 +75,7 @@
     <Compile Include="Physics\LineSegment.cs" />
     <Compile Include="Physics\Polygon.cs" />
     <Compile Include="Physics\Vec2.cs" />
+    <Compile Include="UI\Menu\Background.cs" />
     <Compile Include="UI\Menu\Button.cs" />
     <Compile Include="UI\Menu\MainMenu.cs" />
     <Compile Include="UI\Menu\Pause.cs" />
