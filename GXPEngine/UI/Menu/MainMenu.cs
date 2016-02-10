@@ -14,8 +14,8 @@ namespace NeonArkanoid.UI.Menu
         private Menu.Background _background;
         private Color _color;
 
-        // private readonly SoundChannel _musicChannel;
-        // private readonly Sound _selectedSound;
+         private readonly SoundChannel _musicChannel;
+         private readonly Sound _selectedSound;
 
         private int _selection;
 
@@ -36,9 +36,9 @@ namespace NeonArkanoid.UI.Menu
                 AddChild(button);
             }
             _buttons[0].Selected();
-            /**
+            /**/
             _selectedSound = new Sound(UtilStrings.SoundsMenu + "sound_selected.wav");
-            var music = new Sound(UtilStrings.SoundsMenu + "music_menu.mp3", true, true);
+            var music = new Sound(UtilStrings.SoundsMenu + "music_menu1.wav", true, true);
             _musicChannel = music.Play();
             /**/
         }
@@ -69,7 +69,7 @@ namespace NeonArkanoid.UI.Menu
 
         private void SelectionDown()
         {
-           // _selectedSound.Play();
+            _selectedSound.Play();
             _buttons[_selection].DeSelect();
             if (_selection < _buttons.Length - 1) _selection++;
             else _selection = 0;
@@ -78,7 +78,7 @@ namespace NeonArkanoid.UI.Menu
 
         private void SelectionUp()
         {
-           // _selectedSound.Play();
+            _selectedSound.Play();
             _buttons[_selection].DeSelect();
             if (_selection > 0) _selection--;
             else _selection = _buttons.Length - 1;
@@ -92,7 +92,7 @@ namespace NeonArkanoid.UI.Menu
 
         public void StopMusic()
         {
-           // _musicChannel.Stop();
+            _musicChannel.Stop();
         }
     }
 }

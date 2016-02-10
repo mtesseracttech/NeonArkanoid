@@ -5,7 +5,7 @@ namespace NeonArkanoid.UI.Menu
 {
     internal class Button : AnimationSprite
     {
-       // private readonly Sound _selectSound;
+        private readonly Sound _selectSound;
         private readonly string _state;
 
         public Button(string filename, int rows, int x, int y, string state) : base(filename, 1, rows)
@@ -15,7 +15,7 @@ namespace NeonArkanoid.UI.Menu
             SetXY(x, y);
             _state = state;
 
-            //_selectSound = new Sound(UtilStrings.SoundsMenu + "sound_click.mp3");
+            _selectSound = new Sound(UtilStrings.SoundsMenu + "sound_click.wav");
         }
 
         public void Selected()
@@ -36,7 +36,7 @@ namespace NeonArkanoid.UI.Menu
         //Should get called when the button is being pressed, it returns the gamestate to which the game should be set
         public string Pressed()
         {
-            //_selectSound.Play();
+            _selectSound.Play();
             return _state;
         }
     }
