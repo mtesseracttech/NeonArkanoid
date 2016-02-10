@@ -47,9 +47,7 @@ namespace NeonArkanoid.UI.Menu
         private void SetBackground()
         {
             _background = new Background(UtilStrings.SpritesMenu + "background.png", true);
-            //_background = new Sprite(UtilStrings.SpritesMenu + "background.png");
             AddChild(_background);
-
         }
         /**/
 
