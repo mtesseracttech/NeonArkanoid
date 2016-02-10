@@ -12,15 +12,12 @@ namespace NeonArkanoid.Physics
         public Polygon(Vec2[] points, string id)
         {
             Console.WriteLine("Creating Polygon: " + id);
-            if (points.Length >= 3)
+            _points = points;
+            _lines = new LineSegment[_points.Length];
+            CreateLines();
+            foreach (var line in _lines)
             {
-                _points = points;
-                _lines = new LineSegment[_points.Length];
-                CreateLines();
-            }
-            else
-            {
-                Console.WriteLine("TOO FEW POINTS TO CREATE POLY!");
+                AddChild(line);
             }
             _id = id;
         }

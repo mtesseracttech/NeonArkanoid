@@ -61,7 +61,12 @@ namespace NeonArkanoid.Level
                                 polyID = property.Property.Value;
                             }
                         }
-                        if (polyID != null) _polyList.Add(new Polygon(vectorArray, polyID));
+                        if (polyID != null)
+                        {
+                            Polygon poly = new Polygon(vectorArray, polyID);
+                            poly.SetXY(tiledObject.X, tiledObject.Y);
+                            _polyList.Add(poly);
+                        }
                         else
                         {
                             Console.WriteLine("NO ID WAS GIVEN FOR THE POLYGON");
