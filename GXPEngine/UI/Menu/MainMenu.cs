@@ -27,9 +27,9 @@ namespace NeonArkanoid.UI.Menu
             _buttons = new[]
             {
                 new Button(UtilStrings.SpritesMenu + "Start.png", 2, game.width/2, 50, "Level1"),
-                new Button(UtilStrings.SpritesMenu + "Score.png", 2, game.width/2, 250, "HighScores"),
-                new Button(UtilStrings.SpritesMenu + "option.png", 2, game.width/2, 450, "Option"),
-                new Button(UtilStrings.SpritesMenu + "quit.png", 2, game.width/2, 650, "Exit")
+                new Button(UtilStrings.SpritesMenu + "Score.png", 2, game.width/2, 150, "HighScores"),
+                new Button(UtilStrings.SpritesMenu + "option.png", 2, game.width/2, 250, "Option"),
+                new Button(UtilStrings.SpritesMenu + "quit.png", 2, game.width/2, 350, "Exit")
             };
             foreach (var button in _buttons)
             {

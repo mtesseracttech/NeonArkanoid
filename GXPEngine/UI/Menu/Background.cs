@@ -14,7 +14,7 @@ namespace NeonArkanoid.UI.Menu
         public Background(string filename, bool flicker) : base(filename)
         {
             SetOrigin(game.width, game.height);
-            SetXY(width-170, height-50);
+            SetXY(width, height);
             _flicker = flicker;
         }
 
