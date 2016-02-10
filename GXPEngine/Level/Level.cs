@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
@@ -12,20 +14,22 @@ namespace NeonArkanoid.Level
     {
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
+        private NeonArkanoidGame _game;
         private string _levelName; //useless for now
-        private string _tilesheetName;
+        //private string _tilesheetName;
 
 
-        public Level(string filename)
+        public Level(string filename, NeonArkanoidGame game)
         {
+            _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
 
-            _tilesheetName = _map.TileSet.Image.Source;
+            //_tilesheetName = _map.TileSet.Image.Source;
 
             for (var i = 0; i < _map.ObjectGroup.Length; i++)
             {
-                if (_map.ObjectGroup[i].Name == "polygons")
+                if (_map.ObjectGroup[i].Name.ToLower() == "polygons")
                 {
                     _polyList = new List<Polygon>();
                     CreatePolygons(_map.ObjectGroup[i]);
@@ -48,9 +52,31 @@ namespace NeonArkanoid.Level
                     for (var i = 0; i < pointArr.Length; i++)
                     {
                         var pointCoords = pointArr[i].Split(',');
-                        vectorArray[i] = new Vec2(int.Parse(pointCoords[0]), int.Parse(pointCoords[1]));
+                        vectorArray[i] = new Vec2(
+                            float.Parse(pointCoords[0], CultureInfo.InvariantCulture.NumberFormat),
+                            float.Parse(pointCoords[1], CultureInfo.InvariantCulture.NumberFormat));
                     }
 
+                    uint polyColor = 0;
+                    if (tiledObject.Properties != null)
+                    {
+                        foreach (var property in tiledObject.Properties)
+                        {
+                            if (property.Property.Name.ToLower() == "colour")
+                            {
+                                //List<char> chars = property.Property.Value.ToUpper().ToCharArray().ToList();
+                                //chars.Insert(2, 'F');
+                                //chars.Insert(3, 'F');
+                                //string polyString = new String(chars.ToArray());
+
+                                polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
+                            }
+                        }
+                        var poly = new Polygon(vectorArray, polyColor);
+                        poly.SetXY(tiledObject.X, tiledObject.Y);
+                        _polyList.Add(poly);
+
+                        /*
                     string polyID = null;
                     if (tiledObject.Properties != null)
                     {
@@ -72,11 +98,13 @@ namespace NeonArkanoid.Level
                             Console.WriteLine("NO ID WAS GIVEN FOR THE POLYGON");
                         }
                     }
+                    */
+                    }
                 }
             }
         }
 
-        public string GetLevelName()
+        public string GetLevelName ()
         {
             return _levelName;
         }

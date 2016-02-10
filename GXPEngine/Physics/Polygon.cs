@@ -1,43 +1,45 @@
 ﻿using System;
+using System.Drawing;
 using NeonArkanoid.GXPEngine;
 
 namespace NeonArkanoid.Physics
 {
     internal class Polygon : GameObject
     {
-        private readonly Vec2[] _points;
-        private LineSegment[] _lines;
+        private uint _color;
+        private Vec2[] _points;
         private string _id;
-
-        public Polygon(Vec2[] points, string id)
+        private Level.Level _level;
+        private LineSegment[] _lines;
+        
+        
+        public Polygon(Vec2[] points, uint color)
         {
-            Console.WriteLine("Creating Polygon: " + id);
+            _color = color;
             _points = points;
             _lines = new LineSegment[_points.Length];
             CreateLines();
-            foreach (var line in _lines)
-            {
-                AddChild(line);
-            }
-            _id = id;
+            foreach (var line in _lines) AddChild(line);
         }
-
-        void CreateLines()
+        
+        private void CreateLines()
         {
-            for (int i = 0; i < _points.Length; i++)
+            for (var i = 0; i < _points.Length; i++)
             {
-                if (i < _points.Length -1)
+                if (i < _points.Length - 1)
                 {
                     Console.WriteLine("Creating Line " + i + " with coords: " + _points[i] + _points[i + 1]);
-                    _lines[i] = new LineSegment(_points[i], _points[i + 1]);
+                    _lines[i] = new LineSegment(_points[i], _points[i + 1], _color);
                 }
                 else
                 {
                     Console.WriteLine("Creating Line " + i + " with coords: " + _points[_points.Length - 1] + _points[0]);
-                    _lines[i] = new LineSegment(_points[_points.Length - 1], _points[0]);
+                    _lines[i] = new LineSegment(_points[_points.Length - 1], _points[0], _color);
                 }
             }
         }
+        
+        
 
         public string GetPoints()
         {
@@ -48,7 +50,5 @@ namespace NeonArkanoid.Physics
             }
             return returnstring;
         }
-
-
     }
 }

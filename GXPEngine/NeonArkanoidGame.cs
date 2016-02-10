@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Level;
@@ -14,7 +15,7 @@ namespace NeonArkanoid
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
         {
-            Level.Level level = new Level.Level("polytest.tmx");
+            Level.Level level = new Level.Level("polytest.tmx", this);
             AddChild(level);
             //SetState("MainMenu");
         }

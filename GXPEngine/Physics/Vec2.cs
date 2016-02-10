@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using NeonArkanoid.GXPEngine;
 
 namespace NeonArkanoid.Physics
@@ -85,6 +86,11 @@ namespace NeonArkanoid.Physics
         {
             this.x = x;
             this.y = y;
+        }
+
+        public PointF Vec2toPointF()
+        {
+            return new PointF(x, y);
         }
 
 

@@ -5,7 +5,7 @@ namespace TiledParser
     [XmlRoot("map")]
     public class Map
     {
-        [XmlElement("tileset")] public TileSet TileSet;
+        //[XmlElement("tileset")] public TileSet TileSet;
 
         [XmlElement("objectgroup")] public ObjectGroup[] ObjectGroup;
 
@@ -13,13 +13,8 @@ namespace TiledParser
 
         public override string ToString()
         {
-            var returnString =
-                "Map Version: " + Version +
-                "\n\nTileset Name: " + TileSet.Name +
-                "\nTileset Source File: " + TileSet.Image.Source +
-                "\nTileset FirstGID: " + TileSet.FirstGID +
-                "\nTileset Tile Size: " + TileSet.TileHeight + "x" + TileSet.TileWidth + "\n";
 
+            string returnString = "";
             foreach (var objectGroup in ObjectGroup)
             {
                 returnString += "\n\nObjectlayer: " + objectGroup.Name + "\n";
@@ -50,7 +45,7 @@ namespace TiledParser
             return returnString;
         }
     }
-
+    /*
     [XmlRoot("tileset")]
     public class TileSet
     {
@@ -74,7 +69,7 @@ namespace TiledParser
 
         [XmlAttribute("width")] public int Width;
     }
-
+    */
     [XmlRoot("objectgroup")]
     public class ObjectGroup
     {
