@@ -12,14 +12,13 @@ namespace NeonArkanoid
 
         private string _state;
 
-        public NeonArkanoidGame() : base(1280, 720, false, false)
+        public NeonArkanoidGame() : base(1280, 800, false, false)
         {
             Level.Level level = new Level.Level("polytest.tmx");
+            SetState("MainMenu");
         }
         private static void Main()
         {
-            TMXParser tmxParser = new TMXParser();
-            tmxParser.Parse("Polytest.tmx");
             new NeonArkanoidGame().Start();
         }
 
