@@ -10,8 +10,9 @@ namespace NeonArkanoid.UI.Menu
     {
         private readonly Button[] _buttons;
         private readonly NeonArkanoidGame _game;
-        //private Sprite _header, _background;
+        //private Sprite _header;
         private Menu.Background _background;
+        private Menu.Background _header;
         private Color _color;
 
          private readonly SoundChannel _musicChannel;
@@ -23,7 +24,7 @@ namespace NeonArkanoid.UI.Menu
         {
             _game = game;
             SetBackground();
-           // SetHeader();
+            SetHeader();
             _buttons = new[]
             {
                 new Button(UtilStrings.SpritesMenu + "Start.png", 2, game.width/2, 50, "Level1"),
@@ -50,12 +51,12 @@ namespace NeonArkanoid.UI.Menu
         }
         /**/
 
-        /**
+        /**/
         private void SetHeader()
         {
-            _header = new Sprite(UtilStrings.SpritesMenu + "header_logo.png");
+            _header = new Background(UtilStrings.SpritesMenu + "header.png", true);
             _header.SetOrigin(_header.width/2, _header.height/2);
-            _header.SetXY(game.width/2, 120);
+            _header.SetXY(game.width/2 - 350, 400);
             AddChild(_header);
         }
         /**/
