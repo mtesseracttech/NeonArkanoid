@@ -61,6 +61,7 @@ namespace NeonArkanoid.Physics
         }
         public void Update()
         {
+            movement();
             SetAnimtationRange(0, 12);
         }
 
@@ -117,7 +118,7 @@ namespace NeonArkanoid.Physics
 
         private void movement()
         {
-            if (Input.GetKey)
+            x += 2f;
 
            
         }
