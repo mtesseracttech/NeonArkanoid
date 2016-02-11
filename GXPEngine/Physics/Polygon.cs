@@ -24,13 +24,12 @@ namespace NeonArkanoid.Physics
             _realPosX = realPosX;
             _realPosY = realPosY;
             DrawOnCanvas();
-
             //_lines = new LineSegment[_points.Length];
             //CreateLines();
             //foreach (var line in _lines) AddChild(line);
         }
 
-        private void DrawOnCanvas()
+        public void DrawOnCanvas()
         {
             PointF[] pointFs = new PointF[_points.Length];
             for (int i = 0; i < _points.Length; i++)
@@ -72,5 +71,13 @@ namespace NeonArkanoid.Physics
             }
             return returnstring;
         }
+
+        public void RemovePoly()
+        {
+            _level.RemoveFromPolyList(this);
+            _level.Redraw();
+            this.Destroy();
+        }
+
     }
 }

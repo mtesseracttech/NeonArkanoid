@@ -4,14 +4,11 @@ using System.Globalization;
 using System.Linq;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
-using NeonArkanoid.GXPEngine.Managers;
-using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Physics;
 using TiledParser;
 using System.Drawing.Drawing2D;
-using NeonArkanoid.GXPEngine.Utils;
-using NeonArkanoid.Utility;
 using System.Drawing;
+using NeonArkanoid.GXPEngine.Utils;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
 namespace NeonArkanoid.Level
@@ -19,7 +16,7 @@ namespace NeonArkanoid.Level
     internal class Level : Canvas
     {
         private readonly Map _map;
-        private readonly List<Polygon> _polyList;
+        private List<Polygon> _polyList;
         private string _levelName; //useless for now
         private NeonArkanoidGame _game;
         private Ball _ball;
@@ -64,10 +61,26 @@ namespace NeonArkanoid.Level
 
         public void Update()
         {
-            BallMovement();
-            
+            _ball.Position = new Vec2(Input.mouseX, Input.mouseY);
+            _ball.Step();
+            //BallMovement();
+            CheckCollisions();
+
         }
-        
+
+        private void CheckCollisions()
+        {
+            foreach (GameObject other in _ball.GetCollisions())
+            {
+                if (other is Polygon)
+                {
+                    throw new Exception("EXPLOSION");
+                    Polygon poly = other as Polygon;
+                    poly.RemovePoly();
+                }
+            }
+        }
+
         private void CreatePolygons(ObjectGroup objectGroup)
         {
             foreach (var tiledObject in objectGroup.TiledObjects)
@@ -94,7 +107,6 @@ namespace NeonArkanoid.Level
                                 List<char> chars = property.Property.Value.ToLower().ToCharArray().ToList();
                                 chars.Insert(2, 'f');
                                 chars.Insert(2, 'f');
-                                //string polyString = new string(chars.ToArray());
                                 polyColor = Convert.ToUInt32(new string(chars.ToArray()), 16);
                                 //polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
                             }
@@ -106,6 +118,23 @@ namespace NeonArkanoid.Level
                 }
             }
         }
+
+        public void RemoveFromPolyList(Polygon poly)
+        {
+            _polyList.Remove(poly);
+        }
+
+        public void Redraw()
+        {
+            graphics.Clear(Color.Black);
+            foreach (var polygon in _polyList)
+            {
+                polygon.DrawOnCanvas();
+            }
+        }
+
+
+
         /*
         void lineCollisionTest(LineSegment line)
         {
@@ -203,7 +232,11 @@ namespace NeonArkanoid.Level
 
         private void BallMovement()
         {
-            _ball.x += maxspeed;
+
+
+
+            
+            //_ball.x += maxspeed;
             if (_ball.Velocity.x < -maxspeed)
             {
                 _ball.Velocity.x = -maxspeed;
@@ -262,9 +295,6 @@ namespace NeonArkanoid.Level
             }
 
         }
-
-       
-
 
     }
 }
