@@ -2,6 +2,8 @@
 using NeonArkanoid.GXPEngine;
 using System.Drawing;
 using System;
+using System.Security.Cryptography;
+using NeonArkanoid.GXPEngine.Utils;
 
 namespace NeonArkanoid.Physics
 {
@@ -19,17 +21,20 @@ namespace NeonArkanoid.Physics
         int firstFrame = 0;
         int lastFrame = 12;
 
+        
+        private float maxspeed = 3f;
+
         /**
 		 * Creates a ball with a radius, a start position, a start velocity, and optionally a color.
 		 * Note the Color? this means that pColor can be null (which is not possible normally for structs since they are value types).
 		 /**/
 
-         /**
-            public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null,
-            bool physics = false,
-            Color? pColor = null)
-            : base("../assets/sprite/player/ball.png") //(pRadius*2, pRadius*2)
-          /**/
+        /**
+           public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null,
+           bool physics = false,
+           Color? pColor = null)
+           : base("../assets/sprite/player/ball.png") //(pRadius*2, pRadius*2)
+         /**/
         public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Color? pColor = null): base("../assets/sprite/player/ball.png",13,1) //(pRadius*2, pRadius*2)
         {
             //Physics = physics;
@@ -57,6 +62,17 @@ namespace NeonArkanoid.Physics
             /**/
             Step();
             
+            
+            
+
+        }
+
+        public void Update()
+        {
+            if (Input.GetKey(Key.LEFT)) _velocity.x++;
+            if (Input.GetKey(Key.RIGHT)) _velocity.x--;
+
+            BallMovement();
         }
         public Vec2 Position
         {
@@ -133,6 +149,48 @@ namespace NeonArkanoid.Physics
             return distance;
 
         }
+
+        
+
+        
+
+        private void BallMovement()
+        {
+
+            if (Velocity.x < -maxspeed)
+            {
+                Velocity.x = -maxspeed;
+            }
+            if (Velocity.x > maxspeed)
+            {
+                Velocity.x = maxspeed;
+            }
+            if (Velocity.y > maxspeed)
+            {
+                Velocity.y = maxspeed;
+            }
+            if (Velocity.y < -maxspeed)
+            {
+                Velocity.y = -maxspeed;
+            }
+
+
+            for (int i = 0; i < _acceleration.Length(); i++)
+            {
+                Velocity.Add(_acceleration.Clone().Normalize());
+            }
+            for (int g = 0; g < gravity.Length(); g++)
+            {
+                Velocity.Add(gravity);
+            }
+
+
+        }
+
+        
+
+      
+
 
     }
 }

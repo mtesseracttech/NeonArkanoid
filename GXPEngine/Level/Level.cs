@@ -20,18 +20,17 @@ namespace NeonArkanoid.Level
         private string _levelName; //useless for now
         private NeonArkanoidGame _game;
         private Ball _ball;
-
-        private float maxspeed = 3f;
         private LineSegment _lineA;
-
         private float _leftXBoundary;
         private float _rightXBoundary;
         private float _topYBoundary;
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
             BoundaryCreator();
+       
+            
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
             _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
@@ -209,7 +208,7 @@ namespace NeonArkanoid.Level
         {
             // y = Utils.Clamp(y, height/2, game.height/2 - height/2);
             // x = Utils.Clamp(x, width / 2, game.width / 2 - width / 2);
-            float border = -1;
+            float border = 1;
             _leftXBoundary = border;
             _rightXBoundary = width - border;
             _topYBoundary = border;
@@ -219,7 +218,6 @@ namespace NeonArkanoid.Level
             CreateVisualYBoundary(_topYBoundary);
 
         }
-
         private void CreateVisualXBoundary(float xBoundary)
         {
             AddChild(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
@@ -281,12 +279,12 @@ namespace NeonArkanoid.Level
             if (leftHit)
             {
                 _ball.Position.x = _leftXBoundary + _ball.Radius;
-                _ball.Velocity.SetXY(_ball._velocity.x, _ball.Velocity.y);
+                _ball.Velocity.SetXY(_ball.Velocity.x, _ball.Velocity.y);
             }
             if (righyHit)
             {
                 _ball.Position.x = _rightXBoundary - _ball.Radius;
-                _ball.Velocity.SetXY(_ball._velocity.x, _ball.Velocity.y);
+                _ball.Velocity.SetXY(_ball.Velocity.x, _ball.Velocity.y);
             }
             if (topHit)
             {
@@ -296,5 +294,13 @@ namespace NeonArkanoid.Level
 
         }
 
+        private void CheckBallCollisons()
+        {
+            var leftHit = _ball.Position.x - _ball.Radius < _leftXBoundary - _ball.Velocity.x;
+            var rightHit = _ball.Position.x + _ball.Radius > _rightXBoundary - _ball.Velocity.x;
+            var topHit = _ball.Position.y - _ball.Radius < _topYBoundary - _ball.Velocity.y;
+
+            ReflectBallBack(leftHit, rightHit, topHit);
+        }
     }
 }
