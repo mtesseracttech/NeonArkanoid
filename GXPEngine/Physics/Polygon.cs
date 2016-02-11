@@ -38,8 +38,8 @@ namespace NeonArkanoid.Physics
                 pointFs[i] = _points[i].Vec2toPointF();
                 pointFs[i].X += _realPosX;
                 pointFs[i].Y += _realPosY;
-                Console.WriteLine(pointFs[i]);
             }
+            Console.WriteLine("Drawing polygon at coords: " + _realPosX + "," + _realPosY);
             _level.graphics.DrawPolygon(new Pen(ColorUtils.UIntToColor(_color)), pointFs);
             _level.graphics.FillPolygon(new SolidBrush(ColorUtils.UIntToColor(_color)), pointFs);
         }

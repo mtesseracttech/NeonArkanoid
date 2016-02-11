@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
@@ -16,10 +17,11 @@ namespace NeonArkanoid.Level
         private string _levelName; //useless for now
         private NeonArkanoidGame _game;
         private Ball _ball = new Ball(30, new Vec2 (400, 400), null);
-
+        
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
             _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
@@ -28,16 +30,13 @@ namespace NeonArkanoid.Level
 
             for (var i = 0; i < _map.ObjectGroup.Length; i++)
             {
-                if (_map.ObjectGroup[i].Name.ToLower() == "polygons")
+                if (_map.ObjectGroup[i].Name.ToLower() == "polygons" || _map.ObjectGroup[i].Name.ToLower() == "polygon")
                 {
                     _polyList = new List<Polygon>();
                     CreatePolygons(_map.ObjectGroup[i]);
                 }
             }
-            foreach (var polygon in _polyList)
-            {
-                AddChild(polygon);
-            }
+            if (_polyList != null) foreach (var polygon in _polyList) AddChild(polygon);
 
             AddChild(_ball);
         }
@@ -63,7 +62,7 @@ namespace NeonArkanoid.Level
                     {
                         foreach (var property in tiledObject.Properties)
                         {
-                            if (property.Property.Name.ToLower() == "colour" || property.Property.Name.ToLower() == "color")
+                            if (property.Property.Name.ToLower() == "color" || property.Property.Name.ToLower() == "colour")
                             {
                                 polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
                             }

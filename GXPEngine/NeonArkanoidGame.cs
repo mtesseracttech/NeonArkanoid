@@ -50,7 +50,7 @@ namespace NeonArkanoid
                     AddChild(_menu);
                     break;
                 case "Level1":
-                    _level = new Level.Level("polytest.tmx", this);
+                    _level = new Level.Level("abird.tmx", this);
                     AddChild(_level);
                     break;
                 case "Exit":
