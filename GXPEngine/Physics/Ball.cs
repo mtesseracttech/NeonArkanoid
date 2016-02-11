@@ -1,45 +1,67 @@
 ﻿using System.Drawing;
 using NeonArkanoid.GXPEngine;
+using System;
+using GXPEngine;
 
 namespace NeonArkanoid.Physics
 {
-    public class Ball : Canvas
+    public class Ball : AnimSprite
     {
+
+        private Vec2 _position;
+        public Vec2 _velocity;
+        private Color _ballColor;
         //public but still readonly, can only be assigned once and cannot be overwritten after this
         public readonly int Radius;
-        private Vec2 _acceleration;
-        private Color _ballColor;
-        private Vec2 _position;
-        private Vec2 _velocity;
-
+        public Vec2 _acceleration = new Vec2 (0,0);
+        public Vec2 gravity = new Vec2(0, 0.0f);
+        private float maxspeed = 15f;
+        float frame = 0.5f;
+        int firstFrame = 0;
+        int lastFrame = 12;
 
         /**
 		 * Creates a ball with a radius, a start position, a start velocity, and optionally a color.
 		 * Note the Color? this means that pColor can be null (which is not possible normally for structs since they are value types).
-		 */
+		 /**/
 
-        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null,
+         /**
+            public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null,
             bool physics = false,
             Color? pColor = null)
-            : base(pRadius*2, pRadius*2)
+            : base("../assets/sprite/player/ball.png") //(pRadius*2, pRadius*2)
+          /**/
+              public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Color? pColor = null): base("../assets/sprite/player/ball.png",13,1) //(pRadius*2, pRadius*2)
         {
-            Physics = physics;
+            //Physics = physics;
             Radius = pRadius;
-            Position = position;
-            Velocity = velocity;
-            Acceleration = acceleration;
+            SetOrigin(width / 2, height / 2);
+
+            Position = position ?? Vec2.zero;
+            _ballColor = pColor ?? Color.Blue;
+            Velocity = velocity ?? Vec2.zero;
+
+           // Acceleration = acceleration;
             //?? means: assign pColor unless pColor is null then take Color.Blue instead
             //basically this is short for if (pColor == null) { _ballColor = Color.Blue} else { _ballColor = Color.Blue }
             //another short way to write this is _ballColor = (pColor == null?Color.Blue:pColor);
             //use whatever you feel comfortable with and are able to explain.
-            _ballColor = pColor ?? Color.Blue;
+           // _ballColor = pColor ?? Color.Blue;
 
-            Draw();
+            /**/
+            //Draw();
             if (Position != null)
             {
                 x = Position.x;
                 y = Position.y;
             }
+            /**/
+           // Step();
+            
+        }
+        public void Update()
+        {
+            SetAnimtationRange(0, 12);
         }
 
         public Vec2 Position
@@ -68,19 +90,19 @@ namespace NeonArkanoid.Physics
             set
             {
                 _ballColor = value;
-                Draw();
+               // Draw();
             }
         }
-
+        /**
         private void Draw()
         {
             SetOrigin(Radius, Radius);
-
             graphics.FillEllipse(
                 new SolidBrush(_ballColor),
                 0, 0, 2*Radius, 2*Radius
                 );
         }
+        /**/
 
         public void Step()
         {
@@ -92,5 +114,30 @@ namespace NeonArkanoid.Physics
             x = _position.x;
             y = _position.y;
         }
+
+        private void movement()
+        {
+            if (Input.GetKey)
+
+           
+        }
+
+        private void UpdateAnimtaion()
+        {
+            frame += 0.3f;
+
+            if (frame >= lastFrame + 1) frame = firstFrame;
+            if (frame < firstFrame)     frame = firstFrame;
+
+            SetFrame((int)frame);
+        }
+
+        private void SetAnimtationRange(int first, int last)
+        {
+            firstFrame = first;
+            lastFrame = last;
+            Console.WriteLine("first " + first + " last " + last);
+        }
+
     }
 }

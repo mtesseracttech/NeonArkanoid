@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Drawing;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
@@ -17,7 +15,7 @@ namespace NeonArkanoid.Level
         private readonly List<Polygon> _polyList;
         private string _levelName; //useless for now
         //private string _tilesheetName;
-        private Ball _ball;
+        private Ball _ball = new Ball(30, new Vec2 (400, 400), null);
 
 
         public Level(string filename)
@@ -40,7 +38,7 @@ namespace NeonArkanoid.Level
                 AddChild(polygon);
             }
 
-            
+            AddChild(_ball);
         }
 
         private void CreatePolygons(ObjectGroup objectGroup)
@@ -106,10 +104,9 @@ namespace NeonArkanoid.Level
             return _levelName;
         }
 
-        private void checkBoundariesCollision()
-        {
 
-        }
+        
+        
 
     }
 }

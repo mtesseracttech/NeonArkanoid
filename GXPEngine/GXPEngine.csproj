@@ -72,6 +72,7 @@
     <Compile Include="Physics\Arrow.cs" />
     <Compile Include="Physics\Ball.cs" />
     <Compile Include="Physics\LineSegment.cs" />
+    <Compile Include="Physics\MovingBar.cs" />
     <Compile Include="Physics\Polygon.cs" />
     <Compile Include="Physics\Vec2.cs" />
     <Compile Include="UI\Menu\Background.cs" />

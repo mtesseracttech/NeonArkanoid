@@ -47,6 +47,9 @@ namespace NeonArkanoid.Physics
         {
             float lengthSquared = ((x*x) + (y*y));
             if (lengthSquared != 0f) return Mathf.Sqrt(lengthSquared);
+            /**
+            return (float)Math.Sqrt(x * x + y * y);
+            /**/
             return 0f;
         }
 
