@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
@@ -10,16 +9,17 @@ using Polygon = NeonArkanoid.Physics.Polygon;
 
 namespace NeonArkanoid.Level
 {
-    internal class Level : GameObject
+    internal class Level : Canvas
     {
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
         private string _levelName; //useless for now
-        //private string _tilesheetName;
+        private NeonArkanoidGame _game;
 
 
-        public Level(string filename)
+        public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
+            _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
 
@@ -38,7 +38,7 @@ namespace NeonArkanoid.Level
                 AddChild(polygon);
             }
         }
-
+        
         private void CreatePolygons(ObjectGroup objectGroup)
         {
             foreach (var tiledObject in objectGroup.TiledObjects)
@@ -65,33 +65,9 @@ namespace NeonArkanoid.Level
                                 polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
                             }
                         }
-                        var poly = new Polygon(vectorArray, polyColor);
+                        var poly = new Polygon(vectorArray, polyColor, this, tiledObject.X, tiledObject.Y);
                         poly.SetXY(tiledObject.X, tiledObject.Y);
                         _polyList.Add(poly);
-
-                        /*
-                    string polyID = null;
-                    if (tiledObject.Properties != null)
-                    {
-                        foreach (var property in tiledObject.Properties)
-                        {
-                            if (property.Property.Name == "id")
-                            {
-                                polyID = property.Property.Value;
-                            }
-                        }
-                        if (polyID != null)
-                        {
-                            Polygon poly = new Polygon(vectorArray, polyID);
-                            poly.SetXY(tiledObject.X, tiledObject.Y);
-                            _polyList.Add(poly);
-                        }
-                        else
-                        {
-                            Console.WriteLine("NO ID WAS GIVEN FOR THE POLYGON");
-                        }
-                    }
-                    */
                     }
                 }
             }

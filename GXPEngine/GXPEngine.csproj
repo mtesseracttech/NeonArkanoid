@@ -79,6 +79,7 @@
     <Compile Include="UI\Menu\Button.cs" />
     <Compile Include="UI\Menu\MainMenu.cs" />
     <Compile Include="UI\Menu\Pause.cs" />
+    <Compile Include="Utility\ColorUtils.cs" />
     <Compile Include="Utility\FileReader.cs" />
     <Compile Include="Utility\TiledParser\TMXMap.cs" />
     <Compile Include="Utility\TiledParser\TMXParser.cs" />

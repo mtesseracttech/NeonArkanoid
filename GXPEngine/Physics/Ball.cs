@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Utils;
 
 namespace NeonArkanoid.Physics
 {

@@ -11,7 +11,7 @@ namespace NeonArkanoid.UI.Menu
         private readonly Button[] _buttons;
         private readonly NeonArkanoidGame _game;
         //private Sprite _header, _background;
-        private Menu.Background _background;
+        private Background _background;
         private Color _color;
 
         // private readonly SoundChannel _musicChannel;
@@ -40,15 +40,16 @@ namespace NeonArkanoid.UI.Menu
             _selectedSound = new Sound(UtilStrings.SoundsMenu + "sound_selected.wav");
             var music = new Sound(UtilStrings.SoundsMenu + "music_menu.mp3", true, true);
             _musicChannel = music.Play();
-            /**/
+            **/
         }
-        /**/
+
+
+        
         private void SetBackground()
         {
             _background = new Background(UtilStrings.SpritesMenu + "background.png", true);
             AddChild(_background);
         }
-        /**/
 
         /**
         private void SetHeader()
@@ -58,7 +59,7 @@ namespace NeonArkanoid.UI.Menu
             _header.SetXY(game.width/2, 120);
             AddChild(_header);
         }
-        /**/
+        **/
 
         private void Update()
         {
