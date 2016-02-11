@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
@@ -18,6 +19,7 @@ namespace NeonArkanoid.Level
         private readonly List<Polygon> _polyList;
         private string _levelName; //useless for now
         private NeonArkanoidGame _game;
+<<<<<<< HEAD
         private Ball _ball;
 
         private float maxspeed = 15f;
@@ -30,6 +32,14 @@ namespace NeonArkanoid.Level
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
             BoundaryCreator();
+=======
+        private Ball _ball = new Ball(30, new Vec2 (400, 400), null);
+        
+
+        public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
+        {
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+>>>>>>> origin/dev
             _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
@@ -38,16 +48,13 @@ namespace NeonArkanoid.Level
 
             for (var i = 0; i < _map.ObjectGroup.Length; i++)
             {
-                if (_map.ObjectGroup[i].Name.ToLower() == "polygons")
+                if (_map.ObjectGroup[i].Name.ToLower() == "polygons" || _map.ObjectGroup[i].Name.ToLower() == "polygon")
                 {
                     _polyList = new List<Polygon>();
                     CreatePolygons(_map.ObjectGroup[i]);
                 }
             }
-            foreach (var polygon in _polyList)
-            {
-                AddChild(polygon);
-            }
+            if (_polyList != null) foreach (var polygon in _polyList) AddChild(polygon);
 
             _lineA = new LineSegment(Vec2.zero,Vec2.zero, 0x00000000, 2, true);
             AddChild(_lineA);
@@ -83,7 +90,7 @@ namespace NeonArkanoid.Level
                     {
                         foreach (var property in tiledObject.Properties)
                         {
-                            if (property.Property.Name.ToLower() == "colour")
+                            if (property.Property.Name.ToLower() == "color" || property.Property.Name.ToLower() == "colour")
                             {
                                 polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
                             }

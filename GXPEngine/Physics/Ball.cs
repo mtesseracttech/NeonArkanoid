@@ -123,7 +123,10 @@ namespace NeonArkanoid.Physics
         {
             firstFrame = first;
             lastFrame = last;
+<<<<<<< HEAD
            
+=======
+>>>>>>> origin/dev
         }
 
     }

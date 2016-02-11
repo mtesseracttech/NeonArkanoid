@@ -5,7 +5,6 @@ namespace TiledParser
     [XmlRoot("map")]
     public class Map
     {
-        [XmlElement("tileset")] public TileSet TileSet;
 
         [XmlElement("objectgroup")] public ObjectGroup[] ObjectGroup;
 
@@ -45,30 +44,6 @@ namespace TiledParser
         }
     }
 
-    [XmlRoot("tileset")]
-    public class TileSet
-    {
-        [XmlAttribute("firstgid")] public int FirstGID;
-
-        [XmlElement("image")] public Image Image;
-
-        [XmlAttribute("name")] public string Name;
-
-        [XmlAttribute("tileheight")] public int TileHeight;
-
-        [XmlAttribute("tilewidth")] public int TileWidth;
-    }
-
-    [XmlRoot("image")]
-    public class Image
-    {
-        [XmlAttribute("height")] public int Height;
-
-        [XmlAttribute("source")] public string Source;
-
-        [XmlAttribute("width")] public int Width;
-    }
-
     [XmlRoot("objectgroup")]
     public class ObjectGroup
     {
@@ -82,7 +57,7 @@ namespace TiledParser
     {
         [XmlAttribute("gid")] public int GID;
 
-        [XmlAttribute("height")] public int Height;
+        [XmlAttribute("height")] public float Height;
 
         [XmlAttribute("id")] public int ID;
 
@@ -94,7 +69,7 @@ namespace TiledParser
 
         [XmlAttribute("rotation")] public float Rotation;
 
-        [XmlAttribute("width")] public int Width;
+        [XmlAttribute("width")] public float Width;
 
         [XmlAttribute("x")] public float X;
 
