@@ -107,8 +107,6 @@ namespace NeonArkanoid.Physics
             y = _position.y;
         }
 
-        
-
         public void UpdateAnimtaion()
         {
             frame += 0.3f;
@@ -123,10 +121,6 @@ namespace NeonArkanoid.Physics
         {
             firstFrame = first;
             lastFrame = last;
-<<<<<<< HEAD
-           
-=======
->>>>>>> origin/dev
         }
 
     }
