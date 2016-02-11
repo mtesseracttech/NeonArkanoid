@@ -54,7 +54,8 @@ namespace NeonArkanoid.UI.Menu
         {
             _header = new Background(UtilStrings.SpritesMenu + "header.png", true);
             _header.SetOrigin(_header.width/2, _header.height/2);
-            _header.SetXY(game.width/2 - 350, 400);
+            _header.SetScaleXY(0.5f,0.5f);
+            _header.SetXY(game.width/2 - 450, 150);
             AddChild(_header);
         }
 

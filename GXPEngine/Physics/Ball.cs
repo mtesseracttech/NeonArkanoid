@@ -1,7 +1,5 @@
 ﻿using System.Drawing;
 using NeonArkanoid.GXPEngine;
-using NeonArkanoid.GXPEngine.Utils;
-using NeonArkanoid.Utility;
 using System;
 
 namespace NeonArkanoid.Physics
@@ -16,7 +14,6 @@ namespace NeonArkanoid.Physics
         public readonly int Radius;
         public Vec2 _acceleration = new Vec2 (0,0);
         public Vec2 gravity = new Vec2(0, 0.0f);
-        private float maxspeed = 2f;
         float frame = 0.5f;
         int firstFrame = 0;
         int lastFrame = 12;
@@ -59,13 +56,6 @@ namespace NeonArkanoid.Physics
             /**/
             
         }
-        public void Update()
-        {
-            movement();
-            SetAnimtationRange(0, 12);
-            Step();
-        }
-
         public Vec2 Position
         {
             set { _position = value ?? Vec2.zero; }
@@ -117,35 +107,9 @@ namespace NeonArkanoid.Physics
             y = _position.y;
         }
 
-        private void movement()
-        {
-           // x += 2f;
-            if (Input.GetKey(Key.UP))
-            {
-                float angleRadians = rotation*Mathf.PI/180;
-                _velocity.x = maxspeed*Mathf.Cos((angleRadians));
-                _velocity.y = maxspeed*Mathf.Sin((angleRadians));
-            }
-            else
-            {
-                _velocity = Vec2.zero;
-            }
+        
 
-            if (Input.GetKey(Key.RIGHT))
-            {
-                rotation++;
-                
-            }
-            else if (Input.GetKey(Key.LEFT))
-            {
-                rotation--;
-                
-            }
-
-
-        }
-
-        private void UpdateAnimtaion()
+        public void UpdateAnimtaion()
         {
             frame += 0.3f;
 
@@ -155,11 +119,11 @@ namespace NeonArkanoid.Physics
             SetFrame((int)frame);
         }
 
-        private void SetAnimtationRange(int first, int last)
+        public void SetAnimtationRange(int first, int last)
         {
             firstFrame = first;
             lastFrame = last;
-            Console.WriteLine("first " + first + " last " + last);
+           
         }
 
     }

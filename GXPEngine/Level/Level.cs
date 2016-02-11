@@ -5,6 +5,9 @@ using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
 using TiledParser;
+using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Utility;
+using System.Drawing;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
 namespace NeonArkanoid.Level
@@ -15,11 +18,18 @@ namespace NeonArkanoid.Level
         private readonly List<Polygon> _polyList;
         private string _levelName; //useless for now
         private NeonArkanoidGame _game;
-        private Ball _ball = new Ball(30, new Vec2 (400, 400), null);
+        private Ball _ball;
 
+        private float maxspeed = 15f;
+        private LineSegment _lineA;
+
+        private float _leftXBoundary;
+        private float _rightXBoundary;
+        private float _topYBoundary;
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
+            BoundaryCreator();
             _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
@@ -39,7 +49,17 @@ namespace NeonArkanoid.Level
                 AddChild(polygon);
             }
 
+            _lineA = new LineSegment(Vec2.zero,Vec2.zero, 0x00000000, 2, true);
+            AddChild(_lineA);
+
+            _ball = new Ball(30, new Vec2(400, 400),null, Color.BlueViolet);
             AddChild(_ball);
+
+        }
+
+        public void Update()
+        {
+            BallMovement();
         }
         
         private void CreatePolygons(ObjectGroup objectGroup)
@@ -81,9 +101,95 @@ namespace NeonArkanoid.Level
             return _levelName;
         }
 
+        private void BoundaryCreator()
+        {
+            // y = Utils.Clamp(y, height/2, game.height/2 - height/2);
+            // x = Utils.Clamp(x, width / 2, game.width / 2 - width / 2);
+            float border = -1;
+            _leftXBoundary = border;
+            _rightXBoundary = width - border;
+            _topYBoundary = border;
+
+            CreateVisualXBoundary(_leftXBoundary);
+            CreateVisualXBoundary(_rightXBoundary);
+            CreateVisualYBoundary(_topYBoundary);
+
+        }
+
+        private void CreateVisualXBoundary(float xBoundary)
+        {
+            AddChild(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
+        }
+
+        private void CreateVisualYBoundary(float yBoundary)
+        {
+            AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
+        }
+
+        private void BallMovement()
+        {
+            _ball.x += maxspeed;
+            if (_ball.Velocity.x < -maxspeed)
+            {
+                _ball.Velocity.x = -maxspeed;
+            }
+            if (_ball.Velocity.x > maxspeed)
+            {
+                _ball.Velocity.x = maxspeed;
+            }
+            if (_ball.Velocity.y > maxspeed)
+            {
+                _ball.Velocity.y = maxspeed;
+            }
+            if (_ball.Velocity.y < -maxspeed)
+            {
+                _ball.Velocity.y = -maxspeed;
+            }
+
+
+            for (int i = 0; i < _ball._acceleration.Length(); i++)
+            {
+                _ball.Velocity.Add(_ball._acceleration.Clone().Normalize());
+            }
+            for (int g = 0; g < _ball.gravity.Length(); g++)
+            {
+                _ball.Velocity.Add(_ball.gravity);
+            }
+            
+            
+        }
+
+        private void CheckBallCollisons()
+        {
+            var leftHit = _ball.Position.x - _ball.Radius < _leftXBoundary - _ball.Velocity.x;
+            var rightHit = _ball.Position.x + _ball.Radius > _rightXBoundary - _ball.Velocity.x;
+            var topHit = _ball.Position.y - _ball.Radius < _topYBoundary - _ball.Velocity.y;
+
+            ReflectBallBack(leftHit, rightHit, topHit);
+        }
+
+        private void ReflectBallBack(bool leftHit, bool righyHit, bool topHit)
+        {
+            if (leftHit)
+            {
+                _ball.Position.x = _leftXBoundary + _ball.Radius;
+                _ball.Velocity.SetXY(_ball._velocity.x, _ball.Velocity.y);
+            }
+            if (righyHit)
+            {
+                _ball.Position.x = _rightXBoundary - _ball.Radius;
+                _ball.Velocity.SetXY(_ball._velocity.x, _ball.Velocity.y);
+            }
+            if (topHit)
+            {
+                _ball.Position.y = _topYBoundary + _ball.Radius;
+                _ball.Velocity.SetXY(_ball.Velocity.x, -_ball.Velocity.y);
+            }
+
+        }
 
         
-        
+
 
     }
 }
