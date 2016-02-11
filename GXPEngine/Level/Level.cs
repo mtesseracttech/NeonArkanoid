@@ -63,7 +63,7 @@ namespace NeonArkanoid.Level
                     {
                         foreach (var property in tiledObject.Properties)
                         {
-                            if (property.Property.Name.ToLower() == "colour")
+                            if (property.Property.Name.ToLower() == "colour" || property.Property.Name.ToLower() == "color")
                             {
                                 polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
                             }

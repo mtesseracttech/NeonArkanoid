@@ -159,7 +159,6 @@ namespace NeonArkanoid.Physics
         {
             firstFrame = first;
             lastFrame = last;
-            Console.WriteLine("first " + first + " last " + last);
         }
 
     }
