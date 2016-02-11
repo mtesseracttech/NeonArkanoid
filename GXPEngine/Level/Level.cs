@@ -62,6 +62,7 @@ namespace NeonArkanoid.Level
         public void Update()
         {
             BallMovement();
+            
         }
         
         private void CreatePolygons(ObjectGroup objectGroup)
@@ -190,7 +191,7 @@ namespace NeonArkanoid.Level
 
         }
 
-        
+       
 
 
     }

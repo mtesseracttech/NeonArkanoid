@@ -1,5 +1,6 @@
-﻿using System.Drawing;
+﻿
 using NeonArkanoid.GXPEngine;
+using System.Drawing;
 using System;
 
 namespace NeonArkanoid.Physics
@@ -29,7 +30,7 @@ namespace NeonArkanoid.Physics
             Color? pColor = null)
             : base("../assets/sprite/player/ball.png") //(pRadius*2, pRadius*2)
           /**/
-              public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Color? pColor = null): base("../assets/sprite/player/ball.png",13,1) //(pRadius*2, pRadius*2)
+        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Color? pColor = null): base("../assets/sprite/player/ball.png",13,1) //(pRadius*2, pRadius*2)
         {
             //Physics = physics;
             Radius = pRadius;
@@ -54,6 +55,7 @@ namespace NeonArkanoid.Physics
                 y = Position.y;
             }
             /**/
+            Step();
             
         }
         public Vec2 Position
@@ -121,6 +123,15 @@ namespace NeonArkanoid.Physics
         {
             firstFrame = first;
             lastFrame = last;
+        }
+
+        public float DistanceTo(float x, float y)
+        {
+            float deltax = Math.Abs(x - this.x);
+            float deltay = Math.Abs(y - this.y);
+            float distance = deltax + deltay;
+            return distance;
+
         }
 
     }
