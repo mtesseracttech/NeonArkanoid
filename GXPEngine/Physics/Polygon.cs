@@ -72,5 +72,11 @@ namespace NeonArkanoid.Physics
             }
             return returnstring;
         }
+
+        public void RemoveFromGame()
+        {
+            
+            this.Destroy();
+        }
     }
 }

@@ -7,7 +7,7 @@ using NeonArkanoid.GXPEngine.Utils;
 
 namespace NeonArkanoid.Physics
 {
-    public class Ball : AnimSprite
+    public class Ball : Canvas
     {
 
         private Vec2 _position;
@@ -15,11 +15,11 @@ namespace NeonArkanoid.Physics
         private Color _ballColor;
         //public but still readonly, can only be assigned once and cannot be overwritten after this
         public readonly int Radius;
-        public Vec2 _acceleration = new Vec2 (0,0);
-        public Vec2 gravity = new Vec2(0, 0.0f);
-        float frame = 0.5f;
-        int firstFrame = 0;
-        int lastFrame = 12;
+        private Vec2 _acceleration = new Vec2 (0,0);
+        private Vec2 _gravity = new Vec2(0, 0.0f);
+       // float frame = 0.5f;
+        //int firstFrame = 0;
+        //int lastFrame = 12;
 
         
         private float maxspeed = 3f;
@@ -35,7 +35,7 @@ namespace NeonArkanoid.Physics
            Color? pColor = null)
            : base("../assets/sprite/player/ball.png") //(pRadius*2, pRadius*2)
          /**/
-        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Color? pColor = null): base("../assets/sprite/player/ball.png",13,1) //(pRadius*2, pRadius*2)
+        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Color? pColor = null): base(pRadius * 2, pRadius * 2)   //("../assets/sprite/player/ball.png",13,1) //
         {
             //Physics = physics;
             Radius = pRadius;
@@ -50,29 +50,32 @@ namespace NeonArkanoid.Physics
             //basically this is short for if (pColor == null) { _ballColor = Color.Blue} else { _ballColor = Color.Blue }
             //another short way to write this is _ballColor = (pColor == null?Color.Blue:pColor);
             //use whatever you feel comfortable with and are able to explain.
-           // _ballColor = pColor ?? Color.Blue;
 
-            /**/
-            //Draw();
+            Draw();
             if (Position != null)
-            {
+           {
                 x = Position.x;
                 y = Position.y;
             }
-            /**/
-            Step();
-            
-            
-            
 
+            Step();
         }
 
         public void Update()
         {
-            if (Input.GetKey(Key.LEFT)) _velocity.x++;
-            if (Input.GetKey(Key.RIGHT)) _velocity.x--;
-
             BallMovement();
+            if (Input.GetKey(Key.LEFT))
+            {
+                //_acceleration.x--;
+                _velocity.x--;
+               // SetAnimtationRange(0, 12);
+            }
+            if (Input.GetKey(Key.RIGHT))
+            {
+               // _acceleration.x++;
+                _velocity.x++;
+               // SetAnimtationRange(0,12);
+            }
         }
         public Vec2 Position
         {
@@ -125,9 +128,10 @@ namespace NeonArkanoid.Physics
             y = _position.y;
         }
 
+        /*
         public void UpdateAnimtaion()
         {
-            frame += 0.3f;
+            frame += 1f;
 
             if (frame >= lastFrame + 1) frame = firstFrame;
             if (frame < firstFrame)     frame = firstFrame;
@@ -140,22 +144,11 @@ namespace NeonArkanoid.Physics
             firstFrame = first;
             lastFrame = last;
         }
-
-        public float DistanceTo(float x, float y)
-        {
-            float deltax = Math.Abs(x - this.x);
-            float deltay = Math.Abs(y - this.y);
-            float distance = deltax + deltay;
-            return distance;
-
-        }
-
-        
-
-        
-
+        /**/
         private void BallMovement()
         {
+            x += _velocity.x;
+            x += _acceleration.x;
 
             if (Velocity.x < -maxspeed)
             {
@@ -173,24 +166,24 @@ namespace NeonArkanoid.Physics
             {
                 Velocity.y = -maxspeed;
             }
-
-
             for (int i = 0; i < _acceleration.Length(); i++)
             {
                 Velocity.Add(_acceleration.Clone().Normalize());
             }
-            for (int g = 0; g < gravity.Length(); g++)
+            for (int g = 0; g < _gravity.Length(); g++)
             {
-                Velocity.Add(gravity);
+                Velocity.Add(_gravity);
             }
-
-
         }
 
-        
+        private void Draw()
+        {
+            SetOrigin(Radius, Radius);
 
-      
-
-
+            graphics.FillEllipse(
+                new SolidBrush(_ballColor),
+                0, 0, 2 * Radius, 2 * Radius
+                );
+        }
     }
 }
