@@ -71,7 +71,6 @@
     <Compile Include="GXPEngine\Utils\Utils.cs" />
     <Compile Include="Physics\Arrow.cs" />
     <Compile Include="Physics\Ball.cs" />
-    <Compile Include="Physics\Box.cs" />
     <Compile Include="Physics\LineSegment.cs" />
     <Compile Include="Physics\Polygon.cs" />
     <Compile Include="Physics\Vec2.cs" />
