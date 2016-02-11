@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Utility;
 using System;
 using GXPEngine;
 
@@ -15,7 +17,7 @@ namespace NeonArkanoid.Physics
         public readonly int Radius;
         public Vec2 _acceleration = new Vec2 (0,0);
         public Vec2 gravity = new Vec2(0, 0.0f);
-        private float maxspeed = 15f;
+        private float maxspeed = 2f;
         float frame = 0.5f;
         int firstFrame = 0;
         int lastFrame = 12;
@@ -56,13 +58,13 @@ namespace NeonArkanoid.Physics
                 y = Position.y;
             }
             /**/
-           // Step();
             
         }
         public void Update()
         {
             movement();
             SetAnimtationRange(0, 12);
+            Step();
         }
 
         public Vec2 Position
@@ -118,9 +120,30 @@ namespace NeonArkanoid.Physics
 
         private void movement()
         {
-            x += 2f;
+           // x += 2f;
+            if (Input.GetKey(Key.UP))
+            {
+                float angleRadians = rotation*Mathf.PI/180;
+                _velocity.x = maxspeed*Mathf.Cos((angleRadians));
+                _velocity.y = maxspeed*Mathf.Sin((angleRadians));
+            }
+            else
+            {
+                _velocity = Vec2.zero;
+            }
 
-           
+            if (Input.GetKey(Key.RIGHT))
+            {
+                rotation++;
+                
+            }
+            else if (Input.GetKey(Key.LEFT))
+            {
+                rotation--;
+                
+            }
+
+
         }
 
         private void UpdateAnimtaion()
