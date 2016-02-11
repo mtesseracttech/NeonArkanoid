@@ -14,7 +14,7 @@ namespace NeonArkanoid.UI.Menu
         public Background(string filename, bool flicker) : base(filename)
         {
             SetOrigin(game.width, game.height);
-            SetXY(width-170, height-50);
+            SetXY(width, height);
             _flicker = flicker;
         }
 
@@ -23,9 +23,9 @@ namespace NeonArkanoid.UI.Menu
             if (_flicker)
             {
                 float r = Mathf.Abs(Mathf.Cos(Time.time / 100.0f));
-                float g = Mathf.Abs(Mathf.Cos(Time.time / 1100.0f));
-                float b = Mathf.Abs(Mathf.Cos(Time.time / 1700.0f));
-                color = (uint)(((int)(r * 255)) << 16 | ((int)(g * 255)) << 8 | ((int)(b * 255)));
+                float g = Mathf.Abs(Mathf.Cos(Time.time / 1000.0f));
+                float b = Mathf.Abs(Mathf.Cos(Time.time / 1900.0f));
+                color = (uint)(((int)(r * 300)) << 16 | ((int)(g * 300)) << 8 | ((int)(b * 300)));
                 speed += 1.0f;
             }
         }
