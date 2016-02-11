@@ -15,6 +15,7 @@ namespace NeonArkanoid.Level
         private readonly List<Polygon> _polyList;
         private string _levelName; //useless for now
         private NeonArkanoidGame _game;
+        private Ball _ball = new Ball(30, new Vec2 (400, 400), null);
 
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
@@ -37,6 +38,8 @@ namespace NeonArkanoid.Level
             {
                 AddChild(polygon);
             }
+
+            AddChild(_ball);
         }
         
         private void CreatePolygons(ObjectGroup objectGroup)
@@ -77,5 +80,10 @@ namespace NeonArkanoid.Level
         {
             return _levelName;
         }
+
+
+        
+        
+
     }
 }
