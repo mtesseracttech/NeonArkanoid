@@ -12,6 +12,8 @@ namespace NeonArkanoid.UI.Menu
         private readonly NeonArkanoidGame _game;
         private Background _background;
         private Background _header;
+        private Color _color;
+
          private readonly SoundChannel _musicChannel;
          private readonly Sound _selectedSound;
 
@@ -24,10 +26,10 @@ namespace NeonArkanoid.UI.Menu
             SetHeader();
             _buttons = new[]
             {
-                new Button(UtilStrings.SpritesMenu + "Start.png", 2, 1100, 50, "Level1"),
-                new Button(UtilStrings.SpritesMenu + "Score.png", 2, 1100, 150, "HighScores"),
-                new Button(UtilStrings.SpritesMenu + "option.png", 2, 1100, 250, "Option"),
-                new Button(UtilStrings.SpritesMenu + "quit.png", 2, 1100, 350, "Exit")
+                new Button(UtilStrings.SpritesMenu + "Start.png", 2, game.width/2, 50, "Level1"),
+                new Button(UtilStrings.SpritesMenu + "Score.png", 2, game.width/2, 150, "HighScores"),
+                new Button(UtilStrings.SpritesMenu + "option.png", 2, game.width/2, 250, "Option"),
+                new Button(UtilStrings.SpritesMenu + "quit.png", 2, game.width/2, 350, "Exit")
             };
             foreach (var button in _buttons)
             {

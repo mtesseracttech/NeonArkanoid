@@ -4,9 +4,13 @@ using System.Globalization;
 using System.Linq;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Managers;
+using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Physics;
 using TiledParser;
 using System.Drawing.Drawing2D;
+using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Utility;
 using System.Drawing;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
@@ -18,16 +22,24 @@ namespace NeonArkanoid.Level
         private readonly List<Polygon> _polyList;
         private string _levelName; //useless for now
         private NeonArkanoidGame _game;
-        private Ball _ball = new Ball(30, new Vec2(400, 400), null, Color.BlueViolet);
+        private Ball _ball;
+        private LineSegment _lineA;
+        private float _leftXBoundary;
+        private float _rightXBoundary;
+        private float _topYBoundary;
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
-
+            BoundaryCreator();
+       
+            
             graphics.SmoothingMode = SmoothingMode.HighQuality;
             _game = game;
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
+
             //_tilesheetName = _map.TileSet.Image.Source;
+
             for (var i = 0; i < _map.ObjectGroup.Length; i++)
             {
                 if (_map.ObjectGroup[i].Name.ToLower() == "polygons")
@@ -40,14 +52,15 @@ namespace NeonArkanoid.Level
             {
                 AddChild(polygon);
             }
+
+            _lineA = new LineSegment(Vec2.zero,Vec2.zero, 0x00000000, 2, true);
+            AddChild(_lineA);
+
+            _ball = new Ball(30, new Vec2(400, 400),null, Color.BlueViolet);
             AddChild(_ball);
 
         }
-
-        void Update()
-        {
-               
-        }
+        
         private void CreatePolygons(ObjectGroup objectGroup)
         {
             foreach (var tiledObject in objectGroup.TiledObjects)
@@ -156,15 +169,58 @@ namespace NeonArkanoid.Level
             return _levelName;
         }
 
-        private void DoCollisionCheck()
+        private void BoundaryCreator()
         {
-            foreach (var gameObject in GetCollisions())
-            {
-                if (gameObject is Polygon)
-                {
-                    gameObject.Destroy();
-                }
-            }
+            // y = Utils.Clamp(y, height/2, game.height/2 - height/2);
+            // x = Utils.Clamp(x, width / 2, game.width / 2 - width / 2);
+            float border = 1;
+            _leftXBoundary = border;
+            _rightXBoundary = width - border;
+            _topYBoundary = border;
+
+            CreateVisualXBoundary(_leftXBoundary);
+            CreateVisualXBoundary(_rightXBoundary);
+            CreateVisualYBoundary(_topYBoundary);
+
         }
+        private void CreateVisualXBoundary(float xBoundary)
+        {
+            AddChild(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
+        }
+
+        private void CreateVisualYBoundary(float yBoundary)
+        {
+            AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
+        }
+
+        private void ReflectBallBack(bool leftHit, bool righyHit, bool topHit)
+        {
+            if (leftHit)
+            {
+                _ball.Position.x = _leftXBoundary + _ball.Radius;
+                _ball.Velocity.SetXY(_ball.Velocity.x, _ball.Velocity.y);
+            }
+            if (righyHit)
+            {
+                _ball.Position.x = _rightXBoundary - _ball.Radius;
+                _ball.Velocity.SetXY(_ball.Velocity.x, _ball.Velocity.y);
+            }
+            if (topHit)
+            {
+                _ball.Position.y = _topYBoundary + _ball.Radius;
+                _ball.Velocity.SetXY(_ball.Velocity.x, -_ball.Velocity.y);
+            }
+
+        }
+
+        private void CheckBallCollisons()
+        {
+            var leftHit = _ball.Position.x - _ball.Radius < _leftXBoundary - _ball.Velocity.x;
+            var rightHit = _ball.Position.x + _ball.Radius > _rightXBoundary - _ball.Velocity.x;
+            var topHit = _ball.Position.y - _ball.Radius < _topYBoundary - _ball.Velocity.y;
+
+            ReflectBallBack(leftHit, rightHit, topHit);
+        }
+
     }
 }
