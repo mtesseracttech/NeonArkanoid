@@ -18,10 +18,7 @@ namespace GXPEngine
 		 * Note the Color? this means that pColor can be null (which is not possible normally for structs since they are value types).
 		 */
 
-        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null,
-            bool physics = false,
-            Color? pColor = null)
-            : base(pRadius*2, pRadius*2)
+        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null, bool physics = false, Color? pColor = null) : base(pRadius*2, pRadius*2)
         {
             Physics = physics;
             radius = pRadius;

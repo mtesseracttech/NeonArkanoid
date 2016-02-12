@@ -1,8 +1,13 @@
-﻿using System;
+﻿
+using System;
 using System.Drawing;
 using GXPEngine.Utility;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Core;
+using NeonArkanoid.GXPEngine.OpenGL;
 using NeonArkanoid.Utility;
+
+
 
 namespace NeonArkanoid.Physics
 {
@@ -10,24 +15,26 @@ namespace NeonArkanoid.Physics
     {
         private uint _color;
         private Vec2[] _points;
-        private string _id;
+        private int _id;
         private Level.Level _level;
         private LineSegment[] _lines;
         private float _realPosX;
         private float _realPosY;
-        
-        
-        public Polygon(Vec2[] points, uint color, Level.Level level, float realPosX, float realPosY)
+
+
+
+        public Polygon(Vec2[] points, uint color, Level.Level level, int id, float realPosX, float realPosY)
         {
             _points = points;
-            _level = level;
-            _color = color;
             _realPosX = realPosX;
             _realPosY = realPosY;
+            _level = level;
+            _color = color;
+            _id = id;
             DrawOnCanvas();
             _lines = new LineSegment[_points.Length];
             CreateLines();
-            foreach (var line in _lines) AddChild(line);
+            foreach (var line in _lines) _level.AddChild(line);
         }
 
         public void DrawOnCanvas()
@@ -35,7 +42,7 @@ namespace NeonArkanoid.Physics
             PointF[] pointFs = new PointF[_points.Length];
             for (int i = 0; i < _points.Length; i++)
             {
-                pointFs[i] = _points[i].Vec2toPointF();
+                pointFs[i] = _points[i].Vec2ToPointF();
                 pointFs[i].X += _realPosX;
                 pointFs[i].Y += _realPosY;
             }
@@ -46,25 +53,35 @@ namespace NeonArkanoid.Physics
 
         private void CreateLines()
         {
-            for (var i = 0; i < _points.Length; i++)
+            Vec2[] relativePoints = new Vec2[_points.Length];
+            for (int i = 0; i < _points.Length; i++)
             {
-                if (i < _points.Length - 1)
+                relativePoints[i] = new Vec2();
+                relativePoints[i].x = _points[i].x + _realPosX;
+                relativePoints[i].y = _points[i].y + _realPosY;
+            }
+            for (var i = 0; i < relativePoints.Length; i++)
+            {
+                if (i < relativePoints.Length - 1)
                 {
-                    Console.WriteLine("Creating Line " + i + " with coords: " + _points[i] + _points[i + 1]);
-                    _lines[i] = new LineSegment(_points[i], _points[i + 1], this, _color);
+                    Console.WriteLine("Creating Line " + i + " with coords: " + relativePoints[i] + relativePoints[i + 1]);
+                    _lines[i] = new LineSegment(relativePoints[i], relativePoints[i + 1], this, _color);
                     if(!UtilitySettings.DebugMode) _lines[i].Color = 0x00000000;
 
                 }
                 else
                 {
-                    Console.WriteLine("Creating Line " + i + " with coords: " + _points[_points.Length - 1] + _points[0]);
-                    _lines[i] = new LineSegment(_points[_points.Length - 1], _points[0], this, _color);
+                    Console.WriteLine("Creating Line " + i + " with coords: " + relativePoints[relativePoints.Length - 1] + relativePoints[0]);
+                    _lines[i] = new LineSegment(relativePoints[relativePoints.Length - 1], relativePoints[0], this, _color);
                     if (!UtilitySettings.DebugMode) _lines[i].Color = 0x00000000;
                 }
             }
         }
-        
-        
+
+        public LineSegment[] GetLines()
+        {
+            return _lines;
+        }
 
         public string GetPoints()
         {
@@ -79,6 +96,14 @@ namespace NeonArkanoid.Physics
         public void RemovePoly()
         {
             _level.RemovePoly(this);
+        }
+
+        protected override void RenderSelf(GLContext glContext)
+        {
+            GL.Vertex2f(_points[0].x, _points[0].y);
+            GL.Vertex2f(_points[1].x, _points[1].y);
+            GL.Vertex2f(_points[2].x, _points[2].y);
+            GL.End();
         }
     }
 }

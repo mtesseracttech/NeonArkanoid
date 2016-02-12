@@ -1,7 +1,6 @@
 ﻿using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Utility;
-using NeonArkanoid.UI.Menu;
 using System.Drawing;
 
 namespace NeonArkanoid.UI.Menu

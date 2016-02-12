@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Drawing;
-using NeonArkanoid.GXPEngine;
 
 namespace NeonArkanoid.Physics
 {
     public class Vec2
     {
-        public static Vec2 zero { get { return new Vec2(0, 0); } }
+        public static Vec2 temp = new Vec2();
 
-        public float x = 0;
-        public float y = 0;
+        public float x;
+        public float y;
 
         public Vec2(float pX = 0, float pY = 0)
         {
@@ -17,9 +16,14 @@ namespace NeonArkanoid.Physics
             y = pY;
         }
 
+        public static Vec2 zero
+        {
+            get { return new Vec2(0, 0); }
+        }
+
         public override string ToString()
         {
-            return String.Format("({0}, {1})", x, y);
+            return string.Format("({0}, {1})", x, y);
         }
 
         public Vec2 Add(Vec2 other)
@@ -36,83 +40,88 @@ namespace NeonArkanoid.Physics
             return this;
         }
 
-        public Vec2 Scale(float scale)
-        {
-            x *= scale;
-            y *= scale;
-            return this;
-        }
-
         public float Length()
         {
-            float lengthSquared = ((x*x) + (y*y));
-            if (lengthSquared != 0f) return Mathf.Sqrt(lengthSquared);
-            /**
-            return (float)Math.Sqrt(x * x + y * y);
-            /**/
-            return 0f;
+            return (float) Math.Sqrt(x*x + y*y);
         }
 
         public Vec2 Normalize()
         {
-            float length = Length();
-            if (length != 0f)
+            if (x == 0 && y == 0)
             {
-                x /= length;
-                y /= length;
+                return this;
             }
-            return this;
+            return Scale(1/Length());
         }
-
-        public Vec2 Normal()
-        {
-            return new Vec2(-y, x).Normalize();
-        }
-
-        public float Dot(Vec2 b)
-        {
-            return ((this.x * b.x) + (this.y * b.y));
-        }
-
-        public Vec2 Reflect(Vec2 normal, float bounciness = 1)
-        {
-            float vectorPartLenght = Dot(normal);
-            Vec2 projectedVector = normal.Clone().Scale(vectorPartLenght);
-            return this.Subtract(normal.Clone().Scale((1 + bounciness) * this.Dot(normal)));
-        }
-
 
         public Vec2 Clone()
         {
             return new Vec2(x, y);
         }
 
-        public void SetXY(float x, float y)
+        public Vec2 Zero()
         {
-            this.x = x;
-            this.y = y;
+            x = y = 0;
+            return this;
         }
 
-        public PointF Vec2toPointF()
+        public Vec2 Scale(float scalar)
         {
-            return new PointF(x, y);
+            x *= scalar;
+            y *= scalar;
+            return this;
+        }
+
+        public Vec2 Set(float pX, float pY)
+        {
+            x = pX;
+            y = pY;
+            return this;
+        }
+
+        public Vec2 SetVec(Vec2 vec)
+        {
+            x = vec.x;
+            y = vec.y;
+            return this;
+        }
+
+        public Vec2 Normal()
+        {
+            if (x == 0 && y == 0)
+            {
+                return this;
+            }
+            return new Vec2(-y, x).Scale(1/Length());
+        }
+
+        public float Dot(Vec2 other)
+        {
+            return x*other.x + y*other.y;
+        }
+
+        public Vec2 Reflect(Vec2 normal, float bounciness)
+        {
+            var vectorPartLength = Dot(normal);
+            var projectedVector = normal.Clone().Scale(vectorPartLength);
+            return Subtract(projectedVector.Scale(1 + bounciness));
         }
 
         //angles and rotation
 
         public Vec2 SetAngleRadians(float radians)
         {
-            float radius = Length();
-            y = radians * (float)Math.Sin(radians);
-            x = radius * (float)Math.Cos(radians);
+            var radius = Length();
+            y = radius*(float) Math.Sin(radians);
+            x = radius*(float) Math.Cos(radians);
             return this;
         }
 
         public Vec2 SetAngleDegrees(float degrees)
         {
-            float radius = Length();
-            x = radius * (float)Math.Cos(degrees * (float)Math.PI / 180);
-            y = radius * (float)Math.Sin(degrees * (float)Math.PI / 180);
+            var radius = Length();
+            x = radius*(float) Math.Cos(degrees*(float) Math.PI/180);
+            y = radius*(float) Math.Sin(degrees*(float) Math.PI/180);
             return this;
         }
 
@@ -120,44 +129,50 @@ namespace NeonArkanoid.Physics
         {
             return Math.Atan2(y, x);
         }
+
         public double GetAngleDegrees()
         {
-            return Math.Atan2(y, x) * 180 / Math.PI;
+            return Math.Atan2(y, x)*180/Math.PI;
         }
 
         public Vec2 RotateRadians(float radians)
         {
-            float x1 = x * (float)Math.Cos(radians) - y * (float)Math.Sin(radians);
-            float y1 = x * (float)Math.Sin(radians) - y * (float)Math.Cos(radians);
+            var x1 = x*(float) Math.Cos(radians) - y*(float) Math.Sin(radians);
+            var y1 = x*(float) Math.Sin(radians) - y*(float) Math.Cos(radians);
             x = x1;
             y = y1;
             return this;
         }
+
         public Vec2 RotateDegrees(float degrees)
         {
-            float rad = degrees * (float)Math.PI / 180;
-            float x1 = x * (float)Math.Cos(rad) - y * (float)Math.Sin(rad);
-            float y1 = x * (float)Math.Sin(rad) - y * (float)Math.Cos(rad);
+            var rad = degrees*(float) Math.PI/180;
+            var x1 = x*(float) Math.Cos(rad) - y*(float) Math.Sin(rad);
+            var y1 = x*(float) Math.Sin(rad) - y*(float) Math.Cos(rad);
             x = x1;
             y = y1;
             return this;
         }
+
         public Vec2 FromPolarDegrees(float degrees)
         {
-            float radius = Length();
-            x = radius * (float)Math.Cos(degrees * (float)Math.PI / 180);
-            y = radius * (float)Math.Sin(degrees * (float)Math.PI / 180);
+            var radius = Length();
+            x = radius*(float) Math.Cos(degrees*(float) Math.PI/180);
+            y = radius*(float) Math.Sin(degrees*(float) Math.PI/180);
             return this;
         }
+
         public Vec2 FromPolarRadians(float radians)
         {
-            float radius = Length();
-            x = radius * (float)Math.Sin(radians);
-            y = radius * (float)Math.Cos(radians);
+            var radius = Length();
+            y = radius*(float) Math.Sin(radians);
+            x = radius*(float) Math.Cos(radians);
             return this;
         }
 
-
+        public PointF Vec2ToPointF()
+        {
+            return new PointF(x, y);
+        }
     }
 }
-

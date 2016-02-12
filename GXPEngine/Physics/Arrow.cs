@@ -1,4 +1,5 @@
-﻿using NeonArkanoid.GXPEngine;
+﻿using GXPEngine;
+using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Core;
 
 namespace NeonArkanoid.Physics
