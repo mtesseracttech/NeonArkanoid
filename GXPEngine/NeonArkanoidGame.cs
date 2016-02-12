@@ -1,7 +1,5 @@
 using System;
-using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
-using NeonArkanoid.Level;
 using NeonArkanoid.UI.Menu;
 
 namespace NeonArkanoid
@@ -37,6 +35,10 @@ namespace NeonArkanoid
                 case "MainMenu":
                     _menu.StopMusic();
                     _menu.Destroy();
+                    break;
+                case "Level1":
+                    _level.Destroy();
+                    _level = null;
                     break;
             }
         }

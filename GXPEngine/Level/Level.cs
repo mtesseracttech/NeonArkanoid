@@ -1,49 +1,42 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.Linq;
+using GXPEngine;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
-using NeonArkanoid.GXPEngine.Managers;
 using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Physics;
 using TiledParser;
-using System.Drawing.Drawing2D;
-using NeonArkanoid.GXPEngine.Utils;
-using NeonArkanoid.Utility;
-using System.Drawing;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
 namespace NeonArkanoid.Level
 {
     internal class Level : Canvas
     {
+        private Ball _ball;
+        private readonly NeonArkanoidGame _game;
+        private readonly string _levelName; //useless for now
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
-        private string _levelName; //useless for now
-        private NeonArkanoidGame _game;
-        private Ball _ball;
-
-        private float maxspeed = 3f;
-        private LineSegment _lineA;
-
-        private float _leftXBoundary;
-        private float _rightXBoundary;
-        private float _topYBoundary;
+        private Arrow ballArrow;
+        private readonly float maxspeed = 5;
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
-            graphics.SmoothingMode = SmoothingMode.HighQuality;
-            BoundaryCreator();
+            _levelName = filename.Remove(filename.Length - 4);
+            Console.WriteLine(_levelName);
             _game = game;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
 
-            //_tilesheetName = _map.TileSet.Image.Source;
-
             for (var i = 0; i < _map.ObjectGroup.Length; i++)
             {
-                if (_map.ObjectGroup[i].Name.ToLower() == "polygons")
+                if (_map.ObjectGroup[i].Name.ToLower() == "polygons" || _map.ObjectGroup[i].Name.ToLower() == "polygon")
                 {
                     _polyList = new List<Polygon>();
                     CreatePolygons(_map.ObjectGroup[i]);
@@ -54,20 +47,46 @@ namespace NeonArkanoid.Level
                 AddChild(polygon);
             }
 
-            _lineA = new LineSegment(Vec2.zero,Vec2.zero, 0x00000000, 2, true);
-            AddChild(_lineA);
-
-            _ball = new Ball(30, new Vec2(400, 400),null, Color.BlueViolet);
+            _ball = new Ball(30, new Vec2(game.width/2, game.height/2));
             AddChild(_ball);
-
         }
 
         public void Update()
         {
-            BallMovement();
-            
+
+
+            if (Input.GetKey(Key.UP)) _ball.y--;
+            if (Input.GetKey(Key.DOWN)) _ball.y++;
+            if (Input.GetKey(Key.LEFT)) _ball.x--;
+            if (Input.GetKey(Key.RIGHT)) _ball.x++;
+            if (Input.GetKeyDown(Key.R))
+            {
+                if (_polyList.Count > 0)
+                {
+                    RemovePolyAt(0);
+                }
+            }
+            if (Input.GetKeyDown(Key.T))
+            {
+                _game.SetState("Level1", true);
+            }
+
+        // LimitBallSpeed();
+
+            //Applying Acceleration in For loop, so collision system will be less likely to mess up
+            //for (int i = 0; i < _ball.Acceleration.Length(); i++) _ball.Velocity.Add(_ball.Acceleration.Clone().Normalize());
+
+           // for (int i = 0; i < _ball.Gravity.Length(); i++) _ball.Velocity.Add(_ball.Gravity);
         }
-        
+
+        private void LimitBallSpeed()
+        {
+            if (_ball.Velocity.x > maxspeed) _ball.Velocity.x = maxspeed;
+            if (_ball.Velocity.x < -maxspeed) _ball.Velocity.x = -maxspeed;
+            if (_ball.Velocity.y > maxspeed) _ball.Velocity.y = maxspeed;
+            if (_ball.Velocity.y < -maxspeed) _ball.Velocity.y = -maxspeed;
+        }
+
         private void CreatePolygons(ObjectGroup objectGroup)
         {
             foreach (var tiledObject in objectGroup.TiledObjects)
@@ -91,7 +110,7 @@ namespace NeonArkanoid.Level
                         {
                             if (property.Property.Name.ToLower() == "colour")
                             {
-                                List<char> chars = property.Property.Value.ToLower().ToCharArray().ToList();
+                                var chars = property.Property.Value.ToLower().ToCharArray().ToList();
                                 chars.Insert(2, 'f');
                                 chars.Insert(2, 'f');
                                 //string polyString = new string(chars.ToArray());
@@ -106,20 +125,33 @@ namespace NeonArkanoid.Level
                 }
             }
         }
+
+        public void RemovePoly(Polygon poly)
+        {
+            poly.Destroy();
+            _polyList.Remove(poly);
+            Redraw();
+        }
+
+        public void RemovePolyAt(int index)
+        {
+            _polyList[index].Destroy();
+            _polyList.RemoveAt(index);
+            Redraw();
+        }
+
+        public void Redraw()
+        {
+            graphics.Clear(Color.Black);
+            foreach (var polygon in _polyList)
+            {
+                polygon.DrawOnCanvas();
+            }
+        }
+
         /*
         void lineCollisionTest(LineSegment line)
         {
-            int type = 0;
-
-            if (line.color == 0xffffff00)
-            {
-                type = 1;
-            }
-            else if (line.color == 0xffff0000)
-            {
-                type = 2;
-            }
-
             Vec2 lineVector = line.end.Clone().Sub(line.start);
             Vec2 lineVectorNormalized = lineVector.Clone().Normalize();
             Vec2 lineNormal = lineVector.Clone().Normal();
@@ -171,100 +203,9 @@ namespace NeonArkanoid.Level
         }
         */
 
-        public string GetLevelName ()
+        public string GetLevelName()
         {
             return _levelName;
         }
-
-        private void BoundaryCreator()
-        {
-            // y = Utils.Clamp(y, height/2, game.height/2 - height/2);
-            // x = Utils.Clamp(x, width / 2, game.width / 2 - width / 2);
-            float border = -1;
-            _leftXBoundary = border;
-            _rightXBoundary = width - border;
-            _topYBoundary = border;
-
-            CreateVisualXBoundary(_leftXBoundary);
-            CreateVisualXBoundary(_rightXBoundary);
-            CreateVisualYBoundary(_topYBoundary);
-
-        }
-
-        private void CreateVisualXBoundary(float xBoundary)
-        {
-            AddChild(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
-        }
-
-        private void CreateVisualYBoundary(float yBoundary)
-        {
-            AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
-        }
-
-        private void BallMovement()
-        {
-            _ball.x += maxspeed;
-            if (_ball.Velocity.x < -maxspeed)
-            {
-                _ball.Velocity.x = -maxspeed;
-            }
-            if (_ball.Velocity.x > maxspeed)
-            {
-                _ball.Velocity.x = maxspeed;
-            }
-            if (_ball.Velocity.y > maxspeed)
-            {
-                _ball.Velocity.y = maxspeed;
-            }
-            if (_ball.Velocity.y < -maxspeed)
-            {
-                _ball.Velocity.y = -maxspeed;
-            }
-
-
-            for (int i = 0; i < _ball._acceleration.Length(); i++)
-            {
-                _ball.Velocity.Add(_ball._acceleration.Clone().Normalize());
-            }
-            for (int g = 0; g < _ball.gravity.Length(); g++)
-            {
-                _ball.Velocity.Add(_ball.gravity);
-            }
-            
-            
-        }
-
-        private void CheckBallCollisons()
-        {
-            var leftHit = _ball.Position.x - _ball.Radius < _leftXBoundary - _ball.Velocity.x;
-            var rightHit = _ball.Position.x + _ball.Radius > _rightXBoundary - _ball.Velocity.x;
-            var topHit = _ball.Position.y - _ball.Radius < _topYBoundary - _ball.Velocity.y;
-
-            ReflectBallBack(leftHit, rightHit, topHit);
-        }
-
-        private void ReflectBallBack(bool leftHit, bool righyHit, bool topHit)
-        {
-            if (leftHit)
-            {
-                _ball.Position.x = _leftXBoundary + _ball.Radius;
-                _ball.Velocity.SetXY(_ball._velocity.x, _ball.Velocity.y);
-            }
-            if (righyHit)
-            {
-                _ball.Position.x = _rightXBoundary - _ball.Radius;
-                _ball.Velocity.SetXY(_ball._velocity.x, _ball.Velocity.y);
-            }
-            if (topHit)
-            {
-                _ball.Position.y = _topYBoundary + _ball.Radius;
-                _ball.Velocity.SetXY(_ball.Velocity.x, -_ball.Velocity.y);
-            }
-
-        }
-
-       
-
-
     }
 }
