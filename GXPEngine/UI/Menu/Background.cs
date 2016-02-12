@@ -6,9 +6,8 @@ using System.Drawing;
 
 namespace NeonArkanoid.UI.Menu
 {
-     public class Background : Sprite
+    public class Background : Sprite
     {
-        private float speed;
         private bool _flicker;
 
         public Background(string filename, bool flicker) : base(filename)
@@ -18,15 +17,15 @@ namespace NeonArkanoid.UI.Menu
             _flicker = flicker;
         }
 
-        void Update()
+        private void Update()
         {
+            
             if (_flicker)
             {
-                float r = Mathf.Abs(Mathf.Cos(Time.time / 100.0f));
-                float g = Mathf.Abs(Mathf.Cos(Time.time / 1000.0f));
-                float b = Mathf.Abs(Mathf.Cos(Time.time / 1900.0f));
-                color = (uint)(((int)(r * 300)) << 16 | ((int)(g * 300)) << 8 | ((int)(b * 300)));
-                speed += 1.0f;
+                float r = Mathf.Abs(Mathf.Sin(Time.time / 333*2));
+                float g = Mathf.Abs(Mathf.Sin(Time.time / 666*2));
+                float b = Mathf.Abs(Mathf.Sin(Time.time / 999*2));
+                color = (uint)(((int)(r * 255)) << 16 | ((int)(g * 255)) << 8 | ((int)(b * 255)));
             }
         }
     }

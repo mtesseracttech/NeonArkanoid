@@ -22,6 +22,7 @@ namespace NeonArkanoid.Level
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
         private readonly float maxspeed = 5;
+        private readonly Vec2 gravity = new Vec2(1, 0);
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
@@ -135,7 +136,6 @@ namespace NeonArkanoid.Level
             
             for (int i = 0; i < _ball.Velocity.Length(); i++)
             {
-
                 _ball.Position.Add(_ball.Velocity.Clone().Normalize());
                 _ball.x = _ball.Position.x;
                 _ball.y = _ball.Position.y;
