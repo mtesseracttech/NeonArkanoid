@@ -13,6 +13,7 @@ namespace NeonArkanoid.Physics
         public Vec2 End;
         public uint LineWidth;
         public Vec2 Start;
+        private GameObject _owner;
 
         //stay in this object's coordinate space or interpret vectors as screen coordinates?
         public bool UseGlobalCoords;
@@ -23,6 +24,16 @@ namespace NeonArkanoid.Physics
         {
         }
 
+        public LineSegment(Vec2 pStart, Vec2 pEnd, GameObject owner, uint pColor = 0xffffffff, uint pLineWidth = 1, bool pGlobalCoords = false)
+        {
+            _owner = owner;
+            Start = pStart;
+            End = pEnd;
+            Color = pColor;
+            LineWidth = pLineWidth;
+            UseGlobalCoords = pGlobalCoords;
+        }
+
         public LineSegment(Vec2 pStart, Vec2 pEnd, uint pColor = 0xffffffff, uint pLineWidth = 1,
             bool pGlobalCoords = false)
         {
@@ -31,6 +42,11 @@ namespace NeonArkanoid.Physics
             Color = pColor;
             LineWidth = pLineWidth;
             UseGlobalCoords = pGlobalCoords;
+        }
+
+        public GameObject GetOwner()
+        {
+            return _owner;
         }
 
         //------------------------------------------------------------------------------------------------------------------------

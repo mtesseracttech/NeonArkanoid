@@ -2,6 +2,7 @@
 using System.Drawing;
 using GXPEngine.Utility;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.Utility;
 
 namespace NeonArkanoid.Physics
 {
@@ -24,9 +25,9 @@ namespace NeonArkanoid.Physics
             _realPosX = realPosX;
             _realPosY = realPosY;
             DrawOnCanvas();
-            //_lines = new LineSegment[_points.Length];
-            //CreateLines();
-            //foreach (var line in _lines) AddChild(line);
+            _lines = new LineSegment[_points.Length];
+            CreateLines();
+            foreach (var line in _lines) AddChild(line);
         }
 
         public void DrawOnCanvas()
@@ -39,8 +40,8 @@ namespace NeonArkanoid.Physics
                 pointFs[i].Y += _realPosY;
             }
             Console.WriteLine("Drawing polygon at coords: " + _realPosX + "," + _realPosY);
-            _level.graphics.DrawPolygon(new Pen(ColorUtils.UIntToColor(_color)), pointFs);
-            _level.graphics.FillPolygon(new SolidBrush(ColorUtils.UIntToColor(_color)), pointFs);
+            if (!UtilitySettings.DebugMode) _level.graphics.DrawPolygon(new Pen(ColorUtils.UIntToColor(_color)), pointFs);
+            if (!UtilitySettings.DebugMode) _level.graphics.FillPolygon(new SolidBrush(ColorUtils.UIntToColor(_color)), pointFs);
         }
 
         private void CreateLines()
@@ -50,12 +51,15 @@ namespace NeonArkanoid.Physics
                 if (i < _points.Length - 1)
                 {
                     Console.WriteLine("Creating Line " + i + " with coords: " + _points[i] + _points[i + 1]);
-                    _lines[i] = new LineSegment(_points[i], _points[i + 1], _color);
+                    _lines[i] = new LineSegment(_points[i], _points[i + 1], this, _color);
+                    if(!UtilitySettings.DebugMode) _lines[i].Color = 0x00000000;
+
                 }
                 else
                 {
                     Console.WriteLine("Creating Line " + i + " with coords: " + _points[_points.Length - 1] + _points[0]);
-                    _lines[i] = new LineSegment(_points[_points.Length - 1], _points[0], _color);
+                    _lines[i] = new LineSegment(_points[_points.Length - 1], _points[0], this, _color);
+                    if (!UtilitySettings.DebugMode) _lines[i].Color = 0x00000000;
                 }
             }
         }
@@ -74,9 +78,7 @@ namespace NeonArkanoid.Physics
 
         public void RemovePoly()
         {
-            _level.RemoveFromPolyList(this);
-            _level.Redraw();
-            this.Destroy();
+            _level.RemovePoly(this);
         }
 
     }
