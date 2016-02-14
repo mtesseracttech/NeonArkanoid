@@ -2,7 +2,7 @@
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
 
-namespace GXPEngine
+namespace NeonArkanoid.Physics
 {
     public class Ball : Canvas
     {
@@ -13,8 +13,9 @@ namespace GXPEngine
         private Vec2 _position;
         private Vec2 _velocity;
         private AnimationSprite _spriteOverlay;
-
-        /**
+        float _currentFrame = 0;
+        private float _currentSpeed = 10f; // change the speed of animation
+         /**
 		 * Creates a ball with a radius, a start position, a start velocity, and optionally a color.
 		 * Note the Color? this means that pColor can be null (which is not possible normally for structs since they are value types).
 		 */
@@ -27,8 +28,9 @@ namespace GXPEngine
             Velocity = velocity;
             Acceleration = acceleration;
             _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 13, 1);
-            //AddChild(_spriteOverlay);
-
+            AddChild(_spriteOverlay);
+            //SetOrigin(width/2,height/2);
+            _spriteOverlay.SetXY(-170,-50);
 
 
             //?? means: assign pColor unless pColor is null then take Color.Blue instead
@@ -50,8 +52,15 @@ namespace GXPEngine
 
         void Update()
         {
-            if (_spriteOverlay.currentFrame <= _spriteOverlay.frameCount) _spriteOverlay.currentFrame++;
-            else _spriteOverlay.currentFrame = 0;
+
+            // if (_spriteOverlay.currentFrame <= _spriteOverlay.frameCount)
+            // {
+            //_spriteOverlay.currentFrame ++;
+            _currentFrame += _currentSpeed / 50;
+            _currentFrame %= _spriteOverlay.frameCount;
+            _spriteOverlay.SetFrame((int)_currentFrame);
+            //   }
+            //else _spriteOverlay.currentFrame = 0;
         }
 
         public Vec2 Gravity { get; }
