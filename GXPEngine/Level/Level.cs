@@ -144,10 +144,6 @@ namespace NeonArkanoid.Level
                     for (var p = 0; p < _polyList.Count; p++)
                     {
                         for (var l = 0; l < _polyList[p].GetLines().Length; l++) if (LineCollisionTest(_polyList[p].GetLines()[l])) break;
-                        //{
-                                //if (p > 0) p--; //THIS CODE IS TO MAKE SURE THE COLLISION DETECTION WONT RUN INTO EMPTY OBJECTS
-                                //else break;
-                        //}
                     }
             }
         }
@@ -173,9 +169,7 @@ namespace NeonArkanoid.Level
                     {
                         var owner = line.GetOwner() as Polygon;
                         owner.RemovePoly();
-                        return true;
                     }
-
                     var normal = difference.Clone().Normalize();
                     var separation = _ball.radius - difference.Length();
                     _ball.Position.Add(normal.Clone().Scale(separation));
