@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.Linq;
 using GXPEngine;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
@@ -16,13 +15,13 @@ namespace NeonArkanoid.Level
 {
     internal class Level : Canvas
     {
-        private Ball _ball;
+        private readonly Ball _ball;
         private readonly NeonArkanoidGame _game;
         private readonly string _levelName; //useless for now
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
-        private readonly float maxspeed = 5;
         private readonly Vec2 gravity = new Vec2(1, 0);
+        private readonly float maxspeed = 5;
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
@@ -81,7 +80,8 @@ namespace NeonArkanoid.Level
                                 polyColor = Convert.ToUInt32(property.Property.Value, 16) + 0xFF000000;
                             }
                         }
-                        var poly = new Polygon(vectorArray, polyColor, this, tiledObject.ID ,tiledObject.X, tiledObject.Y);
+                        var poly = new Polygon(vectorArray, polyColor, this, tiledObject.ID, tiledObject.X,
+                            tiledObject.Y);
                         poly.SetXY(tiledObject.X, tiledObject.Y);
                         _polyList.Add(poly);
                     }
@@ -133,64 +133,59 @@ namespace NeonArkanoid.Level
             }
 
             LimitBallSpeed();
-            
-            for (int i = 0; i < _ball.Velocity.Length(); i++)
+
+            for (var i = 0; i < _ball.Velocity.Length(); i++)
             {
                 _ball.Position.Add(_ball.Velocity.Clone().Normalize());
                 _ball.x = _ball.Position.x;
                 _ball.y = _ball.Position.y;
 
                 if (_polyList.Count > 0)
-                {
-                    for (int p = 0; p < _polyList.Count; p++)
+                    for (var p = 0; p < _polyList.Count; p++)
                     {
-                        for (int l = 0; l < _polyList[p].GetLines().Length; l++)
-                        {
-                            LineCollisionTest(_polyList[p].GetLines()[l]); //TODO LAST POLYGON IN GAME GIVES EXCEPTION, MOST LIKELY BECAUSE IT TRIES TO SCAN FOR AN ITEM WHILE THERE ARE NO MORE.
-                        }
+                        for (var l = 0; l < _polyList[p].GetLines().Length; l++) if (LineCollisionTest(_polyList[p].GetLines()[l])) break;
+                        //{
+                                //if (p > 0) p--; //THIS CODE IS TO MAKE SURE THE COLLISION DETECTION WONT RUN INTO EMPTY OBJECTS
+                                //else break;
+                        //}
                     }
-                }
             }
         }
 
-        void LineCollisionTest(LineSegment line)
+        private bool LineCollisionTest(LineSegment line)
         {
-            
-            Vec2 lineVector = line.End.Clone().Subtract(line.Start);
-            Vec2 lineVectorNormalized = lineVector.Clone().Normalize();
-            Vec2 lineNormal = lineVector.Clone().Normal();
-            float lineLength = lineVector.Length();
-            Vec2 ball2Line = _ball.Position.Clone().Subtract(line.Start);
-
-            float ballDistance = ball2Line.Dot(lineNormal);
+            var lineVector = line.End.Clone().Subtract(line.Start);
+            var lineVectorNormalized = lineVector.Clone().Normalize();
+            var lineNormal = lineVector.Clone().Normal();
+            var lineLength = lineVector.Length();
+            var ball2Line = _ball.Position.Clone().Subtract(line.Start);
+            var ballDistance = ball2Line.Dot(lineNormal);
             if (Math.Abs(ballDistance) < _ball.radius)
             {
-                
-                float ballDistanceAlongLine = ball2Line.Dot(lineVectorNormalized);
+                var ballDistanceAlongLine = ball2Line.Dot(lineVectorNormalized);
                 if (ballDistanceAlongLine < 0) ballDistanceAlongLine = 0;
-
                 if (ballDistanceAlongLine > lineLength) ballDistanceAlongLine = lineLength;
-
-                Vec2 closestPointOnLine = line.Start.Clone().Add(lineVectorNormalized.Scale(ballDistanceAlongLine));
-                Vec2 difference = _ball.Position.Clone().Subtract(closestPointOnLine);
-                Console.WriteLine((int)difference.Length());
+                var closestPointOnLine = line.Start.Clone().Add(lineVectorNormalized.Scale(ballDistanceAlongLine));
+                var difference = _ball.Position.Clone().Subtract(closestPointOnLine);
                 if (difference.Length() < _ball.radius)
                 {
                     if (line.GetOwner() is Polygon)
                     {
-                        Polygon owner = line.GetOwner() as Polygon;
+                        var owner = line.GetOwner() as Polygon;
                         owner.RemovePoly();
-                        
+                        return true;
                     }
-                    
-                    Vec2 normal = difference.Clone().Normalize();
-                    float separation = _ball.radius - difference.Length();
+
+                    var normal = difference.Clone().Normalize();
+                    var separation = _ball.radius - difference.Length();
                     _ball.Position.Add(normal.Clone().Scale(separation));
                     _ball.Velocity.Reflect(normal, 0.5f);
                     _ball.x = _ball.Position.x;
                     _ball.y = _ball.Position.y;
+                    return true;
                 }
             }
+            return false;
         }
 
         private void LimitBallSpeed()
@@ -200,7 +195,6 @@ namespace NeonArkanoid.Level
             if (_ball.Velocity.y > maxspeed) _ball.Velocity.y = maxspeed;
             if (_ball.Velocity.y < -maxspeed) _ball.Velocity.y = -maxspeed;
         }
-
 
 
         public string GetLevelName()

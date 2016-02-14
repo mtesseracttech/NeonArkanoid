@@ -12,6 +12,7 @@ namespace GXPEngine
         private Color _ballColor;
         private Vec2 _position;
         private Vec2 _velocity;
+        private AnimationSprite _spriteOverlay;
 
         /**
 		 * Creates a ball with a radius, a start position, a start velocity, and optionally a color.
@@ -25,6 +26,11 @@ namespace GXPEngine
             Position = position;
             Velocity = velocity;
             Acceleration = acceleration;
+            _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 13, 1);
+            //AddChild(_spriteOverlay);
+
+
+
             //?? means: assign pColor unless pColor is null then take Color.Blue instead
             //basically this is short for if (pColor == null) { _ballColor = Color.Blue} else { _ballColor = Color.Blue }
             //another short way to write this is _ballColor = (pColor == null?Color.Blue:pColor);
@@ -40,6 +46,12 @@ namespace GXPEngine
                 y = Position.y;
             }
             Step();
+        }
+
+        void Update()
+        {
+            if (_spriteOverlay.currentFrame <= _spriteOverlay.frameCount) _spriteOverlay.currentFrame++;
+            else _spriteOverlay.currentFrame = 0;
         }
 
         public Vec2 Gravity { get; }
