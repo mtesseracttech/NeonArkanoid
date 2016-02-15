@@ -7,7 +7,9 @@ using GXPEngine;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Utility;
 using NeonArkanoid.Physics;
+using NeonArkanoid.UI.Menu;
 using TiledParser;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
@@ -15,6 +17,7 @@ namespace NeonArkanoid.Level
 {
     internal class Level : Canvas
     {
+        private Background _background1;
         private readonly Ball _ball;
         private readonly NeonArkanoidGame _game;
         private readonly string _levelName; //useless for now
@@ -31,6 +34,7 @@ namespace NeonArkanoid.Level
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
+            
             BoundryCreator();
             
             _levelName = filename.Remove(filename.Length - 4);
@@ -125,6 +129,7 @@ namespace NeonArkanoid.Level
 
         public void Update()
         {
+            
             //--------BALL MOVEMENT-----------//
             if (Input.GetKey(Key.UP))_ball.Velocity.y--;
             else if (Input.GetKey(Key.DOWN))_ball.Velocity.y++;
@@ -239,6 +244,13 @@ namespace NeonArkanoid.Level
             AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
 
+        private void SetBackground()
+        {
+            _background1 = new Background(UtilStrings.SpritesMenu + "background4.jpg", true);
+            AddChild(_background1);
+
+
+        }
 
 
 

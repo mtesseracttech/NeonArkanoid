@@ -9,7 +9,7 @@ namespace NeonArkanoid.UI.Menu
     {
         private readonly Button[] _buttons;
         private readonly NeonArkanoidGame _game;
-        private Background _background;
+        private Background _background1, _background2, _background3;
         private Background _header;
          private readonly SoundChannel _musicChannel;
          private readonly Sound _selectedSound;
@@ -43,8 +43,16 @@ namespace NeonArkanoid.UI.Menu
         
         private void SetBackground()
         {
-            _background = new Background(UtilStrings.SpritesMenu + "background.png", true);
-            AddChild(_background);
+            _background1 = new Background(UtilStrings.SpritesMenu + "background1.jpg", true);
+            AddChild(_background1);
+            _background2 = new Background(UtilStrings.SpritesMenu + "background5.png", false);
+            AddChild(_background2);
+
+            _background3 = new Background(UtilStrings.SpritesMenu + "background3.png", true);
+            AddChild(_background3);
+
+
+
         }
 
         private void SetHeader()
@@ -53,7 +61,7 @@ namespace NeonArkanoid.UI.Menu
             _header.SetOrigin(_header.width/2, _header.height/2);
             _header.SetScaleXY(0.5f,0.5f);
             _header.SetXY(game.width/2 - 450, 150);
-            AddChild(_header);
+           // AddChild(_header);
         }
 
         private void Update()
