@@ -135,8 +135,8 @@ namespace NeonArkanoid.Level
             //-------------------------------//
 
             //--------Pedal MOVEMENT-----------//
-            if (Input.GetKey(Key.A)) _padel.Velocity.x--;
-            else if (Input.GetKey(Key.D)) _padel.Velocity.x++;
+            if (Input.GetKey(Key.A)) _padel.x -= 5f;
+            else if (Input.GetKey(Key.D)) _padel.x += 5f;
             //else _padel.Velocity.x = 0;
             //-------------------------------//
 
