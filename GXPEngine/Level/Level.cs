@@ -26,6 +26,8 @@ namespace NeonArkanoid.Level
         private readonly Vec2 gravity = new Vec2(1, 0);
         private readonly Padel _padel;
         private readonly float maxspeed = 5;
+        private bool _gameEnded;
+        private int _endTimer;
 
         private float _leftXBoundary;
         private float _rightXBoundary;
@@ -34,7 +36,7 @@ namespace NeonArkanoid.Level
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
-            
+            _gameEnded = false;
             _levelName = filename.Remove(filename.Length - 4);
             Console.WriteLine(_levelName);
             _game = game;
@@ -63,6 +65,7 @@ namespace NeonArkanoid.Level
             AddChild(_padel);
         }
 
+
         private void CreatePolygons(ObjectGroup objectGroup)
         {
             foreach (var tiledObject in objectGroup.TiledObjects)
@@ -84,7 +87,7 @@ namespace NeonArkanoid.Level
                     {
                         foreach (var property in tiledObject.Properties)
                         {
-                            if (property.Property.Name.ToLower() == "colour")
+                            if (property.Property.Name.ToLower() == "colour" || property.Property.Name.ToLower() == "color")
                             {
                                 //var chars = property.Property.Value.ToLower().ToCharArray().ToList();
                                 //chars.Insert(2, 'f');
@@ -127,48 +130,57 @@ namespace NeonArkanoid.Level
 
         public void Update()
         {
-            
-            //--------BALL MOVEMENT-----------//
-            if (Input.GetKey(Key.UP))_ball.Velocity.y--;
-            else if (Input.GetKey(Key.DOWN))_ball.Velocity.y++;
-            else _ball.Velocity.y = 0;
-
-            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x--;
-            else if (Input.GetKey(Key.RIGHT))  _ball.Velocity.x++;
-            else _ball.Velocity.x = 0;
-            //-------------------------------//
-
-            //--------Pedal MOVEMENT-----------//
-            if (Input.GetKey(Key.A)) _padel.x -= 5f;
-            else if (Input.GetKey(Key.D)) _padel.x += 5f;
-            //-------------------------------//
-
-            if (Input.GetKeyDown(Key.R))
+            if (_polyList.Count > 0)
             {
-                if (_polyList.Count > 0)
+                Controls();
+                LimitBallSpeed();
+
+                for (var i = 0; i < _ball.Velocity.Length(); i++)
                 {
-                    RemovePolyAt(0);
+                    _ball.Position.Add(_ball.Velocity.Clone().Normalize());
+                    _ball.Step();
+
+                    if (_polyList.Count > 0)
+                        for (var p = 0; p < _polyList.Count; p++)
+                        {
+                            for (var l = 0; l < _polyList[p].GetLines().Length; l++)
+                            {
+                                bool collision = LineCollisionTest(_polyList[p].GetLines()[l]);
+                                if (collision) break;
+                            }
+                        }
                 }
             }
-            if (Input.GetKeyDown(Key.T))
+            else
             {
-                _game.SetState("Level1", true);
+                EndRound();
             }
+            
+        }
 
-            LimitBallSpeed();
-
-            for (var i = 0; i < _ball.Velocity.Length(); i++)
+        private void EndRound()
+        {
+            if (_gameEnded == false)
             {
-                _ball.Position.Add(_ball.Velocity.Clone().Normalize());
-                _ball.x =  _ball.Position.x;
-                _ball.y = _ball.Position.y;
-
-                if (_polyList.Count > 0)
-                    for (var p = 0; p < _polyList.Count; p++)
-                    {
-                        for (var l = 0; l < _polyList[p].GetLines().Length; l++) if (LineCollisionTest(_polyList[p].GetLines()[l])) break;
-                    }
+                _endTimer = Time.now;
+                _gameEnded = true;
             }
+            if (_gameEnded && _endTimer + 1000 < Time.now) _game.SetState("MainMenu");
+        }
+
+        private void Controls()
+        {
+            if (Input.GetKey(Key.UP)) _ball.Velocity.y = -1;
+            else if (Input.GetKey(Key.DOWN)) _ball.Velocity.y = 1;
+            else _ball.Velocity.y = 0;
+
+            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x = -1;
+            else if (Input.GetKey(Key.RIGHT)) _ball.Velocity.x = 1;
+            else _ball.Velocity.x = 0;
+
+            if (Input.GetKeyDown(Key.R)) if (_polyList.Count > 0) RemovePolyAt(0);
+
+            if (Input.GetKeyDown(Key.T)) _game.SetState("Level1", true);
         }
 
         private bool LineCollisionTest(LineSegment line)
@@ -177,11 +189,11 @@ namespace NeonArkanoid.Level
             var lineVectorNormalized = lineVector.Clone().Normalize();
             var lineNormal = lineVector.Clone().Normal();
             var lineLength = lineVector.Length();
-            var ball2Line = _ball.Position.Clone().Subtract(line.Start);
-            var ballDistance = ball2Line.Dot(lineNormal);
+            var ballToLine = _ball.Position.Clone().Subtract(line.Start);
+            var ballDistance = ballToLine.Dot(lineNormal);
             if (Math.Abs(ballDistance) < _ball.radius)
             {
-                var ballDistanceAlongLine = ball2Line.Dot(lineVectorNormalized);
+                var ballDistanceAlongLine = ballToLine.Dot(lineVectorNormalized);
                 if (ballDistanceAlongLine < 0) ballDistanceAlongLine = 0;
                 if (ballDistanceAlongLine > lineLength) ballDistanceAlongLine = lineLength;
                 var closestPointOnLine = line.Start.Clone().Add(lineVectorNormalized.Scale(ballDistanceAlongLine));
@@ -197,8 +209,7 @@ namespace NeonArkanoid.Level
                     var separation = _ball.radius - difference.Length();
                     _ball.Position.Add(normal.Clone().Scale(separation));
                     _ball.Velocity.Reflect(normal, 0.5f);
-                    _ball.x = _ball.Position.x;
-                    _ball.y = _ball.Position.y;
+                    _ball.Step();
                     return true;
                 }
             }
