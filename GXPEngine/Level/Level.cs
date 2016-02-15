@@ -21,9 +21,15 @@ namespace NeonArkanoid.Level
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
         private readonly Vec2 gravity = new Vec2(1, 0);
+        private readonly Padel _padel;
         private readonly float maxspeed = 5;
         private bool _gameEnded;
         private int _endTimer;
+
+        private float _leftXBoundary;
+        private float _rightXBoundary;
+        private float _topYBoundary;
+        private float _bottomYBoundary;
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
@@ -49,8 +55,11 @@ namespace NeonArkanoid.Level
                 AddChild(polygon);
             }
 
-            _ball = new Ball(30, new Vec2(game.width/4, game.height/4));
+            _ball = new Ball(30, new Vec2(game.width/2, game.height/2));
             AddChild(_ball);
+
+            _padel = new Padel(new Vec2(game.width/2, 700));
+            AddChild(_padel);
         }
 
 
@@ -119,6 +128,22 @@ namespace NeonArkanoid.Level
         public void Update()
         {
             if (_polyList.Count > 0)
+            //--------BALL MOVEMENT-----------//
+            if (Input.GetKey(Key.UP))_ball.Velocity.y--;
+            else if (Input.GetKey(Key.DOWN))_ball.Velocity.y++;
+            else _ball.Velocity.y = 0;
+
+            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x--;
+            else if (Input.GetKey(Key.RIGHT))  _ball.Velocity.x++;
+            else _ball.Velocity.x = 0;
+            //-------------------------------//
+
+            //--------Pedal MOVEMENT-----------//
+            if (Input.GetKey(Key.A)) _padel.x -= 5f;
+            else if (Input.GetKey(Key.D)) _padel.x += 5f;
+            //-------------------------------//
+
+            if (Input.GetKeyDown(Key.R))
             {
                 Controls();
                 LimitBallSpeed();
@@ -154,6 +179,15 @@ namespace NeonArkanoid.Level
             {
                 _endTimer = Time.now;
                 _gameEnded = true;
+                _ball.Position.Add(_ball.Velocity.Clone().Normalize());
+                _ball.x =  _ball.Position.x;
+                _ball.y = _ball.Position.y;
+
+                if (_polyList.Count > 0)
+                    for (var p = 0; p < _polyList.Count; p++)
+                    {
+                        for (var l = 0; l < _polyList[p].GetLines().Length; l++) if (LineCollisionTest(_polyList[p].GetLines()[l])) break;
+                    }
             }
             if (_gameEnded && _endTimer + 1000 < Time.now) _game.SetState("MainMenu");
         }
@@ -214,10 +248,37 @@ namespace NeonArkanoid.Level
             if (_ball.Velocity.y < -maxspeed) _ball.Velocity.y = -maxspeed;
         }
 
-
         public string GetLevelName()
         {
             return _levelName;
         }
+
+        public void BoundryCreator()
+        {
+            float border = 1;
+            _leftXBoundary = border;
+            _rightXBoundary = width - border;
+            _topYBoundary = border;
+            _bottomYBoundary = height - border;
+
+            CreateVisualXBoundary(_leftXBoundary);
+            CreateVisualXBoundary(_rightXBoundary);
+            CreateVisualYBoundary(_topYBoundary);
+            CreateVisualYBoundary(_bottomYBoundary);
+        }
+
+        private void CreateVisualXBoundary(float xBoundary)
+        {
+            AddChild(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
+        }
+
+        private void CreateVisualYBoundary(float yBoundary)
+        {
+            AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
+        }
+
+
+
+
     }
 }

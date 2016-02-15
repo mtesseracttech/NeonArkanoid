@@ -3,35 +3,46 @@ using System.Drawing;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
 
-namespace GXPEngine
+namespace NeonArkanoid.Physics
 {
     public class Ball : Canvas
     {
         //public but still readonly, can only be assigned once and cannot be overwritten after this
         public readonly int radius;
+
         private Vec2 _acceleration;
         private Color _ballColor;
         private Vec2 _position;
         private Vec2 _velocity;
-        private AnimationSprite _spriteOverlay;
 
-        /**
+        private AnimationSprite _spriteOverlay;
+        float _currentFrame = 0;
+        private float _currentSpeed = 10f; // change the speed of animation
+         /**
 		 * Creates a ball with a radius, a start position, a start velocity, and optionally a color.
 		 * Note the Color? this means that pColor can be null (which is not possible normally for structs since they are value types).
 		 */
 
-        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null, bool physics = false, Color? pColor = null) : base(pRadius*2, pRadius*2)
+        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null, bool 
+            physics = false, Color? pColor = null) 
+            : base(pRadius*2, pRadius*2)
         {
             Physics = physics;
             radius = pRadius;
             Position = position;
             Velocity = velocity;
             Acceleration = acceleration;
+<<<<<<< HEAD
             _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball1.png", 1, 1); //Temp sprite until the actual sprite is fixed
             _spriteOverlay.SetOrigin(_spriteOverlay.width/2, _spriteOverlay.height/2);
             Console.WriteLine(_spriteOverlay.x + "," + _spriteOverlay.y);
             AddChild(_spriteOverlay);
+=======
+>>>>>>> origin/dev
 
+            _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 13, 1);
+            AddChild(_spriteOverlay);
+            _spriteOverlay.SetXY(-170,-50);
 
 
             //?? means: assign pColor unless pColor is null then take Color.Blue instead
@@ -53,8 +64,15 @@ namespace GXPEngine
 
         void Update()
         {
-            if (_spriteOverlay.currentFrame <= _spriteOverlay.frameCount) _spriteOverlay.currentFrame++;
-            else _spriteOverlay.currentFrame = 0;
+
+            // if (_spriteOverlay.currentFrame <= _spriteOverlay.frameCount)
+            // {
+            //_spriteOverlay.currentFrame ++;
+            _currentFrame += _currentSpeed / 50;
+            _currentFrame %= _spriteOverlay.frameCount;
+            _spriteOverlay.SetFrame((int)_currentFrame);
+            //   }
+            //else _spriteOverlay.currentFrame = 0;
         }
 
         public Vec2 Gravity { get; }
