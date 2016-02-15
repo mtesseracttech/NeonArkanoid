@@ -8,10 +8,12 @@ namespace NeonArkanoid.Physics
     {
         //public but still readonly, can only be assigned once and cannot be overwritten after this
         public readonly int radius;
+
         private Vec2 _acceleration;
         private Color _ballColor;
         private Vec2 _position;
         private Vec2 _velocity;
+
         private AnimationSprite _spriteOverlay;
         float _currentFrame = 0;
         private float _currentSpeed = 10f; // change the speed of animation
@@ -20,16 +22,18 @@ namespace NeonArkanoid.Physics
 		 * Note the Color? this means that pColor can be null (which is not possible normally for structs since they are value types).
 		 */
 
-        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null, bool physics = false, Color? pColor = null) : base(pRadius*2, pRadius*2)
+        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null, bool 
+            physics = false, Color? pColor = null) 
+            : base(pRadius*2, pRadius*2)
         {
             Physics = physics;
             radius = pRadius;
             Position = position;
             Velocity = velocity;
             Acceleration = acceleration;
+
             _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 13, 1);
             AddChild(_spriteOverlay);
-            //SetOrigin(width/2,height/2);
             _spriteOverlay.SetXY(-170,-50);
 
 

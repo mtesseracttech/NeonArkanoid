@@ -129,6 +129,7 @@ namespace NeonArkanoid.Level
             if (Input.GetKey(Key.UP))_ball.Velocity.y--;
             else if (Input.GetKey(Key.DOWN))_ball.Velocity.y++;
             else _ball.Velocity.y = 0;
+
             if (Input.GetKey(Key.LEFT)) _ball.Velocity.x--;
             else if (Input.GetKey(Key.RIGHT))  _ball.Velocity.x++;
             else _ball.Velocity.x = 0;
@@ -137,7 +138,6 @@ namespace NeonArkanoid.Level
             //--------Pedal MOVEMENT-----------//
             if (Input.GetKey(Key.A)) _padel.x -= 5f;
             else if (Input.GetKey(Key.D)) _padel.x += 5f;
-            //else _padel.Velocity.x = 0;
             //-------------------------------//
 
             if (Input.GetKeyDown(Key.R))
@@ -238,8 +238,6 @@ namespace NeonArkanoid.Level
         {
             AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
-
-        
 
 
 
