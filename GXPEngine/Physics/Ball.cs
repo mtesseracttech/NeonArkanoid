@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
 
@@ -26,8 +27,10 @@ namespace GXPEngine
             Position = position;
             Velocity = velocity;
             Acceleration = acceleration;
-            _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 13, 1);
-            //AddChild(_spriteOverlay);
+            _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball1.png", 1, 1); //Temp sprite until the actual sprite is fixed
+            _spriteOverlay.SetOrigin(_spriteOverlay.width/2, _spriteOverlay.height/2);
+            Console.WriteLine(_spriteOverlay.x + "," + _spriteOverlay.y);
+            AddChild(_spriteOverlay);
 
 
 
