@@ -6,25 +6,27 @@ namespace NeonArkanoid.Physics
     public class Padel : AnimSprite
     {
         private Vec2 _position;
-        private LineSegment _line;
+        private LineSegment _line1;
+        public LineSegment _line2;
+        private LineSegment _line3;
         private float _currentFrame = 0;
-        private float _currentSpeed = 5f; // change the speed of animation
+        private float _currentSpeed = 10f; // change the speed of animation
 
 
-        public Padel(Vec2 position = null) : base("../assets/sprite/player/tab.png", 12, 1)
+        public Padel(Vec2 position = null) : base("../assets/sprite/player/player.png", 26, 1)
         {
             _position = position;
 
             //SetXY(game.width/2, 700);
-            SetScaleXY(0.7f,0.7f);
+           // SetScaleXY(0.7f,0.7f);
 
             if (Position != null)
             {
                 x = Position.x;
                 y = Position.y;
             }
-            _line = new LineSegment(width + 80, 13, height - 25, 13, 0xffffffff, 100);
-            AddChild(_line);
+           CreateLines();
+
         }
 
         void Update()
@@ -40,6 +42,15 @@ namespace NeonArkanoid.Physics
             get { return _position; }
         }
 
+        private void CreateLines()
+        {
+            _line1 = new LineSegment(width, 10, width /2 + 30, 5, 0xff8888ff, 10);
+            AddChild(_line1);
+            _line2 = new LineSegment(width - 120, 5, width/2 - 90, 10, 0xff8888ff, 10);
+            AddChild(_line2);
+            _line3 = new LineSegment(width -60, 5, width/ 2 - 30, 5, 0xff0000ff, 10);
+            AddChild(_line3);
 
+        }
     }
 }

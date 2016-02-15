@@ -215,7 +215,7 @@ namespace NeonArkanoid.Level
             return _levelName;
         }
 
-        private void BoundryCreator()
+        public void BoundryCreator()
         {
             float border = 1;
             _leftXBoundary = border;
@@ -238,6 +238,7 @@ namespace NeonArkanoid.Level
         {
             AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
+
 
 
 
