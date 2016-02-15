@@ -7,7 +7,9 @@ using GXPEngine;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Utility;
 using NeonArkanoid.Physics;
+using NeonArkanoid.UI.Menu;
 using TiledParser;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
@@ -15,6 +17,7 @@ namespace NeonArkanoid.Level
 {
     internal class Level : Canvas
     {
+        private Background _background1;
         private readonly Ball _ball;
         private readonly NeonArkanoidGame _game;
         private readonly string _levelName; //useless for now
@@ -34,6 +37,8 @@ namespace NeonArkanoid.Level
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
             _gameEnded = false;
+            
+            //BoundryCreator();
             _levelName = filename.Remove(filename.Length - 4);
             Console.WriteLine(_levelName);
             _game = game;
@@ -128,27 +133,9 @@ namespace NeonArkanoid.Level
         public void Update()
         {
             if (_polyList.Count > 0)
-            //--------BALL MOVEMENT-----------//
-            if (Input.GetKey(Key.UP))_ball.Velocity.y--;
-            else if (Input.GetKey(Key.DOWN))_ball.Velocity.y++;
-            else _ball.Velocity.y = 0;
-
-            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x--;
-            else if (Input.GetKey(Key.RIGHT))  _ball.Velocity.x++;
-            else _ball.Velocity.x = 0;
-            //-------------------------------//
-
-            //--------Pedal MOVEMENT-----------//
-            if (Input.GetKey(Key.A)) _padel.x -= 5f;
-            else if (Input.GetKey(Key.D)) _padel.x += 5f;
-            //-------------------------------//
-
-            if (Input.GetKeyDown(Key.R))
             {
                 Controls();
                 LimitBallSpeed();
-
-
 
                 for (var i = 0; i < _ball.Velocity.Length(); i++)
                 {
@@ -179,15 +166,6 @@ namespace NeonArkanoid.Level
             {
                 _endTimer = Time.now;
                 _gameEnded = true;
-                _ball.Position.Add(_ball.Velocity.Clone().Normalize());
-                _ball.x =  _ball.Position.x;
-                _ball.y = _ball.Position.y;
-
-                if (_polyList.Count > 0)
-                    for (var p = 0; p < _polyList.Count; p++)
-                    {
-                        for (var l = 0; l < _polyList[p].GetLines().Length; l++) if (LineCollisionTest(_polyList[p].GetLines()[l])) break;
-                    }
             }
             if (_gameEnded && _endTimer + 1000 < Time.now) _game.SetState("MainMenu");
         }
@@ -253,6 +231,8 @@ namespace NeonArkanoid.Level
             return _levelName;
         }
 
+
+	/*
         public void BoundryCreator()
         {
             float border = 1;
@@ -276,7 +256,15 @@ namespace NeonArkanoid.Level
         {
             AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
+	*/
 
+        private void SetBackground()
+        {
+            _background1 = new Background(UtilStrings.SpritesMenu + "background4.jpg", true);
+            AddChild(_background1);
+
+
+        }
 
 
 
