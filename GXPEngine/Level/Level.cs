@@ -35,8 +35,6 @@ namespace NeonArkanoid.Level
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
             
-            BoundryCreator();
-            
             _levelName = filename.Remove(filename.Length - 4);
             Console.WriteLine(_levelName);
             _game = game;
@@ -219,40 +217,5 @@ namespace NeonArkanoid.Level
         {
             return _levelName;
         }
-
-        public void BoundryCreator()
-        {
-            float border = 1;
-            _leftXBoundary = border;
-            _rightXBoundary = width - border;
-            _topYBoundary = border;
-            _bottomYBoundary = height - border;
-
-            CreateVisualXBoundary(_leftXBoundary);
-            CreateVisualXBoundary(_rightXBoundary);
-            CreateVisualYBoundary(_topYBoundary);
-            CreateVisualYBoundary(_bottomYBoundary);
-        }
-
-        private void CreateVisualXBoundary(float xBoundary)
-        {
-            AddChild(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
-        }
-
-        private void CreateVisualYBoundary(float yBoundary)
-        {
-            AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
-        }
-
-        private void SetBackground()
-        {
-            _background1 = new Background(UtilStrings.SpritesMenu + "background4.jpg", true);
-            AddChild(_background1);
-
-
-        }
-
-
-
     }
 }
