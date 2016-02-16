@@ -20,20 +20,21 @@ namespace NeonArkanoid.Level
         private readonly NeonArkanoidGame _game;
         private readonly string _levelName; //useless for now
         private readonly Map _map;
+        private readonly Paddle _paddle;
         private readonly List<Polygon> _polyList;
+        private readonly Vec2 acceleration = new Vec2(0, 0.1f); //Gravity
         private readonly float maxspeed = 10;
         private Background _background1;
         private List<LineSegment> _borderList;
-        private List<Ball> _bouncerBalls; 
         private float _bottomYBoundary;
+        private List<Ball> _bouncerBalls;
+        private List<Polygon> _bumperList;
         private int _endTimer;
         private bool _gameEnded;
 
         private float _leftXBoundary;
-        private readonly Paddle _paddle;
         private float _rightXBoundary;
         private float _topYBoundary;
-        private readonly Vec2 acceleration = new Vec2(0, 0.1f); //Gravity
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
@@ -61,6 +62,7 @@ namespace NeonArkanoid.Level
             }
 
             AddBouncerBalls();
+            AddBumpers();
 
             _ball = new Ball(30, new Vec2(game.width/2, game.height/2));
 
@@ -68,7 +70,31 @@ namespace NeonArkanoid.Level
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
             AddChild(_paddle);
+        }
 
+        private void AddBumpers()
+        {
+            _bumperList = new List<Polygon>();
+            _bumperList.Add(
+                new Polygon(
+                    new[] 
+                    {
+                        new Vec2(0, game.height - 200),
+                        new Vec2(0, game.height),
+                        new Vec2(50, game.height)
+                    }, 0xFF00FFFF, this, 20, 0, 0));
+            _bumperList.Add(
+                new Polygon(
+                    new[]
+                    {
+                        new Vec2(game.width, game.height - 200),
+                        new Vec2(game.width,game.height),
+                        new Vec2(game.width-50, game.height)
+                    }, 0xFF00FFFF, this, 20, 0, 0));
+            foreach (var polygon in _bumperList)
+            {
+                AddChild(polygon);
+            }
         }
 
         private void AddBouncerBalls()
@@ -76,7 +102,7 @@ namespace NeonArkanoid.Level
             _bouncerBalls = new List<Ball>();
             _bouncerBalls.Add(new Ball(50, new Vec2(100, 100)));
             _bouncerBalls.Add(new Ball(50, new Vec2(game.width - 100, 100)));
-            for (int i = 0; i < _bouncerBalls.Count; i++)
+            for (var i = 0; i < _bouncerBalls.Count; i++)
             {
                 _bouncerBalls[i].BallColor = Color.Green;
                 AddChild(_bouncerBalls[i]);
@@ -145,6 +171,10 @@ namespace NeonArkanoid.Level
             {
                 polygon.DrawOnCanvas();
             }
+            foreach (var polygon in _bumperList)
+            {
+                polygon.DrawOnCanvas();
+            }
         }
 
         public void Update()
@@ -152,7 +182,7 @@ namespace NeonArkanoid.Level
             if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
                 Controls();
-                LimitBallSpeed();
+                //LimitBallSpeed();
                 ApplyForces();
                 CollisionDetections();
                 DebugInfo();
@@ -165,7 +195,7 @@ namespace NeonArkanoid.Level
 
         private void DebugInfo()
         {
-            if(UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
+            if (UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
         }
 
         private void ApplyForces()
@@ -175,7 +205,7 @@ namespace NeonArkanoid.Level
             _ball.Position.Add(_ball.Velocity);
             _ball.Step();
 
-            _ball.Velocity.Normalize().Scale(5);
+            //_ball.Velocity.Normalize().Scale(10);
         }
 
         private void CollisionDetections()
@@ -214,7 +244,6 @@ namespace NeonArkanoid.Level
                         //What happens when the ball hits the pedal
                     }
                 }
-                
 
 
                 //Temporary collisions with the borders of the game
@@ -231,8 +260,21 @@ namespace NeonArkanoid.Level
                     if (BallCollisionTest(ball, 1f))
                     {
                         //What happens when the ball bounces against a bouncer ball
+                        _ball.Velocity.Normalize().Scale(20);
                     }
                 }
+
+                foreach (var polygon in _bumperList)
+                {
+                    foreach (var lineSegment in polygon.GetLines())
+                    {
+                        if (LineCollisionTest(lineSegment, 1f))
+                        {
+                            _game.SetState("MainMenu");
+                        }
+                    }
+                }
+
 
 
                 //AND BEFORE THIS ONE
@@ -310,10 +352,11 @@ namespace NeonArkanoid.Level
         {
             if (_ball.Position.Clone().Subtract(ball.Position).Length() <= _ball.radius + ball.radius)
             {
-                Vec2 delta = _ball.Position.Clone().Subtract(ball.Position);
-                float distToCap = delta.Clone().Length();
-                Vec2 deltaNormalized = delta.Clone().Normalize();
-                _ball.Position.SetVec(_ball.Position.Add(deltaNormalized.Clone().Scale(-distToCap + _ball.radius + ball.radius)));
+                var delta = _ball.Position.Clone().Subtract(ball.Position);
+                var distToCap = delta.Clone().Length();
+                var deltaNormalized = delta.Clone().Normalize();
+                _ball.Position.SetVec(
+                    _ball.Position.Add(deltaNormalized.Clone().Scale(-distToCap + _ball.radius + ball.radius)));
                 _ball.Velocity.Reflect(deltaNormalized, reflectionStrength);
                 _ball.Step();
                 return true;
