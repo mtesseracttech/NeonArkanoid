@@ -204,8 +204,6 @@ namespace NeonArkanoid.Level
             _ball.Velocity.Add(_ball.Acceleration);
             _ball.Position.Add(_ball.Velocity);
             _ball.Step();
-
-            //_ball.Velocity.Normalize().Scale(10);
         }
 
         private void CollisionDetections()
@@ -260,7 +258,6 @@ namespace NeonArkanoid.Level
                     if (BallCollisionTest(ball, 1f))
                     {
                         //What happens when the ball bounces against a bouncer ball
-                        _ball.Velocity.Normalize().Scale(20);
                     }
                 }
 
@@ -270,7 +267,7 @@ namespace NeonArkanoid.Level
                     {
                         if (LineCollisionTest(lineSegment, 1f))
                         {
-                            _game.SetState("MainMenu");
+                            _ball.Velocity.Normalize().Scale(20);
                         }
                     }
                 }
