@@ -197,8 +197,9 @@ namespace NeonArkanoid.Level
                         {
                             if (LineCollisionTest(_polyList[p].GetLines()[l], 0.5f))
                             {
+                                //What happens when the ball hits a polygon
                                 _polyList[p].RemovePoly();
-                                break;
+                                break; //Needed to avoid ArgumentOutOfRangeException
                             }
                         }
                     }
@@ -208,19 +209,29 @@ namespace NeonArkanoid.Level
                 //Collisions with the paddle
                 foreach (var line in _paddle.GetLines())
                 {
-                    LineCollisionTest(line, 1f);
+                    if (LineCollisionTest(line, 1f))
+                    {
+                        //What happens when the ball hits the pedal
+                    }
                 }
+                
 
 
                 //Temporary collisions with the borders of the game
                 foreach (var line in _borderList)
                 {
-                    LineCollisionTest(line, 1f);
+                    if (LineCollisionTest(line, 1f))
+                    {
+                        //What happens when the ball hits a border    
+                    }
                 }
 
                 foreach (var ball in _bouncerBalls)
                 {
-                    BallCollisionTest(ball, 1f);
+                    if (BallCollisionTest(ball, 1f))
+                    {
+                        //What happens when the ball bounces against a bouncer ball
+                    }
                 }
 
 
