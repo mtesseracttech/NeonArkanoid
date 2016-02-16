@@ -406,10 +406,12 @@ namespace NeonArkanoid.Level
             _borderList.Add(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
 
+        /**
         private void SetBackground()
         {
             _background1 = new Background(UtilStrings.SpritesMenu + "background4.jpg", true);
             AddChild(_background1);
         }
+        /**/
     }
 }

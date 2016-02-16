@@ -32,9 +32,10 @@ namespace NeonArkanoid.Physics
             Velocity = velocity;
             Acceleration = acceleration;
 
-            _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 13, 1);
-            //if (!UtilitySettings.DebugMode) AddChild(_spriteOverlay);
-            _spriteOverlay.SetXY(-170, -50);
+            _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 5, 1);
+            _spriteOverlay.SetOrigin(radius, radius);
+            if (!UtilitySettings.DebugMode) AddChild(_spriteOverlay);
+            
 
 
             //?? means: assign pColor unless pColor is null then take Color.Blue instead

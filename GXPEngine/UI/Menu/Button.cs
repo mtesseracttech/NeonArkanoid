@@ -20,15 +20,15 @@ namespace NeonArkanoid.UI.Menu
 
         public void Selected()
         {
-            if (scaleX != 0.3f)
-                SetScaleXY(0.3f, 0.3f);
+            if (scaleX != 1f)
+                SetScaleXY(1f, 1f);
                     //Only made it scan for scaleX because if that one is not right, the other won't be either
             SetFrame(0);
         }
 
         public void DeSelect()
         {
-            if (scaleX != 0.2f) SetScaleXY(0.2f, 0.2f);
+            if (scaleX != 1f) SetScaleXY(1f, 1f);
             SetFrame(1);
         }
 
