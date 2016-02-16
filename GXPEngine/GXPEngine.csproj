@@ -84,6 +84,12 @@
     <Compile Include="Utility\FileReader.cs" />
     <Compile Include="Utility\TiledParser\TMXMap.cs" />
     <Compile Include="Utility\TiledParser\TMXParser.cs" />
+    <Compile Include="Utility\Tween\Approach.cs" />
+    <Compile Include="Utility\Tween\Ease.cs" />
+    <Compile Include="Utility\Tween\GlideInfo.cs" />
+    <Compile Include="Utility\Tween\Lerper.cs" />
+    <Compile Include="Utility\Tween\Tween.cs" />
+    <Compile Include="Utility\Tween\Tweener.cs" />
     <Compile Include="Utility\UtilitySettings.cs" />
     <Compile Include="Utility\UtilStrings.cs" />
   </ItemGroup>

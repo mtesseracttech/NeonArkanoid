@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Globalization;
+using Glide;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
@@ -16,25 +18,37 @@ namespace NeonArkanoid.Level
 {
     internal class Level : Canvas
     {
+        private readonly  Tweener _tweener = new Tweener();
         private readonly Ball _ball;
         private readonly NeonArkanoidGame _game;
-        private readonly string _levelName; //useless for now
         private readonly Map _map;
         private readonly Paddle _paddle;
         private readonly List<Polygon> _polyList;
         private readonly Vec2 acceleration = new Vec2(0, 0.1f); //Gravity
         private readonly float maxspeed = 10;
+
         private Background _background1;
-        private List<LineSegment> _borderList;
+
         private float _bottomYBoundary;
+
+        private List<LineSegment> _borderList;
         private List<Ball> _bouncerBalls;
         private List<Polygon> _bumperList;
+
+        private Canvas _go1 = new Canvas("../assets/sprite/ui/GO1.png");
+        private Canvas _go2 = new Canvas("../assets/sprite/ui/GO2.png");
+
         private int _endTimer;
         private bool _gameEnded;
 
+        private int seconds, minutes;
+        private int timer = 0;
+        
         private float _leftXBoundary;
         private float _rightXBoundary;
         private float _topYBoundary;
+
+        private readonly string _levelName; //useless for now
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
@@ -65,11 +79,11 @@ namespace NeonArkanoid.Level
             AddBumpers();
 
             _ball = new Ball(30, new Vec2(game.width/2, game.height/2));
-
             AddChild(_ball);
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
             AddChild(_paddle);
+            
         }
 
         private void AddBumpers()
@@ -108,7 +122,6 @@ namespace NeonArkanoid.Level
                 AddChild(_bouncerBalls[i]);
             }
         }
-
 
         private void CreatePolygons(ObjectGroup objectGroup)
         {
@@ -175,20 +188,27 @@ namespace NeonArkanoid.Level
             {
                 polygon.DrawOnCanvas();
             }
+
         }
 
         public void Update()
         {
+            
             if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
+                timer ++;
+                Redraw();
+                DrawTimer();
                 Controls();
                 //LimitBallSpeed();
                 ApplyForces();
                 CollisionDetections();
                 DebugInfo();
+                
             }
             else
             {
+                timer = 0;
                 EndRound();
             }
         }
@@ -271,9 +291,6 @@ namespace NeonArkanoid.Level
                         }
                     }
                 }
-
-
-
                 //AND BEFORE THIS ONE
             }
         }
@@ -285,11 +302,13 @@ namespace NeonArkanoid.Level
             {
                 _endTimer = Time.now;
                 _gameEnded = true;
+
             }
             //Sets the game to the main menu after the set time is over
             if (_gameEnded && _endTimer + 2000 < Time.now)
             {
                 _game.SetState("MainMenu");
+                
             }
         }
 
@@ -410,5 +429,30 @@ namespace NeonArkanoid.Level
             AddChild(_background1);
         }
         /**/
+
+        private void DrawTimer()
+        {
+            seconds = Mathf.Floor(timer / 60);
+           // minutes = Mathf.Floor( / 3600);
+           // seconds = Mathf.Floor(Time.time / 120);
+            minutes = Time.time / 60000;
+            if (seconds > 59)
+            {
+                timer = 0;
+            }
+
+
+            string time = minutes.ToString() + ":" + seconds.ToString();
+            var brush = new SolidBrush(Color.FromArgb(255, 255, 255, 255));
+
+            var fonts = new PrivateFontCollection();
+            fonts.AddFontFile("agency_fb.ttf");
+
+            var myFont = new Font((FontFamily)fonts.Families[0], 30);
+            graphics.DrawString(time, myFont, brush, new PointF(600, 20));
+            Console.WriteLine(time);
+
+
+        }
     }
 }
