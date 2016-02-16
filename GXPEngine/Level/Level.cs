@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
-using System.Linq.Expressions;
-using GXPEngine;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
-using NeonArkanoid.Utility;
 using NeonArkanoid.Physics;
 using NeonArkanoid.UI.Menu;
+using NeonArkanoid.Utility;
 using TiledParser;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
@@ -18,23 +16,24 @@ namespace NeonArkanoid.Level
 {
     internal class Level : Canvas
     {
-        private Background _background1;
         private readonly Ball _ball;
         private readonly NeonArkanoidGame _game;
         private readonly string _levelName; //useless for now
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
-        private List<LineSegment> _borderList; 
-        private Paddle _paddle;
         private readonly float maxspeed = 10;
-        private bool _gameEnded;
+        private Background _background1;
+        private List<LineSegment> _borderList;
+        private List<Ball> _bouncerBalls; 
+        private float _bottomYBoundary;
         private int _endTimer;
-        private Vec2 acceleration = new Vec2(0, 0.1f); //Gravity
+        private bool _gameEnded;
 
         private float _leftXBoundary;
+        private readonly Paddle _paddle;
         private float _rightXBoundary;
         private float _topYBoundary;
-        private float _bottomYBoundary;
+        private readonly Vec2 acceleration = new Vec2(0, 0.1f); //Gravity
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
@@ -61,12 +60,27 @@ namespace NeonArkanoid.Level
                 AddChild(polygon);
             }
 
+            AddBouncerBalls();
+
             _ball = new Ball(30, new Vec2(game.width/2, game.height/2));
-            
+
             AddChild(_ball);
 
-            _paddle = new Paddle(this, new Vec2(game.width/2, game.height-100));
+            _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
             AddChild(_paddle);
+
+        }
+
+        private void AddBouncerBalls()
+        {
+            _bouncerBalls = new List<Ball>();
+            _bouncerBalls.Add(new Ball(50, new Vec2(100, 100)));
+            _bouncerBalls.Add(new Ball(50, new Vec2(game.width - 100, 100)));
+            for (int i = 0; i < _bouncerBalls.Count; i++)
+            {
+                _bouncerBalls[i].BallColor = Color.Green;
+                AddChild(_bouncerBalls[i]);
+            }
         }
 
 
@@ -91,7 +105,8 @@ namespace NeonArkanoid.Level
                     {
                         foreach (var property in tiledObject.Properties)
                         {
-                            if (property.Property.Name.ToLower() == "colour" || property.Property.Name.ToLower() == "color")
+                            if (property.Property.Name.ToLower() == "colour" ||
+                                property.Property.Name.ToLower() == "color")
                             {
                                 //var chars = property.Property.Value.ToLower().ToCharArray().ToList();
                                 //chars.Insert(2, 'f');
@@ -146,12 +161,11 @@ namespace NeonArkanoid.Level
             {
                 EndRound();
             }
-            
         }
 
         private void DebugInfo()
         {
-            Console.WriteLine(_ball.Velocity.Length());
+            if(UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
         }
 
         private void ApplyForces()
@@ -160,6 +174,8 @@ namespace NeonArkanoid.Level
             _ball.Velocity.Add(_ball.Acceleration);
             _ball.Position.Add(_ball.Velocity);
             _ball.Step();
+
+            _ball.Velocity.Normalize().Scale(5);
         }
 
         private void CollisionDetections()
@@ -179,7 +195,7 @@ namespace NeonArkanoid.Level
                     {
                         for (var l = 0; l < _polyList[p].GetLines().Length; l++)
                         {
-                            if (LineCollisionTest(_polyList[p].GetLines()[l], 0.8f))
+                            if (LineCollisionTest(_polyList[p].GetLines()[l], 0.5f))
                             {
                                 _polyList[p].RemovePoly();
                                 break;
@@ -202,6 +218,11 @@ namespace NeonArkanoid.Level
                     LineCollisionTest(line, 1f);
                 }
 
+                foreach (var ball in _bouncerBalls)
+                {
+                    BallCollisionTest(ball, 1f);
+                }
+
 
                 //AND BEFORE THIS ONE
             }
@@ -210,7 +231,7 @@ namespace NeonArkanoid.Level
         private void EndRound()
         {
             //Triggers the end of the game and sets counter until game pops to different state/does something
-            if (_gameEnded == false) 
+            if (_gameEnded == false)
             {
                 _endTimer = Time.now;
                 _gameEnded = true;
@@ -270,6 +291,21 @@ namespace NeonArkanoid.Level
                     _ball.Step();
                     return true;
                 }
+            }
+            return false;
+        }
+
+        private bool BallCollisionTest(Ball ball, float reflectionStrength)
+        {
+            if (_ball.Position.Clone().Subtract(ball.Position).Length() <= _ball.radius + ball.radius)
+            {
+                Vec2 delta = _ball.Position.Clone().Subtract(ball.Position);
+                float distToCap = delta.Clone().Length();
+                Vec2 deltaNormalized = delta.Clone().Normalize();
+                _ball.Position.SetVec(_ball.Position.Add(deltaNormalized.Clone().Scale(-distToCap + _ball.radius + ball.radius)));
+                _ball.Velocity.Reflect(deltaNormalized, reflectionStrength);
+                _ball.Step();
+                return true;
             }
             return false;
         }
