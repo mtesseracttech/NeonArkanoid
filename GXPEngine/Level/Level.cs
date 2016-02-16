@@ -47,6 +47,7 @@ namespace NeonArkanoid.Level
 
 
         private int _score = 0;
+        private int _lifes = 5;
         
         private float _leftXBoundary;
         private float _rightXBoundary;
@@ -205,6 +206,7 @@ namespace NeonArkanoid.Level
                 Redraw();
                 DrawTimer();
                 DrawScore();
+                DrawLifes();
                 Controls();
                 //LimitBallSpeed();
                 ApplyForces();
@@ -214,14 +216,28 @@ namespace NeonArkanoid.Level
             }
             else
             {
-                _timerSeconds = 0;
-                _timerMinutes = 0;
-                _score = 0;
+                ReturnTime();
+                ReturnScore();
+                ReturnLifes();
                 EndRound();
 
             }
         }
 
+        private int ReturnLifes()
+        {
+            return _lifes;
+        }
+
+        private int ReturnTime()
+        {
+            return _timerSeconds | _timerMinutes;
+        }
+
+        private int ReturnScore()
+        {
+            return _score;
+        }
         private void DebugInfo()
         {
             if (UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
@@ -280,17 +296,16 @@ namespace NeonArkanoid.Level
                 {
                     if (LineCollisionTest(line, 1f))
                     {
-                        //What happens when the ball hits a border    
+                        //What happens when the ball hits a border  
                     }
                 }
-
                 foreach (var ball in _bouncerBalls)
                 {
                     if (BallCollisionTest(ball, 1f))
                     {
                         //What happens when the ball bounces against a bouncer ball
                         //ADDING THE SCORE
-                        _score += 2;
+                        _score  +=10;
                     }
                 }
 
@@ -481,6 +496,18 @@ namespace NeonArkanoid.Level
             var myFont = new Font((FontFamily)fonts.Families[0], 30);
             
             graphics.DrawString(_score.ToString("0000"), myFont, brush, new PointF(game.width/2 + 5, 60));
+        }
+
+        private void DrawLifes()
+        {
+            var brush = new SolidBrush(Color.FromArgb(255, 255, 20 , 20));
+
+            var fonts = new PrivateFontCollection();
+            fonts.AddFontFile("agency_fb.ttf");
+
+            var myFont = new Font((FontFamily)fonts.Families[0], 30);
+
+            graphics.DrawString(_lifes.ToString(), myFont, brush, new PointF(game.width / 8, 20));
         }
     }
 }
