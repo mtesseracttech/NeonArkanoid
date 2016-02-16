@@ -2,6 +2,7 @@
 using System.Drawing;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Physics;
+using NeonArkanoid.Utility;
 
 namespace NeonArkanoid.Physics
 {
@@ -32,16 +33,15 @@ namespace NeonArkanoid.Physics
             Position = position;
             Velocity = velocity;
             Acceleration = acceleration;
-<<<<<<< HEAD
+
+            /*
             _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball1.png", 1, 1); //Temp sprite until the actual sprite is fixed
             _spriteOverlay.SetOrigin(_spriteOverlay.width/2, _spriteOverlay.height/2);
             Console.WriteLine(_spriteOverlay.x + "," + _spriteOverlay.y);
             AddChild(_spriteOverlay);
-=======
->>>>>>> origin/dev
-
+            */
             _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 13, 1);
-            AddChild(_spriteOverlay);
+            if(!UtilitySettings.DebugMode)AddChild(_spriteOverlay);
             _spriteOverlay.SetXY(-170,-50);
 
 
@@ -119,11 +119,6 @@ namespace NeonArkanoid.Physics
 
         public void Step()
         {
-            if (Physics)
-            {
-                _velocity.Add(_acceleration);
-                _position.Add(_velocity);
-            }
             x = _position.x;
             y = _position.y;
         }

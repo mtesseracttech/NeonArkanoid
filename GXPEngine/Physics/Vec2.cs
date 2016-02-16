@@ -72,7 +72,7 @@ namespace NeonArkanoid.Physics
             return this;
         }
 
-        public Vec2 Set(float pX, float pY)
+        public Vec2 SetXY(float pX, float pY)
         {
             x = pX;
             y = pY;

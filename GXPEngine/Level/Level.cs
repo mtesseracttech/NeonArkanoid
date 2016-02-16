@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
+using System.Linq.Expressions;
 using GXPEngine;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
@@ -23,11 +24,12 @@ namespace NeonArkanoid.Level
         private readonly string _levelName; //useless for now
         private readonly Map _map;
         private readonly List<Polygon> _polyList;
-        private readonly Vec2 gravity = new Vec2(1, 0);
-        private readonly Padel _padel;
-        private readonly float maxspeed = 5;
+        private List<LineSegment> _borderList; 
+        private Paddle _paddle;
+        private readonly float maxspeed = 10;
         private bool _gameEnded;
         private int _endTimer;
+        private Vec2 acceleration = new Vec2(0, 0.1f); //Gravity
 
         private float _leftXBoundary;
         private float _rightXBoundary;
@@ -38,7 +40,7 @@ namespace NeonArkanoid.Level
         {
             _gameEnded = false;
             
-            //BoundryCreator();
+            BoundaryCreator();
             _levelName = filename.Remove(filename.Length - 4);
             Console.WriteLine(_levelName);
             _game = game;
@@ -61,10 +63,11 @@ namespace NeonArkanoid.Level
             }
 
             _ball = new Ball(30, new Vec2(game.width/2, game.height/2));
+            
             AddChild(_ball);
 
-            _padel = new Padel(new Vec2(game.width/2, 700));
-            AddChild(_padel);
+            _paddle = new Paddle(this, new Vec2(game.width/2, game.height-100));
+            AddChild(_paddle);
         }
 
 
@@ -132,26 +135,13 @@ namespace NeonArkanoid.Level
 
         public void Update()
         {
-            if (_polyList.Count > 0)
+            if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
                 Controls();
                 LimitBallSpeed();
-
-                for (var i = 0; i < _ball.Velocity.Length(); i++)
-                {
-                    _ball.Position.Add(_ball.Velocity.Clone().Normalize());
-                    _ball.Step();
-
-                    if (_polyList.Count > 0)
-                        for (var p = 0; p < _polyList.Count; p++)
-                        {
-                            for (var l = 0; l < _polyList[p].GetLines().Length; l++)
-                            {
-                                bool collision = LineCollisionTest(_polyList[p].GetLines()[l]);
-                                if (collision) break;
-                            }
-                        }
-                }
+                ApplyForces();
+                CollisionDetections();
+                DebugInfo();
             }
             else
             {
@@ -160,32 +150,104 @@ namespace NeonArkanoid.Level
             
         }
 
+        private void DebugInfo()
+        {
+            Console.WriteLine(_ball.Velocity.Length());
+        }
+
+        private void ApplyForces()
+        {
+            _ball.Acceleration = acceleration;
+            _ball.Velocity.Add(_ball.Acceleration);
+            _ball.Position.Add(_ball.Velocity);
+            _ball.Step();
+        }
+
+        private void CollisionDetections()
+        {
+            //Ball velocity gets choppped into pieces to make sure that the hit detection works on higher speeds
+            for (var i = 0; i < _ball.Velocity.Length(); i++)
+            {
+                _ball.Position.Add(_ball.Velocity.Clone().Normalize());
+                _ball.Step();
+
+                //ALL COLLISION DETECTIONS COME AFTER THIS POINT
+
+                //Collisions with the vector polygons
+                if (_polyList.Count > 0)
+                {
+                    for (var p = 0; p < _polyList.Count; p++)
+                    {
+                        for (var l = 0; l < _polyList[p].GetLines().Length; l++)
+                        {
+                            if (LineCollisionTest(_polyList[p].GetLines()[l], 0.8f))
+                            {
+                                _polyList[p].RemovePoly();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+
+                //Collisions with the paddle
+                foreach (var line in _paddle.GetLines())
+                {
+                    LineCollisionTest(line, 1f);
+                }
+
+
+                //Temporary collisions with the borders of the game
+                foreach (var line in _borderList)
+                {
+                    LineCollisionTest(line, 1f);
+                }
+
+
+                //AND BEFORE THIS ONE
+            }
+        }
+
         private void EndRound()
         {
-            if (_gameEnded == false)
+            //Triggers the end of the game and sets counter until game pops to different state/does something
+            if (_gameEnded == false) 
             {
                 _endTimer = Time.now;
                 _gameEnded = true;
             }
-            if (_gameEnded && _endTimer + 1000 < Time.now) _game.SetState("MainMenu");
+            //Sets the game to the main menu after the set time is over
+            if (_gameEnded && _endTimer + 2000 < Time.now)
+            {
+                _game.SetState("MainMenu");
+            }
         }
 
         private void Controls()
         {
-            if (Input.GetKey(Key.UP)) _ball.Velocity.y = -1;
-            else if (Input.GetKey(Key.DOWN)) _ball.Velocity.y = 1;
-            else _ball.Velocity.y = 0;
+            if (Input.GetKey(Key.UP)) _ball.Velocity.y += -1;
+            if (Input.GetKey(Key.DOWN)) _ball.Velocity.y += 1;
 
-            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x = -1;
-            else if (Input.GetKey(Key.RIGHT)) _ball.Velocity.x = 1;
-            else _ball.Velocity.x = 0;
+            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x += -1;
+            if (Input.GetKey(Key.RIGHT)) _ball.Velocity.x += 1;
 
             if (Input.GetKeyDown(Key.R)) if (_polyList.Count > 0) RemovePolyAt(0);
 
             if (Input.GetKeyDown(Key.T)) _game.SetState("Level1", true);
+
+            if (Input.GetKey(Key.D))
+            {
+                _paddle.Position.x += 10;
+                _paddle.Step();
+            }
+            if (Input.GetKey(Key.A))
+            {
+                _paddle.Position.x -= 10;
+                _paddle.Step();
+            }
         }
 
-        private bool LineCollisionTest(LineSegment line)
+        private bool LineCollisionTest(LineSegment line, float reflectionStrength)
         {
             var lineVector = line.End.Clone().Subtract(line.Start);
             var lineVectorNormalized = lineVector.Clone().Normalize();
@@ -202,15 +264,10 @@ namespace NeonArkanoid.Level
                 var difference = _ball.Position.Clone().Subtract(closestPointOnLine);
                 if (difference.Length() < _ball.radius)
                 {
-                    if (line.GetOwner() is Polygon)
-                    {
-                        var owner = line.GetOwner() as Polygon;
-                        owner.RemovePoly();
-                    }
                     var normal = difference.Clone().Normalize();
                     var separation = _ball.radius - difference.Length();
                     _ball.Position.Add(normal.Clone().Scale(separation));
-                    _ball.Velocity.Reflect(normal, 0.5f);
+                    _ball.Velocity.Reflect(normal, reflectionStrength);
                     _ball.Step();
                     return true;
                 }
@@ -232,8 +289,8 @@ namespace NeonArkanoid.Level
         }
 
 
-	/*
-        public void BoundryCreator()
+	
+        public void BoundaryCreator()
         {
             float border = 1;
             _leftXBoundary = border;
@@ -241,29 +298,31 @@ namespace NeonArkanoid.Level
             _topYBoundary = border;
             _bottomYBoundary = height - border;
 
+            _borderList = new List<LineSegment>();
             CreateVisualXBoundary(_leftXBoundary);
             CreateVisualXBoundary(_rightXBoundary);
             CreateVisualYBoundary(_topYBoundary);
             CreateVisualYBoundary(_bottomYBoundary);
+            foreach (var lineSegment in _borderList)
+            {
+                AddChild(lineSegment);
+            }
         }
 
         private void CreateVisualXBoundary(float xBoundary)
         {
-            AddChild(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
+            _borderList.Add(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
         }
 
         private void CreateVisualYBoundary(float yBoundary)
         {
-            AddChild(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
+            _borderList.Add(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
-	*/
 
         private void SetBackground()
         {
             _background1 = new Background(UtilStrings.SpritesMenu + "background4.jpg", true);
             AddChild(_background1);
-
-
         }
 
 
