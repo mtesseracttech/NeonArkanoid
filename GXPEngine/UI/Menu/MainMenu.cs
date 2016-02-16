@@ -23,10 +23,10 @@ namespace NeonArkanoid.UI.Menu
             SetHeader();
             _buttons = new[]
             {
-                new Button(UtilStrings.SpritesMenu + "Start.png", 2, 1100, 50, "Level1"),
-                new Button(UtilStrings.SpritesMenu + "Score.png", 2, 1100, 150, "HighScores"),
-                new Button(UtilStrings.SpritesMenu + "option.png", 2, 1100, 250, "Option"),
-                new Button(UtilStrings.SpritesMenu + "quit.png", 2, 1100, 350, "Exit")
+                new Button(UtilStrings.SpritesMenu + "Start.png", 2, 1110, 190, "Level1"),
+               // new Button(UtilStrings.SpritesMenu + "Score.png", 2, 1100, 150, "HighScores"),
+                //new Button(UtilStrings.SpritesMenu + "option.png", 2, 1100, 250, "Option"),
+                new Button(UtilStrings.SpritesMenu + "quit.png", 2, 1100, 540, "Exit")
             };
             foreach (var button in _buttons)
             {
@@ -45,7 +45,7 @@ namespace NeonArkanoid.UI.Menu
         {
             _background1 = new Background(UtilStrings.SpritesMenu + "background1.jpg", true);
             AddChild(_background1);
-            _background2 = new Background(UtilStrings.SpritesMenu + "background5.png", false);
+            _background2 = new Background(UtilStrings.SpritesMenu + "background.png", false);
             AddChild(_background2);
 
             _background3 = new Background(UtilStrings.SpritesMenu + "background3.png", true);
