@@ -27,6 +27,11 @@ namespace NeonArkanoid.Level
         private readonly Vec2 acceleration = new Vec2(0, 0.1f); //Gravity
         private readonly float maxspeed = 10;
 
+        private readonly PrivateFontCollection _fonts;
+        private  SolidBrush _brushTime,_brushScore;
+        private readonly Font _Myfont;
+        private Color _colorTime, _colorScore;
+
         private Background _background1;
 
         private float _bottomYBoundary;
@@ -35,7 +40,7 @@ namespace NeonArkanoid.Level
         private List<Ball> _bouncerBalls;
         private List<Polygon> _bumperList;
 
-        //private Canvas _go1 = new Canvas("../assets/sprite/ui/GO1.png");
+       // private Canvas _go1 = new Canvas("../assets/sprite/ui/GO1.png");
         //private Canvas _go2 = new Canvas("../assets/sprite/ui/GO2.png");
 
         private int _endTimer;
@@ -57,6 +62,18 @@ namespace NeonArkanoid.Level
 
         public Level(string filename, NeonArkanoidGame game) : base(game.width, game.height)
         {
+
+            _fonts = new PrivateFontCollection();
+            _fonts.AddFontFile("agency_fb.ttf");
+            _Myfont = new Font((FontFamily)_fonts.Families[0], 30);
+
+            _colorTime = Color.FromArgb(255, Color.White);
+            _brushTime = new SolidBrush(_colorTime);
+            _colorScore = Color.FromArgb(50, Color.DeepSkyBlue);
+            _brushScore = new SolidBrush(_colorScore);
+
+
+
             _gameEnded = false;
             BoundaryCreator();
             _levelName = filename.Remove(filename.Length - 4);
@@ -88,6 +105,34 @@ namespace NeonArkanoid.Level
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
             AddChild(_paddle);
+        }
+
+        public void Update()
+        {
+
+            if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
+            {
+                _timerSeconds++;
+                _timerMinutes++;
+                Redraw();
+                DrawTimer();
+                DrawScore();
+                DrawLifes();
+                Controls();
+                //LimitBallSpeed();
+                ApplyForces();
+                CollisionDetections();
+                DebugInfo();
+
+            }
+            else
+            {
+                ReturnTime();
+                ReturnScore();
+                ReturnLifes();
+                EndRound();
+
+            }
         }
 
         private void AddBumpers()
@@ -195,48 +240,19 @@ namespace NeonArkanoid.Level
 
         }
 
-        public void Update()
-        {
-            
-            if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
-            {
-                _timerSeconds ++;
-                _timerMinutes ++;
-                Redraw();
-                DrawTimer();
-                DrawScore();
-                DrawLifes();
-                Controls();
-                //LimitBallSpeed();
-                ApplyForces();
-                CollisionDetections();
-                DebugInfo();
-                
-            }
-            else
-            {
-                ReturnTime();
-                ReturnScore();
-                ReturnLifes();
-                EndRound();
-
-            }
-        }
-
         private int ReturnLifes()
         {
             return _lifes;
         }
-
         private int ReturnTime()
         {
             return _timerSeconds | _timerMinutes;
         }
-
         private int ReturnScore()
         {
             return _score;
         }
+
         private void DebugInfo()
         {
             //if (UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
@@ -248,8 +264,7 @@ namespace NeonArkanoid.Level
             _ball.Velocity.Add(_ball.Acceleration);
             _ball.Position.Add(_ball.Velocity);
             _ball.Step();
-        }
-        
+        }       
 
         /// <summary>
         /// In this block of code, the different collisions are checked.
@@ -373,7 +388,6 @@ namespace NeonArkanoid.Level
             }
         }
 
-
         /// <summary>
         /// Handles Collisions and reflection between the ball and a given line. 
         /// </summary>
@@ -413,7 +427,6 @@ namespace NeonArkanoid.Level
             return false;
         }
 
-
         /// <summary>
         /// Handles Collisions and reflection between the ball and a given ball. 
         /// </summary>
@@ -440,7 +453,6 @@ namespace NeonArkanoid.Level
             }
             return false;
         }
-
 
         private void LimitBallSpeed()
         {
@@ -498,46 +510,33 @@ namespace NeonArkanoid.Level
             }
             string time = minutes.ToString("00") + ":" + seconds.ToString("00");
 
+            /**
+            _brush = new SolidBrush(Color.FromArgb(255, 255, 255, 255));
+            /**/
 
-            /*
-            var brush = new SolidBrush(Color.FromArgb(255, 255, 255, 255));
-
-            var fonts = new PrivateFontCollection();
-            fonts.AddFontFile("agency_fb.ttf");
-
-            var myFont = new Font((FontFamily)fonts.Families[0], 30);
-            graphics.DrawString(time, myFont, brush, new PointF(game.width/2, 20));
-            */
-
+            graphics.DrawString(time, _Myfont, _brushTime, new PointF(game.width/2, 20));
+            
         }
 
         private void DrawScore()
         {
-            /*
-            var brush = new SolidBrush(Color.FromArgb(255, 4, 255, 255));
+            /**
+            _brush = new SolidBrush(Color.FromArgb(255, 4, 255, 255));
+            /**/
 
-            var fonts = new PrivateFontCollection();
-            fonts.AddFontFile("agency_fb.ttf");
-
-            var myFont = new Font((FontFamily)fonts.Families[0], 30);
+            graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore, new PointF(game.width/2 + 2, 60));
             
-            graphics.DrawString(_score.ToString("0000"), myFont, brush, new PointF(game.width/2 + 5, 60));
-            */
         }
 
-        
+
         private void DrawLifes()
-        {   
-            /*
-            var brush = new SolidBrush(Color.FromArgb(255, 255, 20 , 20));
+        {
+            /**
+            _brush = new SolidBrush(Color.FromArgb(255, 255, 20 , 20));
+            /**/
 
-            var fonts = new PrivateFontCollection();
-            fonts.AddFontFile("agency_fb.ttf");
-
-            var myFont = new Font((FontFamily)fonts.Families[0], 30);
-
-            graphics.DrawString(_lifes.ToString(), myFont, brush, new PointF(game.width / 8, 20));
-            */
+            graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width / 8, 20));
+           
 
         }
     }
