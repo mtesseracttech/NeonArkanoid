@@ -64,12 +64,12 @@ namespace NeonArkanoid.Level
             AddBouncerBalls();
             AddBumpers();
 
-            _ball = new Ball(30, new Vec2(game.width/2, game.height/2));
+            _ball = new Ball(30, new Vec2(200, 200));
 
             AddChild(_ball);
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
-            AddChild(_paddle);
+            //AddChild(_paddle);
         }
 
         private void AddBumpers()
@@ -195,7 +195,7 @@ namespace NeonArkanoid.Level
 
         private void DebugInfo()
         {
-            if (UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
+            //if (UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
         }
 
         private void ApplyForces()
@@ -205,7 +205,18 @@ namespace NeonArkanoid.Level
             _ball.Position.Add(_ball.Velocity);
             _ball.Step();
         }
+        
 
+        /// <summary>
+        /// In this block of code, the different collisions are checked.
+        /// The preceding for-loop cuts the velocity into pieces to make collision scanning on higher speeds more accurate.
+        /// 
+        /// New collisionchecks are added by scanning the objects of the following types (or that contain these types):
+        /// -Ball
+        /// -LineSegment
+        /// Place a single object in an if/else-block and let the corresponding collisiontest return a value, 
+        /// based on that, add the actions that follow the collision in the if/else block.
+        /// </summary>
         private void CollisionDetections()
         {
             //Ball velocity gets choppped into pieces to make sure that the hit detection works on higher speeds
@@ -271,9 +282,6 @@ namespace NeonArkanoid.Level
                         }
                     }
                 }
-
-
-
                 //AND BEFORE THIS ONE
             }
         }
@@ -295,15 +303,12 @@ namespace NeonArkanoid.Level
 
         private void Controls()
         {
-            if (Input.GetKey(Key.UP)) _ball.Velocity.y += -1;
-            if (Input.GetKey(Key.DOWN)) _ball.Velocity.y += 1;
-
-            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x += -1;
-            if (Input.GetKey(Key.RIGHT)) _ball.Velocity.x += 1;
-
-            if (Input.GetKeyDown(Key.R)) if (_polyList.Count > 0) RemovePolyAt(0);
-
-            if (Input.GetKeyDown(Key.T)) _game.SetState("Level1", true);
+            if (Input.GetKey(Key.UP)) _ball.Velocity.y += -1; //FOR DEBUG ONLY
+            if (Input.GetKey(Key.DOWN)) _ball.Velocity.y += 1; //FOR DEBUG ONLY
+            if (Input.GetKey(Key.LEFT)) _ball.Velocity.x += -1; //FOR DEBUG ONLY
+            if (Input.GetKey(Key.RIGHT)) _ball.Velocity.x += 1; //FOR DEBUG ONLY
+            if (Input.GetKeyDown(Key.R)) if (_polyList.Count > 0) RemovePolyAt(0); //FOR DEBUG ONLY
+            if (Input.GetKeyDown(Key.T)) _game.SetState("Level1", true); //FOR DEBUG ONLY
 
             if (Input.GetKey(Key.D))
             {
@@ -317,6 +322,18 @@ namespace NeonArkanoid.Level
             }
         }
 
+
+        /// <summary>
+        /// Handles Collisions and reflection between the ball and a given line. 
+        /// </summary>
+        /// <param name="line">
+        /// Is the Line that the ball will be checked against.
+        /// </param>
+        /// <param name="reflectionStrength">
+        /// Is the amount of reflection that will be given to the ball, 
+        /// 1 is a perfect bounce, 0 makes the ball not bounce at all.
+        /// </param>
+        /// <returns>Returns true when a collision was actually detected</returns>
         private bool LineCollisionTest(LineSegment line, float reflectionStrength)
         {
             var lineVector = line.End.Clone().Subtract(line.Start);
@@ -345,6 +362,18 @@ namespace NeonArkanoid.Level
             return false;
         }
 
+
+        /// <summary>
+        /// Handles Collisions and reflection between the ball and a given ball. 
+        /// </summary>
+        /// <param name="ball">
+        /// Is a ball that the ball will be checked against.
+        /// </param>
+        /// <param name="reflectionStrength">
+        /// Is the amount of reflection that will be given to the ball,
+        /// 1f is a perfect bounce, 0f makes the ball not bounce at all.
+        /// </param>
+        /// <returns>Returns true when a collision was actually detected</returns>
         private bool BallCollisionTest(Ball ball, float reflectionStrength)
         {
             if (_ball.Position.Clone().Subtract(ball.Position).Length() <= _ball.radius + ball.radius)
@@ -360,6 +389,7 @@ namespace NeonArkanoid.Level
             }
             return false;
         }
+
 
         private void LimitBallSpeed()
         {
@@ -402,13 +432,5 @@ namespace NeonArkanoid.Level
         {
             _borderList.Add(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
-
-        /**
-        private void SetBackground()
-        {
-            _background1 = new Background(UtilStrings.SpritesMenu + "background4.jpg", true);
-            AddChild(_background1);
-        }
-        /**/
     }
 }

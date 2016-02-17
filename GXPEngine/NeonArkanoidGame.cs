@@ -35,11 +35,17 @@ namespace NeonArkanoid
                 case "MainMenu":
                     _menu.StopMusic();
                     _menu.Destroy();
+                    _menu = null;
                     break;
                 case "Level1":
                     _level.Destroy();
                     _level = null;
                     break;
+                case "Level2":
+                    _level.Destroy();
+                    _level = null;
+                    break;
+
             }
         }
 
@@ -52,6 +58,10 @@ namespace NeonArkanoid
                     AddChild(_menu);
                     break;
                 case "Level1":
+                    _level = new Level.Level("tiger 4.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level2":
                     _level = new Level.Level("tiger 4.tmx", this);
                     AddChild(_level);
                     break;

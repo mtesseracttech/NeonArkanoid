@@ -34,7 +34,7 @@ namespace NeonArkanoid.Physics
 
             _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 5, 1);
             _spriteOverlay.SetOrigin(radius, radius);
-            if (!UtilitySettings.DebugMode) AddChild(_spriteOverlay);
+            //if (!UtilitySettings.DebugMode) AddChild(_spriteOverlay);
             
 
 
