@@ -134,9 +134,7 @@ namespace NeonArkanoid.Level
                 _timerSeconds++;
                 _timerMinutes++;
                 //Redraw(); CAUSING TOO MUCH LAAAG AAAH 
-                DrawTimer();
-                DrawScore();
-                DrawLifes();
+                RenderVisuals();
                 Controls();
                 LimitBallSpeed();
                 ApplyForces();
@@ -150,6 +148,13 @@ namespace NeonArkanoid.Level
                 ReturnLifes();
                 EndRound();
             }
+        }
+
+        private void RenderVisuals()
+        {
+            DrawTimer();
+            DrawScore();
+            DrawLifes();
         }
 
         private void AddBumpers()
