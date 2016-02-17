@@ -129,14 +129,13 @@ namespace NeonArkanoid.Level
 
         public void Update()
         {
+            _timerSeconds++;
+            _timerMinutes++;
             if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
-                _timerSeconds++;
-                _timerMinutes++;
-                //Redraw(); CAUSING TOO MUCH LAAAG AAAH 
-                DrawTimer();
-                DrawScore();
-                DrawLifes();
+                
+                Redraw(); 
+                
                 Controls();
                 LimitBallSpeed();
                 ApplyForces();
@@ -266,6 +265,7 @@ namespace NeonArkanoid.Level
                 polygon.DrawOnCanvas();
             }
             DrawTimer();
+            DrawScore();
         }
 
         private int ReturnLifes()
