@@ -16,6 +16,8 @@ namespace NeonArkanoid.Physics
 
         public Paddle(Level.Level level, Vec2 position = null) : base("../assets/sprite/player/player.png", 26, 1)
         {
+            SetOrigin(width/2, 0);
+
             _level = level;
             _position = position;
             if (UtilitySettings.DebugMode) alpha = 0;
@@ -59,65 +61,29 @@ namespace NeonArkanoid.Physics
                 new Vec2(120, 20)
             };
 
-            _lines = new LineSegment[_lineVecs.Length-1];
-            for (int i = 0; i < _lines.Length; i++)
+            _lines = new LineSegment[_lineVecs.Length - 1];
+            for (var i = 0; i < _lines.Length; i++)
             {
-                _lines[i] = new LineSegment(_position.Add(_lineVecs[i]), _position.Add(_lineVecs[i + 1]), 0xFF00FF00);
+                _lines[i] = new LineSegment(_position.Clone().Add(_lineVecs[i]), _position.Clone().Add(_lineVecs[i + 1]),
+                    0xFF00FF00);
                 _level.AddChild(_lines[i]);
-                Console.WriteLine("Creating line with startpoint: " + _lines[i].Start + " and endpoint: " + _lines[i].End);
+                Console.WriteLine("Creating line with startpoint: " + _lines[i].Start + " and endpoint: " +
+                                  _lines[i].End);
             }
-            
         }
 
         public void Step()
         {
-            float xDiff = x - _position.x;
-            float yDiff = y - _position.y;
-
-            Console.WriteLine(xDiff + " , " + yDiff);
+            var xDiff = _position.x - x;
+            var yDiff = _position.y - y;
 
             x = _position.x;
             y = _position.y;
 
-            Console.WriteLine(Position);
-
-            /*
-            _lines[0].Start.SetXY(x + , y + 10);
-            _lines[1].Start.SetXY(x + width - 120, y + 5);
-            _lines[2].Start.SetXY(x + width - 60, y + 5);
-            _lines[3].Start.SetXY(x +);
-            _lines[4].Start.SetXY(x +);
-            _lines[0].End.SetXY(x + width / 2 + 30, y + 5);
-            _lines[1].End.SetXY(x + width / 2 - 90, y + 10);
-            _lines[2].End.SetXY(x + width / 2 - 30, y + 5);
-            _lines[3].End.SetXY();
-            _lines[4].End.SetXY();
-            */
-            /*
-            for (int i = 0; i < _lines.Length; i++)
-            {
-                _lines[i].Start.SetXY(_position.x + _lineVecs[i].x, _position.y + _lineVecs[i].y);
-                _lines[i].End.SetXY(_position.x + _lineVecs[i + 1].x, _position.y + _lineVecs[i].y);
-            }
-            */
-            /*
-            _lines[0].Start.SetXY(x + width, y + 10);
-            _lines[1].Start.SetXY(x + width - 120, y + 5);
-            _lines[2].Start.SetXY(x + width - 60, y + 5);
-            _lines[0].End.SetXY(x + width/2 + 30, y + 5);
-            _lines[1].End.SetXY(x + width/2 - 90, y + 10);
-            _lines[2].End.SetXY(x + width/2 - 30, y + 5);
-            */
-            
-            for (int i = 0; i < _lines.Length; i++)
+            for (var i = 0; i < _lines.Length; i++)
             {
                 _lines[i].Start.SetXY(_lines[i].Start.x + xDiff, _lines[i].Start.y + yDiff);
                 _lines[i].End.SetXY(_lines[i].End.x + xDiff, _lines[i].End.y + yDiff);
-            }
-
-            foreach (var lineSegment in _lines)
-            {
-                Console.WriteLine(lineSegment.Start + " " + lineSegment.End);
             }
         }
     }

@@ -35,8 +35,8 @@ namespace NeonArkanoid.Level
         private List<Ball> _bouncerBalls;
         private List<Polygon> _bumperList;
 
-        private Canvas _go1 = new Canvas("../assets/sprite/ui/GO1.png");
-        private Canvas _go2 = new Canvas("../assets/sprite/ui/GO2.png");
+        //private Canvas _go1 = new Canvas("../assets/sprite/ui/GO1.png");
+        //private Canvas _go2 = new Canvas("../assets/sprite/ui/GO2.png");
 
         private int _endTimer;
         private bool _gameEnded;
@@ -499,7 +499,7 @@ namespace NeonArkanoid.Level
             string time = minutes.ToString("00") + ":" + seconds.ToString("00");
 
 
-
+            /*
             var brush = new SolidBrush(Color.FromArgb(255, 255, 255, 255));
 
             var fonts = new PrivateFontCollection();
@@ -507,11 +507,13 @@ namespace NeonArkanoid.Level
 
             var myFont = new Font((FontFamily)fonts.Families[0], 30);
             graphics.DrawString(time, myFont, brush, new PointF(game.width/2, 20));
+            */
+
         }
 
         private void DrawScore()
         {
-
+            /*
             var brush = new SolidBrush(Color.FromArgb(255, 4, 255, 255));
 
             var fonts = new PrivateFontCollection();
@@ -520,10 +522,13 @@ namespace NeonArkanoid.Level
             var myFont = new Font((FontFamily)fonts.Families[0], 30);
             
             graphics.DrawString(_score.ToString("0000"), myFont, brush, new PointF(game.width/2 + 5, 60));
+            */
         }
 
+        
         private void DrawLifes()
-        {
+        {   
+            /*
             var brush = new SolidBrush(Color.FromArgb(255, 255, 20 , 20));
 
             var fonts = new PrivateFontCollection();
@@ -532,6 +537,8 @@ namespace NeonArkanoid.Level
             var myFont = new Font((FontFamily)fonts.Families[0], 30);
 
             graphics.DrawString(_lifes.ToString(), myFont, brush, new PointF(game.width / 8, 20));
+            */
+
         }
     }
 }

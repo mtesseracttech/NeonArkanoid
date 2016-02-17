@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.Utility;
 
@@ -26,6 +27,7 @@ namespace NeonArkanoid.Physics
             physics = false, Color? pColor = null)
             : base(pRadius*2, pRadius*2)
         {
+            graphics.SmoothingMode= SmoothingMode.HighSpeed;
             Physics = physics;
             radius = pRadius;
             Position = position;
@@ -33,8 +35,8 @@ namespace NeonArkanoid.Physics
             Acceleration = acceleration;
 
             _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 5, 1);
-            _spriteOverlay.SetOrigin(radius, radius);
-            //if (!UtilitySettings.DebugMode) AddChild(_spriteOverlay);
+            _spriteOverlay.SetOrigin(_spriteOverlay.width/2, _spriteOverlay.height/2);
+            if (!UtilitySettings.DebugMode) AddChild(_spriteOverlay);
             
 
 
