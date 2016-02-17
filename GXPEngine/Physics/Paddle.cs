@@ -12,12 +12,12 @@ namespace NeonArkanoid.Physics
         private LineSegment[] _lines;
         private Vec2[] _lineVecs;
         private Vec2 _position;
-
+        private int _xLimit;
+        private int _border = 20;
 
         public Paddle(Level.Level level, Vec2 position = null) : base("../assets/sprite/player/player.png", 26, 1)
         {
             SetOrigin(width/2, 0);
-
             _level = level;
             _position = position;
             if (UtilitySettings.DebugMode) alpha = 0;
@@ -27,7 +27,20 @@ namespace NeonArkanoid.Physics
                 x = Position.x;
                 y = Position.y;
             }
+
+
+
             CreateLines();
+
+            CreateLimit();
+        }
+
+        private void CreateLimit()
+        {
+            foreach (var lineVec in _lineVecs)
+            {
+                if (lineVec.x > _xLimit) _xLimit = (int)lineVec.x;
+            }
         }
 
         public Vec2 Position
@@ -46,6 +59,14 @@ namespace NeonArkanoid.Physics
             _currentFrame += _currentSpeed/50;
             _currentFrame %= frameCount;
             SetFrame((int) _currentFrame);
+
+            LimitMovement();
+        }
+
+        private void LimitMovement()
+        {
+            if (Position.x < _xLimit + _border) Position.x = _xLimit + _border;
+            if (Position.x > game.width - _xLimit - _border) Position.x = game.width - _xLimit - _border;
         }
 
         private void CreateLines()
