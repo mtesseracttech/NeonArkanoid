@@ -15,7 +15,7 @@ namespace NeonArkanoid.Physics
         private int _xLimit;
         private int _border = 20;
 
-        public Paddle(Level.Level level, Vec2 position = null) : base("../assets/sprite/player/player.png", 26, 1)
+        public Paddle(Level.Level level, Vec2 position = null) : base("../assets/sprite/player/player.png", 13, 1)
         {
             SetOrigin(width/2, 0);
             _level = level;
@@ -73,20 +73,20 @@ namespace NeonArkanoid.Physics
         {
             _lineVecs = new[]
             {
-                new Vec2(-120, 20),
-                new Vec2(-80, 5),
-                new Vec2(-40, 0),
-                new Vec2(0, 0),
-                new Vec2(40, 0),
-                new Vec2(80, 5),
-                new Vec2(120, 20)
+                new Vec2(-105, 20),
+                new Vec2(-70, 10),
+                new Vec2(-40, 5),
+                new Vec2(0, 5),
+                new Vec2(40, 5),
+                new Vec2(70, 10),
+                new Vec2(105, 20)
             };
 
             _lines = new LineSegment[_lineVecs.Length - 1];
             for (var i = 0; i < _lines.Length; i++)
             {
                 _lines[i] = new LineSegment(_position.Clone().Add(_lineVecs[i]), _position.Clone().Add(_lineVecs[i + 1]),
-                    0xFF00FF00);
+                    0x0000FF00);
                 _level.AddChild(_lines[i]);
                 Console.WriteLine("Creating line with startpoint: " + _lines[i].Start + " and endpoint: " +
                                   _lines[i].End);

@@ -9,7 +9,6 @@ using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Physics;
-using NeonArkanoid.UI.Menu;
 using TiledParser;
 using Polygon = NeonArkanoid.Physics.Polygon;
 
@@ -17,50 +16,53 @@ namespace NeonArkanoid.Level
 {
     internal class Level : GameObject
     {
+        private readonly Vec2 _acceleration = new Vec2(0, 0.1f); //Gravity
         private readonly Ball _ball;
+        private readonly PrivateFontCollection _fonts;
         private readonly NeonArkanoidGame _game;
+        private readonly float maxSpeed = 10;
 
         private readonly string _levelName; //useless for now
         private readonly Map _map;
-        private readonly Paddle _paddle;
-        private readonly List<Polygon> _polyList;
-        private readonly Tweener _tweener = new Tweener();
-        private readonly Vec2 _acceleration = new Vec2(0, 0.1f); //Gravity
-        private readonly float maxSpeed = 10;
-
-        private AnimationSprite _background;
-        private readonly PrivateFontCollection _fonts;
-        private  SolidBrush _brushTime,_brushScore;
         private readonly Font _Myfont;
-        private Color _colorTime, _colorScore;
-
-        private Canvas _drawingField;
-
-        private List<LineSegment> _borderList;
-
-        private float _bottomYBoundary;
+        private readonly Tweener _tweener = new Tweener();
+        private Paddle _paddle;
+        private List<Polygon> _polyList;
         private List<Ball> _bouncerBalls;
         private List<Polygon> _bumperList;
+        private List<LineSegment> _borderList;
+        private AnimationSprite _background;
+        private Canvas _drawingField;
+
+
+        private readonly SolidBrush _brushTime;
+        private readonly SolidBrush _brushScore;
+
+        private readonly Color _colorTime;
+        private readonly Color _colorScore;
 
         //private Canvas _go1 = new Canvas("../assets/sprite/ui/GO1.png");
         //private Canvas _go2 = new Canvas("../assets/sprite/ui/GO2.png");
 
+
+        private int _lifes = 5;
         private int _endTimer;
         private bool _gameEnded;
 
         private float _leftXBoundary;
-        private readonly int _lifes = 5;
         private float _rightXBoundary;
+        private float _bottomYBoundary;
 
-        private float width;
-        private float height;
 
         private int _score;
         private int _timerMinutes;
         private int _timerSeconds;
         private float _topYBoundary;
+        private readonly float height;
 
         private int seconds, minutes;
+
+        private readonly float width;
 
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
         {
@@ -72,7 +74,7 @@ namespace NeonArkanoid.Level
 
             _fonts = new PrivateFontCollection();
             _fonts.AddFontFile("agency_fb.ttf");
-            _Myfont = new Font((FontFamily)_fonts.Families[0], 30);
+            _Myfont = new Font(_fonts.Families[0], 30);
 
             _colorTime = Color.FromArgb(255, Color.White);
             _brushTime = new SolidBrush(_colorTime);
@@ -121,18 +123,17 @@ namespace NeonArkanoid.Level
 
         private void SetBackground()
         {
-            _background = new AnimationSprite("../assets/sprite/background/background game.png", 21, 1);
+            _background = new AnimationSprite("../assets/sprite/background/background game.png", 7, 3);
             AddChild(_background);
         }
 
         public void Update()
         {
-
             if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
                 _timerSeconds++;
                 _timerMinutes++;
-                Redraw();
+                //Redraw(); CAUSING TOO MUCH LAAAG AAAH 
                 DrawTimer();
                 DrawScore();
                 DrawLifes();
@@ -141,7 +142,6 @@ namespace NeonArkanoid.Level
                 ApplyForces();
                 CollisionDetections();
                 DebugInfo();
-
             }
             else
             {
@@ -271,10 +271,12 @@ namespace NeonArkanoid.Level
         {
             return _lifes;
         }
+
         private int ReturnTime()
         {
             return _timerSeconds | _timerMinutes;
         }
+
         private int ReturnScore()
         {
             return _score;
@@ -541,13 +543,13 @@ namespace NeonArkanoid.Level
 
         private void DrawScore()
         {
-            _drawingField.graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore, new PointF(game.width/2 + 2, 60));   
+            _drawingField.graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore,
+                new PointF(game.width/2 + 2, 60));
         }
 
         private void DrawLifes()
         {
-            _drawingField.graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width / 8, 20));
-           
+            _drawingField.graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width/8, 20));
         }
     }
 }

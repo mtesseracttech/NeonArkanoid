@@ -104,16 +104,5 @@ namespace NeonArkanoid.Physics
             }
             _level.RemovePoly(this);
         }
-
-        /*
-        protected override void RenderSelf(GLContext glContext)
-        {
-            GL.Vertex2f(_points[0].x, _points[0].y);
-            GL.Vertex2f(_points[1].x, _points[1].y);
-            GL.Vertex2f(_points[2].x, _points[2].y);
-            GL.End();
-        }
-        */
-
     }
 }

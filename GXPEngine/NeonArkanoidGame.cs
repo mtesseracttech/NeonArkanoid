@@ -7,11 +7,9 @@ namespace NeonArkanoid
     public class NeonArkanoidGame : Game
     {
         private Level.Level _level;
-<<<<<<< HEAD
+
         private Credits _credits;
-=======
         private MainMenu _menu;
->>>>>>> origin/dev
 
         private string _state;
 
@@ -50,14 +48,10 @@ namespace NeonArkanoid
                     _level.Destroy();
                     _level = null;
                     break;
-<<<<<<< HEAD
                 case "Credits":
                     _credits.Destroy();
                     _credits = null;
                     break;
-
-=======
->>>>>>> origin/dev
             }
         }
 
@@ -70,11 +64,11 @@ namespace NeonArkanoid
                     AddChild(_menu);
                     break;
                 case "Level1":
-                    _level = new Level.Level("rocket.tmx", this);
+                    _level = new Level.Level("tiger 4.tmx", this);
                     AddChild(_level);
                     break;
                 case "Level2":
-                    _level = new Level.Level("tiger 4.tmx", this);
+                    _level = new Level.Level("rocket.tmx", this);
                     AddChild(_level);
                     break;
                 case "Credits":
