@@ -528,7 +528,6 @@ namespace NeonArkanoid.Level
             
         }
 
-
         private void DrawLifes()
         {
             /**

@@ -1,13 +1,14 @@
 using System;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.UI.Menu;
-
+using NeonArkanoid.Utility;
 namespace NeonArkanoid
 {
     public class NeonArkanoidGame : Game
     {
         private MainMenu _menu;
         private Level.Level _level;
+        private Credits _credits;
 
         private string _state;
 
@@ -45,6 +46,10 @@ namespace NeonArkanoid
                     _level.Destroy();
                     _level = null;
                     break;
+                case "Credits":
+                    _credits.Destroy();
+                    _credits = null;
+                    break;
 
             }
         }
@@ -58,12 +63,16 @@ namespace NeonArkanoid
                     AddChild(_menu);
                     break;
                 case "Level1":
-                    _level = new Level.Level("tiger 4.tmx", this);
+                    _level = new Level.Level("rocket.tmx", this);
                     AddChild(_level);
                     break;
                 case "Level2":
                     _level = new Level.Level("tiger 4.tmx", this);
                     AddChild(_level);
+                    break;
+                case "Credits":
+                    _credits = new Credits(this);
+                    AddChild(_credits);
                     break;
                 case "Exit":
                     Environment.Exit(0);
