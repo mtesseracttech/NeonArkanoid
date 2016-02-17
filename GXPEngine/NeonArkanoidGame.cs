@@ -7,12 +7,8 @@ namespace NeonArkanoid
     public class NeonArkanoidGame : Game
     {
         private Level.Level _level;
-<<<<<<< HEAD
         private Credits _credits;
-=======
         private MainMenu _menu;
->>>>>>> origin/dev
-
         private string _state;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
@@ -50,14 +46,10 @@ namespace NeonArkanoid
                     _level.Destroy();
                     _level = null;
                     break;
-<<<<<<< HEAD
                 case "Credits":
                     _credits.Destroy();
                     _credits = null;
                     break;
-
-=======
->>>>>>> origin/dev
             }
         }
 
