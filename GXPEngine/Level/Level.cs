@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Globalization;
 using Glide;
 using GXPEngine.Utility.TiledParser;
@@ -33,7 +34,7 @@ namespace NeonArkanoid.Level
         private readonly Font _Myfont;
         private Color _colorTime, _colorScore;
 
-        private Canvas _polyField;
+        private Canvas _drawingField;
 
         private List<LineSegment> _borderList;
 
@@ -113,16 +114,16 @@ namespace NeonArkanoid.Level
 
         private void SetPolyField()
         {
-            _polyField = new Canvas(game.width, game.height);
-            _polyField.graphics.SmoothingMode = SmoothingMode.HighQuality;
-            AddChild(_polyField);
+            _drawingField = new Canvas(game.width, game.height);
+            _drawingField.graphics.SmoothingMode = SmoothingMode.HighQuality;
+            AddChild(_drawingField);
         }
 
         private void SetBackground()
         {
             _background = new AnimationSprite("../assets/sprite/background/background game.png", 21, 1);
             AddChild(_background);
-
+        }
 
         public void Update()
         {
@@ -255,7 +256,7 @@ namespace NeonArkanoid.Level
 
         public void Redraw()
         {
-            _polyField.graphics.Clear(Color.FromArgb(0x00000000));
+            _drawingField.graphics.Clear(Color.FromArgb(0x00000000));
             foreach (var polygon in _polyList)
             {
                 polygon.DrawOnCanvas();
@@ -286,7 +287,7 @@ namespace NeonArkanoid.Level
 
         public Canvas GetPolyField()
         {
-            return _polyField;
+            return _drawingField;
         }
 
         private void ApplyForces()
@@ -535,17 +536,17 @@ namespace NeonArkanoid.Level
             }
             var time = minutes.ToString("00") + ":" + seconds.ToString("00");
 
-            graphics.DrawString(time, _Myfont, _brushTime, new PointF(game.width/2, 20));
+            _drawingField.graphics.DrawString(time, _Myfont, _brushTime, new PointF(game.width/2, 20));
         }
 
         private void DrawScore()
         {
-            graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore, new PointF(game.width/2 + 2, 60));   
+            _drawingField.graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore, new PointF(game.width/2 + 2, 60));   
         }
 
         private void DrawLifes()
         {
-            graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width / 8, 20));
+            _drawingField.graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width / 8, 20));
            
         }
     }
