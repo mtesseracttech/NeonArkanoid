@@ -64,6 +64,9 @@ namespace NeonArkanoid.Level
 
         private readonly float width;
 
+        private float _currentFrame;
+        private readonly float _currentSpeed = 15f; // change the speed of animation
+
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
         {
             width = game.width;
@@ -124,11 +127,14 @@ namespace NeonArkanoid.Level
         private void SetBackground()
         {
             _background = new AnimationSprite("../assets/sprite/background/background game.png", 7, 3);
+
             AddChild(_background);
         }
 
         public void Update()
         {
+            _timerSeconds++;
+            _timerMinutes++;
             if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
                 _timerSeconds++;
@@ -148,6 +154,10 @@ namespace NeonArkanoid.Level
                 ReturnLifes();
                 EndRound();
             }
+
+            _currentFrame += _currentSpeed / 50;
+            _currentFrame %= _background.frameCount;
+            _background.SetFrame((int)_currentFrame);
         }
 
         private void RenderVisuals()
@@ -271,6 +281,7 @@ namespace NeonArkanoid.Level
                 polygon.DrawOnCanvas();
             }
             DrawTimer();
+            DrawScore();
         }
 
         private int ReturnLifes()
