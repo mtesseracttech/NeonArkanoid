@@ -6,8 +6,8 @@ namespace NeonArkanoid
 {
     public class NeonArkanoidGame : Game
     {
-        private MainMenu _menu;
         private Level.Level _level;
+        private MainMenu _menu;
 
         private string _state;
 
@@ -15,6 +15,7 @@ namespace NeonArkanoid
         {
             SetState("MainMenu");
         }
+
         private static void Main()
         {
             new NeonArkanoidGame().Start();
@@ -45,7 +46,6 @@ namespace NeonArkanoid
                     _level.Destroy();
                     _level = null;
                     break;
-
             }
         }
 

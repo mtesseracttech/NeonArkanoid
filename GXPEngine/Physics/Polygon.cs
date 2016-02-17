@@ -45,9 +45,9 @@ namespace NeonArkanoid.Physics
             if (UtilitySettings.DebugMode)
                 Console.WriteLine("Drawing polygon at coords: " + _realPosX + "," + _realPosY);
             if (!UtilitySettings.DebugMode)
-                _level.graphics.DrawPolygon(new Pen(ColorUtils.UIntToColor(_color)), pointFs);
+                _level.GetPolyField().graphics.DrawPolygon(new Pen(ColorUtils.UIntToColor(_color)), pointFs);
             if (!UtilitySettings.DebugMode)
-                _level.graphics.FillPolygon(new SolidBrush(ColorUtils.UIntToColor(_color)), pointFs);
+                _level.GetPolyField().graphics.FillPolygon(new SolidBrush(ColorUtils.UIntToColor(_color)), pointFs);
         }
 
         private void CreateLines()
@@ -105,6 +105,7 @@ namespace NeonArkanoid.Physics
             _level.RemovePoly(this);
         }
 
+        /*
         protected override void RenderSelf(GLContext glContext)
         {
             GL.Vertex2f(_points[0].x, _points[0].y);
@@ -112,5 +113,7 @@ namespace NeonArkanoid.Physics
             GL.Vertex2f(_points[2].x, _points[2].y);
             GL.End();
         }
+        */
+
     }
 }
