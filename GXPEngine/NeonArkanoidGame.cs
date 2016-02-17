@@ -7,10 +7,8 @@ namespace NeonArkanoid
     public class NeonArkanoidGame : Game
     {
         private Level.Level _level;
-
         private Credits _credits;
         private MainMenu _menu;
-
         private string _state;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)

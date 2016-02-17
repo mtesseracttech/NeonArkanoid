@@ -265,6 +265,7 @@ namespace NeonArkanoid.Level
             {
                 polygon.DrawOnCanvas();
             }
+            DrawTimer();
         }
 
         private int ReturnLifes()
