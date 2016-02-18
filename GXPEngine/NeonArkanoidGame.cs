@@ -85,7 +85,8 @@ namespace NeonArkanoid
             }
         }
 
-        private void Update() { }
+        private void Update()
+        { }
 
         public void StartWinScreen()
         {

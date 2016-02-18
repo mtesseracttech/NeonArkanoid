@@ -11,8 +11,8 @@ namespace NeonArkanoid.UI.Menu
         private readonly NeonArkanoidGame _game;
         private Background _background1, _background2;
         private Background _header, _header1;
-         private readonly SoundChannel _musicChannel;
-         private readonly Sound _selectedSound;
+        private readonly SoundChannel _musicChannel;
+        private readonly Sound _selectedSound;
 
         private int _selection;
 

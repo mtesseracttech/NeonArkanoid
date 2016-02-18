@@ -69,8 +69,6 @@ namespace NeonArkanoid.Physics
             return _spriteOverlay;
         }
 
-        public Vec2 Gravity { get; }
-
         public Vec2 Position
         {
             set { _position = value ?? Vec2.zero; }
