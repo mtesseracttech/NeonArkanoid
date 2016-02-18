@@ -1,6 +1,5 @@
 using System;
 using NeonArkanoid.GXPEngine;
-using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.UI.Menu;
 
 namespace NeonArkanoid
@@ -13,6 +12,7 @@ namespace NeonArkanoid
         private WinScreen _winScreen;
         private GameOver _gameOver;
         private string _state;
+        private int _score = 100;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
         {
@@ -89,9 +89,7 @@ namespace NeonArkanoid
             }
         }
 
-
-        private void Update()
-        { }
+        private void Update(){}
 
         public void StartWinScreen()
         {
@@ -103,6 +101,21 @@ namespace NeonArkanoid
         {
             _gameOver = new GameOver(this);
             AddChild(_gameOver);
+        }
+
+        public void AddToScore(int score)
+        {
+            _score += score;
+        }
+
+        public int GetScore()
+        {
+            return _score;
+        }
+
+        public void NextLevel(string currentLevel)
+        {
+            currentLevel
         }
     }
 }

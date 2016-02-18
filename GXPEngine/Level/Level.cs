@@ -82,8 +82,9 @@ namespace NeonArkanoid.Level
         {
             width = game.width;
             height = game.height;
-
+            _game = game;
             SetBackground();
+            _score = _game.GetScore();
             _hud = new HUD(_lifes,this);
             SetPolyField();
             SetTextBoxSettings();
@@ -93,7 +94,7 @@ namespace NeonArkanoid.Level
             _gameEnded = false;
             _levelName = filename.Remove(filename.Length - 4);
             //Console.WriteLine(_levelName);
-            _game = game;
+            
 
             var tmxParser = new TMXParser();
             _map = tmxParser.Parse(filename);
@@ -505,14 +506,22 @@ namespace NeonArkanoid.Level
             //Triggers the end of the game and sets counter until game pops to different state/does something
             if (_gameEnded == false)
             {
-                if(_polyList.Count < 1)_game.StartWinScreen();//calls the win screen
-                else _game.StartGameOver();
+                if (_polyList.Count < 1)
+                {
+                    _game.AddToScore(_score); //Adds the score to the score on the main menu
+                    _game.StartWinScreen(); //calls the win screen
+                }
+                else
+                {
+                    _game.StartGameOver();
+                }
                 _endTimer = Time.now;
                 _gameEnded = true;
             }
             //Sets the game to the main menu after the set time is over
             if (_gameEnded && _endTimer + 5000 < Time.now)
             {
+                
                 _game.SetState("MainMenu");
                 
             }
