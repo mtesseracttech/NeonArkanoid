@@ -1,6 +1,6 @@
 using System;
 
-namespace GXPEngine
+namespace NeonArkanoid.GXPEngine.Utils
 {
 	/// <summary>
 	/// The Utils class contains a number of useful functions.

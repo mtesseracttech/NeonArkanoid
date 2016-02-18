@@ -1,9 +1,9 @@
 using System;
-using GXPEngine.Core;
-using GXPEngine.Managers;
 using System.Collections.Generic;
+using NeonArkanoid.GXPEngine.Core;
+using NeonArkanoid.GXPEngine.Managers;
 
-namespace GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// The Game class represents the Game window.

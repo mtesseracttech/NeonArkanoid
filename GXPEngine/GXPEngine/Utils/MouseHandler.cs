@@ -1,7 +1,6 @@
-﻿using System;
-using GXPEngine.Core;
+﻿using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine
+namespace NeonArkanoid.GXPEngine.Utils
 {
 	/**
 	 * Simple MouseHandler interface between the Input class and your own code, that turns the Input.mouseX Input.mouseY
@@ -53,9 +52,9 @@ namespace GXPEngine
 		//this allows us to use the mouse down point as drag point instead of seeing the target jump due
 		//to the fact that it sets its origin to the mouse down point.
 		//eg instead of:
-		//position.Set (Input.mouseX, Input.mouseY);
+		//position.SetXY (Input.mouseX, Input.mouseY);
 		//you can do
-		//position.Set (Input.mouseX + _mouseHandler.offsetToTarget.x, Input.mouseY + _mouseHandler.offsetToTarget.y);
+		//position.SetXY (Input.mouseX + _mouseHandler.offsetToTarget.x, Input.mouseY + _mouseHandler.offsetToTarget.y);
 		private Vector2 _offset = new Vector2();
 
 		/// <summary>

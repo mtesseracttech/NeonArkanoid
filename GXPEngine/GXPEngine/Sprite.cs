@@ -1,7 +1,7 @@
 using System;
-using GXPEngine.Core;
+using NeonArkanoid.GXPEngine.Core;
 
-namespace GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// The Sprite class holds 2D images that can be used as objects in your game.
@@ -254,9 +254,9 @@ namespace GXPEngine
 		/// The blue component, range 0..1
 		/// </param>
 		public void SetColor(float r, float g, float b) {
-			r = Utils.Clamp(r, 0, 1);
-			g = Utils.Clamp(g, 0, 1);
-			b = Utils.Clamp(b, 0, 1);
+			r = Utils.Utils.Clamp(r, 0, 1);
+			g = Utils.Utils.Clamp(g, 0, 1);
+			b = Utils.Utils.Clamp(b, 0, 1);
 			byte rr = (byte)Math.Floor((r * 255));
 			byte rg = (byte)Math.Floor((g * 255));
 			byte rb = (byte)Math.Floor((b * 255));

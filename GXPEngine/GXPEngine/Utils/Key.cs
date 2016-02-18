@@ -1,6 +1,4 @@
-using System;
-
-namespace GXPEngine
+﻿namespace NeonArkanoid.GXPEngine.Utils
 {
 	/// <summary>
 	/// Contains key definitions for usage with Input.GetKey and Input.GetKeyDown.

@@ -1,13 +1,10 @@
 using System;
 using System.Collections;
-
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Drawing.Drawing2D;
+using NeonArkanoid.GXPEngine.OpenGL;
 
-using GXPEngine.OpenGL;
-
-namespace GXPEngine.Core
+namespace NeonArkanoid.GXPEngine.Core
 {
 	public class Texture2D
 	{

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -9,6 +9,8 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GXPEngine</RootNamespace>
     <AssemblyName>GXPEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>True</DebugSymbols>
@@ -20,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>False</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>none</DebugType>
@@ -29,13 +32,17 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <ConsolePause>False</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MyGame.cs" />
+    <Compile Include="Level\Level.cs" />
+    <Compile Include="NeonArkanoidGame.cs" />
     <Compile Include="GXPEngine\Canvas.cs" />
     <Compile Include="GXPEngine\Game.cs" />
     <Compile Include="GXPEngine\GameObject.cs" />
@@ -62,8 +69,56 @@
     <Compile Include="GXPEngine\Utils\MouseHandler.cs" />
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
+    <Compile Include="Physics\Arrow.cs" />
+    <Compile Include="Physics\Ball.cs" />
+    <Compile Include="Physics\LineSegment.cs" />
+    <Compile Include="Physics\MovingBar.cs" />
+    <Compile Include="Physics\Paddle.cs" />
+    <Compile Include="Physics\Polygon.cs" />
+    <Compile Include="Physics\Vec2.cs" />
+    <Compile Include="TweenEngineAPI\BaseTween.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Back.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Bounce.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Circ.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Cubic.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Elastic.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Expo.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Linear.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Quad.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Quart.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Quint.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Sine.cs" />
+    <Compile Include="TweenEngineAPI\Paths\CatmullRom.cs" />
+    <Compile Include="TweenEngineAPI\Paths\Linear.cs" />
+    <Compile Include="TweenEngineAPI\Pool.cs" />
+    <Compile Include="TweenEngineAPI\Primitives\MutableFloat.cs" />
+    <Compile Include="TweenEngineAPI\Primitives\MutableInteger.cs" />
+    <Compile Include="TweenEngineAPI\SpriteAccessor.cs" />
+    <Compile Include="TweenEngineAPI\Timeline.cs" />
+    <Compile Include="TweenEngineAPI\Tween.cs" />
+    <Compile Include="TweenEngineAPI\TweenAccessor.cs" />
+    <Compile Include="TweenEngineAPI\TweenCallback.cs" />
+    <Compile Include="TweenEngineAPI\TweenEquation.cs" />
+    <Compile Include="TweenEngineAPI\TweenEquations.cs" />
+    <Compile Include="TweenEngineAPI\TweenManager.cs" />
+    <Compile Include="TweenEngineAPI\TweenPath.cs" />
+    <Compile Include="TweenEngineAPI\TweenPaths.cs" />
+    <Compile Include="TweenEngineAPI\TweenUtils.cs" />
+    <Compile Include="UI\Menu\Background.cs" />
+    <Compile Include="UI\Menu\Button.cs" />
+    <Compile Include="UI\Menu\Credits.cs" />
+    <Compile Include="UI\Menu\MainMenu.cs" />
+    <Compile Include="UI\Menu\Pause.cs" />
+    <Compile Include="UI\Menu\WinScreen.cs" />
+    <Compile Include="Utility\ColorUtils.cs" />
+    <Compile Include="Utility\FileReader.cs" />
+    <Compile Include="Utility\TiledParser\TMXMap.cs" />
+    <Compile Include="Utility\TiledParser\TMXParser.cs" />
+    <Compile Include="Utility\UtilitySettings.cs" />
+    <Compile Include="Utility\UtilStrings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="GXPEngine\" />
+    <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

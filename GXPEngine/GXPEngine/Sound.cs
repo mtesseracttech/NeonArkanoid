@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Threading;
 
-namespace GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// The Sound Class represents a Sound resource in memory
@@ -31,15 +30,15 @@ namespace GXPEngine
 		public Sound( String filename, bool looping = false, bool streaming = false )
 		{
 			if ( _system == 0 ) { // if fmod not initialized, create system and init default
-				FMOD.System_Create( out _system );
-				FMOD.System_Init( _system, 32, 0, 0 );
+				FMOD.FMOD.System_Create( out _system );
+				FMOD.FMOD.System_Init( _system, 32, 0, 0 );
 			}
-			uint loop = FMOD.FMOD_LOOP_OFF; // no loop
-			if ( looping ) loop = FMOD.FMOD_LOOP_NORMAL;
+			uint loop = FMOD.FMOD.FMOD_LOOP_OFF; // no loop
+			if ( looping ) loop = FMOD.FMOD.FMOD_LOOP_NORMAL;
 			if ( streaming ) {
-				FMOD.System_CreateStream( _system, filename, loop, 0, out _id );	
+				FMOD.FMOD.System_CreateStream( _system, filename, loop, 0, out _id );	
 			} else {
-				FMOD.System_CreateSound( _system, filename, loop, 0, out _id );
+				FMOD.FMOD.System_CreateSound( _system, filename, loop, 0, out _id );
 			}
 		}
 		
@@ -50,7 +49,7 @@ namespace GXPEngine
 		internal static void Step() 
 		{
 			//if (_system != 0) 
-			FMOD.System_Update(_system);
+			FMOD.FMOD.System_Update(_system);
 		}
 		
 		/// <summary>
@@ -69,7 +68,7 @@ namespace GXPEngine
 		public SoundChannel Play( bool paused = false, int channelId = -1 )
 		{
 			int id = 0;
-			FMOD.System_PlaySound( _system, channelId, _id, paused, ref id );
+			FMOD.FMOD.System_PlaySound( _system, channelId, _id, paused, ref id );
 			SoundChannel soundChannel = new SoundChannel( id );
 			return soundChannel;
 		}

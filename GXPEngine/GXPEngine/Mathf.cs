@@ -1,6 +1,6 @@
 using System;
 
-namespace GXPEngine
+namespace NeonArkanoid.GXPEngine
 {
 	/// <summary>
 	/// Contains several functions for doing floating point Math

@@ -1,6 +1,6 @@
 using System;
 
-namespace GXPEngine.Core
+namespace NeonArkanoid.GXPEngine.Core
 {
 	public class BoxCollider : Collider
 	{
