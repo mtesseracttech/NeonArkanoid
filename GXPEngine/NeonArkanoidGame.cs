@@ -70,7 +70,7 @@ namespace NeonArkanoid
                     AddChild(_menu);
                     break;
                 case "Level1":
-                    _level = new Level.Level("WOLF FINAL.tmx", this);
+                    _level = new Level.Level("tiger 4.tmx", this);
                     AddChild(_level);
                     break;
                 case "Level2":

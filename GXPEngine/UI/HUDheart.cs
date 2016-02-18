@@ -9,10 +9,10 @@ namespace GXPEngine.UI
         private int _currentCreateFrame, _currentDefaultFrame, _currentBreakFrame;
         private int[] _breakFrames = {0,1,2,3,4,5};
         private int[] _createFrames = {5,4,3,2,1,0};
-        private int[] _defaultFrames = {6, 7, 8, 9};
+        private int[] _defaultFrames = {6, 7, 8, 9,10};
 
         private int _state;
-        public HUDheart(float x, float y) : base("../assets/sprite/ui/heart.png",10,1)
+        public HUDheart(float x, float y) : base("../assets/sprite/ui/heart.png",11,1)
         {
             SetXY(x, y);
             _state = 0;
