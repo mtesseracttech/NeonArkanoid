@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
+using GXPEngine.UI;
 using NeonArkanoid.Utility;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
@@ -49,6 +50,8 @@ namespace NeonArkanoid.Level
         private Color _colorTime;
         private Color _colorScore;
 
+        private readonly HUD _hud;
+
         private int _lifes = 5;
         private int _oldLifes;
         private int _endTimer;
@@ -73,7 +76,7 @@ namespace NeonArkanoid.Level
         private readonly float width;
 
         private float _currentFrame;
-        private readonly float _currentSpeed = 15f; // change the speed of animation
+        private readonly float _currentSpeed = 5f; // change the speed of animation
 
 
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
@@ -81,9 +84,8 @@ namespace NeonArkanoid.Level
             width = game.width;
             height = game.height;
 
-            
-
             SetBackground();
+            _hud = new HUD(_lifes,this);
             SetPolyField();
             SetTextBoxSettings();
             BoundaryCreator();
@@ -91,7 +93,7 @@ namespace NeonArkanoid.Level
 
             _gameEnded = false;
             _levelName = filename.Remove(filename.Length - 4);
-            Console.WriteLine(_levelName);
+            //Console.WriteLine(_levelName);
             _game = game;
 
             var tmxParser = new TMXParser();
@@ -138,7 +140,7 @@ namespace NeonArkanoid.Level
             _Myfont = new Font(_fonts.Families[0], 30);
             _colorTime = Color.FromArgb(255, Color.White);
             _brushTime = new SolidBrush(_colorTime);
-            _colorScore = Color.FromArgb(50, Color.DeepSkyBlue);
+            _colorScore = Color.FromArgb(255, Color.Aqua);
             _brushScore = new SolidBrush(_colorScore);
         }
 
@@ -153,6 +155,24 @@ namespace NeonArkanoid.Level
         {
             _background = new AnimationSprite(UtilStrings.SpritesBack + "background game.png", 7, 3);
             AddChild(_background);
+        }
+
+        private void AnimationForBackground()
+        {
+            _currentFrame += _currentSpeed / 50;
+            _currentFrame %= _background.frameCount;
+            _background.SetFrame((int)_currentFrame);
+        }
+
+        private void AnimtaionForBumperRound()
+        {
+
+            _currentFrame += _currentSpeed / 50;
+            _currentFrame %= _bumperSprites[0].frameCount;
+            _bumperSprites[0].SetFrame((int)_currentFrame);
+            _currentFrame %= _bumperSprites[1].frameCount;
+            _bumperSprites[1].SetFrame((int)_currentFrame);
+
         }
 
         public void Update()
@@ -176,10 +196,10 @@ namespace NeonArkanoid.Level
                 ReturnLifes();
                 EndRound();
             }
-            _currentFrame += _currentSpeed / 50;
-            _currentFrame %= _background.frameCount;
-            _background.SetFrame((int)_currentFrame);
-            
+            AnimationForBackground();
+            AnimtaionForBumperRound();
+            BallLoseLife();
+
         }
 
         private void ExceptionalMovement()
@@ -204,7 +224,6 @@ namespace NeonArkanoid.Level
             CheckTimer();
             CheckScore();
 
-            DrawLifes();
             SpriteEffects();
         }
 
@@ -259,6 +278,7 @@ namespace NeonArkanoid.Level
                 new AnimationSprite(UtilStrings.SpritesObject + "bumper double.png", 17, 1),
                 new AnimationSprite(UtilStrings.SpritesObject + "bumper double.png", 17, 1)
             };
+
 
             _bumperSprites[0].SetXY(0, game.height - _bumperSprites[0].height);
             _bumperSprites[1].SetXY(game.width - _bumperSprites[1].width, game.height - _bumperSprites[1].height);
@@ -370,7 +390,7 @@ namespace NeonArkanoid.Level
 
         private void DebugInfo()
         {
-            Console.WriteLine(_invincibilityTimer);
+            //Console.WriteLine(_invincibilityTimer);
         }
 
         public Canvas GetPolyField()
@@ -490,12 +510,12 @@ namespace NeonArkanoid.Level
             //Triggers the end of the game and sets counter until game pops to different state/does something
             if (_gameEnded == false)
             {
-                _game.StartWinScreen();
+                _game.StartWinScreen();//calls the win screen
                 _endTimer = Time.now;
                 _gameEnded = true;
             }
             //Sets the game to the main menu after the set time is over
-            if (_gameEnded && _endTimer + 3000 < Time.now)
+            if (_gameEnded && _endTimer + 5000 < Time.now)
             {
                 _game.SetState("MainMenu");
                 
@@ -668,19 +688,42 @@ namespace NeonArkanoid.Level
 
         }
 
-        private void DrawLifes()
+        private void EndRoundGameOver()
         {
-            if (_oldLifes != _lifes)
+
+            //Triggers the end of the game and sets counter until game pops to different state/does something
+            if (_gameEnded == false)
             {
-                Redraw();
-                _oldLifes = _lifes;
+                _game.StartGameOver();
+                _endTimer = Time.now;
+                _gameEnded = true;
+            }
+            //Sets the game to the main menu after the set time is over
+            if (_gameEnded && _endTimer + 5000 < Time.now)
+            {
+                _game.SetState("MainMenu");
+
             }
         }
 
-        private void StopMusic()
+        private void BallLoseLife()
+        {
+            if (_lifes < 0)
+            {
+                EndRoundGameOver();
+                
+            }
+            else
+            {
+                _hud.SetHearts(_lifes);
+            }
+        }
+
+        public void StopMusic()
         {
             _musicChannel.Stop();
         }
+
     }
 }
  

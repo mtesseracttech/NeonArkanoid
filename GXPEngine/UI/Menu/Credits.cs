@@ -12,6 +12,8 @@ namespace NeonArkanoid.UI.Menu
         private readonly Button[] _buttons;
         private Background _background1;
         private readonly Sound _selectedSound;
+        private SoundChannel _musicChannel;
+        private Sound _music;
 
         private int _selection;
 
@@ -31,6 +33,8 @@ namespace NeonArkanoid.UI.Menu
             _buttons[0].Selected();
 
             _selectedSound = new Sound(UtilStrings.SoundsMenu + "sound_selected.wav");
+            _music = new Sound(UtilStrings.SoundsLevel + "4.mp3", true, true);
+            _musicChannel = _music.Play();
 
         }
 
@@ -68,6 +72,11 @@ namespace NeonArkanoid.UI.Menu
         private void Select()
         {
             _game.SetState(_buttons[_selection].Pressed());
+        }
+
+        public void StopMusic()
+        {
+            _musicChannel.Stop();
         }
 
     }

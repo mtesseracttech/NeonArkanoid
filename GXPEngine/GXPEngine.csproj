@@ -104,9 +104,12 @@
     <Compile Include="TweenEngineAPI\TweenPath.cs" />
     <Compile Include="TweenEngineAPI\TweenPaths.cs" />
     <Compile Include="TweenEngineAPI\TweenUtils.cs" />
+    <Compile Include="UI\HUD.cs" />
+    <Compile Include="UI\HUDheart.cs" />
     <Compile Include="UI\Menu\Background.cs" />
     <Compile Include="UI\Menu\Button.cs" />
     <Compile Include="UI\Menu\Credits.cs" />
+    <Compile Include="UI\Menu\GameOver.cs" />
     <Compile Include="UI\Menu\MainMenu.cs" />
     <Compile Include="UI\Menu\Pause.cs" />
     <Compile Include="UI\Menu\WinScreen.cs" />
