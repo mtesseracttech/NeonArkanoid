@@ -14,6 +14,7 @@
 
         //SOUNDS & MUSIC
         public static readonly string SoundsMenu = AssetPath + "sounds/ui/menu/";
+        public static readonly string SoundsLevel = AssetPath + "sounds/level/";
         //DEBUG RESOURCES
         public static readonly string SpritesDebug = AssetPath + "sprite/debug/";
     }
