@@ -36,7 +36,6 @@ namespace NeonArkanoid.Level
         private AnimationSprite _background;
         private Canvas _drawingField;
 
-
         private SoundChannel _musicChannel;
         private Sound _music;
         private Sound _hitPoly;
@@ -45,7 +44,6 @@ namespace NeonArkanoid.Level
         private AnimationSprite[] _bumperSprites;
         private SolidBrush _brushTime;
         private SolidBrush _brushScore;
-
 
         private Color _colorTime;
         private Color _colorScore;
