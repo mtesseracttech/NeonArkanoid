@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
+using GXPEngine.Utility;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
@@ -132,7 +133,7 @@ namespace NeonArkanoid.Level
             _myfont = new Font(_fonts.Families[0], 30);
             _colorTime = Color.FromArgb(255, Color.White);
             _brushTime = new SolidBrush(_colorTime);
-            _colorScore = Color.FromArgb(50, Color.DeepSkyBlue);
+            _colorScore = Color.FromArgb(100, ColorUtils.UIntToColor(0xFF4CDDFF));
             _brushScore = new SolidBrush(_colorScore);
         }
 
