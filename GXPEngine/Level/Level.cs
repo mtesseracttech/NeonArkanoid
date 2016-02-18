@@ -129,7 +129,6 @@ namespace NeonArkanoid.Level
             _hitPaddle = new Sound(UtilStrings.SoundsLevel + "1_pedal hit.wav");
             _music = new Sound(UtilStrings.SoundsLevel + "level2.wav", true, true);
             _musicChannel = _music.Play();
-
         }
 
         private void SetTextBoxSettings()
@@ -196,8 +195,7 @@ namespace NeonArkanoid.Level
             }
             AnimationForBackground();
             AnimtaionForBumperRound();
-            BallLoseLife();
-
+            
         }
 
         private void ExceptionalMovement()
@@ -221,7 +219,7 @@ namespace NeonArkanoid.Level
         {
             CheckTimer();
             CheckScore();
-
+            BallLoseLife();
             SpriteEffects();
         }
 
@@ -276,7 +274,6 @@ namespace NeonArkanoid.Level
                 new AnimationSprite(UtilStrings.SpritesObject + "bumper double.png", 17, 1),
                 new AnimationSprite(UtilStrings.SpritesObject + "bumper double.png", 17, 1)
             };
-
 
             _bumperSprites[0].SetXY(0, game.height - _bumperSprites[0].height);
             _bumperSprites[1].SetXY(game.width - _bumperSprites[1].width, game.height - _bumperSprites[1].height);
@@ -638,7 +635,6 @@ namespace NeonArkanoid.Level
             CreateVisualXBoundary(_leftXBoundary);
             CreateVisualXBoundary(_rightXBoundary);
             CreateVisualYBoundary(_topYBoundary);
-            //CreateVisualYBoundary(_bottomYBoundary);
             foreach (var lineSegment in _borderList)
             {
                 AddChild(lineSegment);
@@ -688,7 +684,6 @@ namespace NeonArkanoid.Level
 
         private void EndRoundGameOver()
         {
-
             //Triggers the end of the game and sets counter until game pops to different state/does something
             if (_gameEnded == false)
             {
@@ -700,28 +695,18 @@ namespace NeonArkanoid.Level
             if (_gameEnded && _endTimer + 5000 < Time.now)
             {
                 _game.SetState("MainMenu");
-
             }
         }
 
         private void BallLoseLife()
         {
-            if (_lifes < 0)
-            {
-                EndRoundGameOver();
-                
-            }
-            else
-            {
-                _hud.SetHearts(_lifes);
-            }
+            if (_lifes >= 0) _hud.SetHearts(_lifes);
         }
 
         public void StopMusic()
         {
             _musicChannel.Stop();
         }
-
     }
 }
  
