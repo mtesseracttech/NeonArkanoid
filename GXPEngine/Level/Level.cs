@@ -16,7 +16,7 @@ namespace NeonArkanoid.Level
 {
     internal class Level : GameObject
     {
-        private readonly Vec2 _acceleration = new Vec2(0, 0.1f); //Gravity
+        private readonly Vec2 _acceleration = new Vec2(0, 0.08f); //Gravity
         private readonly Ball _ball;
         private readonly float _currentSpeed = 15f; // change the speed of animation
         private readonly NeonArkanoidGame _game;
@@ -25,8 +25,8 @@ namespace NeonArkanoid.Level
         private readonly Map _map;
         private readonly Paddle _paddle;
         private readonly List<Polygon> _polyList;
-        private readonly float height;
-        private readonly float maxSpeed = 10;
+        private readonly float _height;
+        private readonly float _maxSpeed = 10;
 
         private readonly float width;
         private AnimationSprite _background;
@@ -56,10 +56,9 @@ namespace NeonArkanoid.Level
         private int _lifes = 5;
         private Sound _music;
 
-
         private SoundChannel _musicChannel;
 
-        private Font _Myfont;
+        private Font _myfont;
         private int _oldLifes;
         private int _oldScore;
         private float _rightXBoundary;
@@ -70,13 +69,14 @@ namespace NeonArkanoid.Level
         private int _timerSeconds;
         private float _topYBoundary;
 
-        private int seconds, minutes;
+        private int _secondsTicker;
+        private int _seconds, _minutes;
 
 
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
         {
             width = game.width;
-            height = game.height;
+            _height = game.height;
 
             SetBackground();
             SetPolyField();
@@ -129,7 +129,7 @@ namespace NeonArkanoid.Level
         {
             _fonts = new PrivateFontCollection();
             _fonts.AddFontFile("agency_fb.ttf");
-            _Myfont = new Font(_fonts.Families[0], 30);
+            _myfont = new Font(_fonts.Families[0], 30);
             _colorTime = Color.FromArgb(255, Color.White);
             _brushTime = new SolidBrush(_colorTime);
             _colorScore = Color.FromArgb(50, Color.DeepSkyBlue);
@@ -151,7 +151,8 @@ namespace NeonArkanoid.Level
 
         public void Update()
         {
-            if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
+            //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
+            if (_polyList.Count > 0 && _lifes > 0) 
             {
                 Tickers();
                 RenderVisuals();
@@ -195,8 +196,7 @@ namespace NeonArkanoid.Level
         {
             CheckTimer();
             CheckScore();
-
-            DrawLifes();
+            CheckLifes();
             SpriteEffects();
         }
 
@@ -330,12 +330,12 @@ namespace NeonArkanoid.Level
             {
                 polygon.DrawOnCanvas();
             }
-            var time = minutes.ToString("00") + ":" + seconds.ToString("00");
+            var time = _minutes.ToString("00") + ":" + _secondsTicker.ToString("00");
 
-            _drawingField.graphics.DrawString(time, _Myfont, _brushTime, new PointF(game.width/2, 20));
-            _drawingField.graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore,
+            _drawingField.graphics.DrawString(time, _myfont, _brushTime, new PointF(game.width/2, 20));
+            _drawingField.graphics.DrawString(_score.ToString("0000"), _myfont, _brushScore,
                 new PointF(game.width/2 + 2, 60));
-            _drawingField.graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width/8, 20));
+            _drawingField.graphics.DrawString(_lifes.ToString(), _myfont, _brushTime, new PointF(game.width/8, 20));
         }
 
         private void LoseLife(bool returnToPaddle = true)
@@ -410,7 +410,7 @@ namespace NeonArkanoid.Level
                     {
                         for (var l = 0; l < _polyList[p].GetLines().Length; l++)
                         {
-                            if (LineCollisionTest(_polyList[p].GetLines()[l], 0.5f))
+                            if (LineCollisionTest(_polyList[p].GetLines()[l], 0.8f))
                             {
                                 //ADDING THE SCORE
                                 _score += 1;
@@ -429,8 +429,9 @@ namespace NeonArkanoid.Level
                 {
                     if (LineCollisionTest(line, 1f))
                     {
-                        _hitPaddle.Play();
                         //What happens when the ball hits the pedal
+                        _hitPaddle.Play();
+                        if(_ball.Velocity.Length() < 4) _ball.Velocity.Normalize().Scale(4);
                     }
                 }
 
@@ -449,9 +450,8 @@ namespace NeonArkanoid.Level
                     if (BallCollisionTest(ball, 1f))
                     {
                         //What happens when the ball bounces against a bouncer ball
-                        //ADDING THE SCORE
-                        //_score += 10;
-                        LoseLife();
+                        _score += 10;
+                        _ball.Velocity.Normalize().Scale(7);
                     }
                 }
 
@@ -462,7 +462,6 @@ namespace NeonArkanoid.Level
                         if (LineCollisionTest(lineSegment, 1f))
                         {
                             _ball.Velocity.Normalize().Scale(20);
-                            //ADDING THE SCORE
                             _score += 3;
                             _hitPoly.Play();
                         }
@@ -506,12 +505,12 @@ namespace NeonArkanoid.Level
             if (Input.GetKeyDown(Key.B)) _stuckToPaddle = !_stuckToPaddle;
             if (Input.GetKey(Key.D))
             {
-                _paddle.Position.x += 10;
+                _paddle.Position.x += 15;
                 _paddle.Step();
             }
             if (Input.GetKey(Key.A))
             {
-                _paddle.Position.x -= 10;
+                _paddle.Position.x -= 15;
                 _paddle.Step();
             }
             if (_stuckToPaddle)
@@ -592,7 +591,7 @@ namespace NeonArkanoid.Level
 
         private void LimitBallSpeed()
         {
-            if (_ball.Velocity.Length() > maxSpeed) _ball.Velocity.Normalize().Scale(maxSpeed);
+            if (_ball.Velocity.Length() > _maxSpeed) _ball.Velocity.Normalize().Scale(_maxSpeed);
         }
 
         public string GetLevelName()
@@ -621,7 +620,7 @@ namespace NeonArkanoid.Level
 
         private void CreateVisualXBoundary(float xBoundary)
         {
-            _borderList.Add(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
+            _borderList.Add(new LineSegment(xBoundary, 0, xBoundary, _height, 0xffffffff, 1));
         }
 
         private void CreateVisualYBoundary(float yBoundary)
@@ -632,19 +631,19 @@ namespace NeonArkanoid.Level
         private void CheckTimer()
         {
             var hasChanged = false;
-            var oldSeconds = seconds;
-            var oldMinutes = minutes;
+            var oldSeconds = _secondsTicker;
+            var oldMinutes = _minutes;
 
-            seconds = Mathf.Floor(_timerSeconds/120);
+            _secondsTicker = Mathf.Floor(_timerSeconds/120);
 
-            if (seconds > 59)
+            if (_secondsTicker > 59)
             {
                 _timerSeconds = 0;
-                minutes++;
+                _minutes++;
             }
-            if (minutes > 59) _timerMinutes = 0;
+            if (_minutes > 59) _timerMinutes = 0;
 
-            if (seconds != oldSeconds || minutes != oldMinutes)
+            if (_secondsTicker != oldSeconds || _minutes != oldMinutes)
             {
                 Redraw();
             }
@@ -659,7 +658,7 @@ namespace NeonArkanoid.Level
             }
         }
 
-        private void DrawLifes()
+        private void CheckLifes()
         {
             if (_oldLifes != _lifes)
             {

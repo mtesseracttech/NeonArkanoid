@@ -13,7 +13,7 @@ namespace NeonArkanoid.Physics
         private Vec2[] _lineVecs;
         private Vec2 _position;
         private int _xLimit;
-        private int _border = 20;
+        private int _border = 40;
 
         public Paddle(Level.Level level, Vec2 position = null) : base("../assets/sprite/player/player.png", 13, 1)
         {
