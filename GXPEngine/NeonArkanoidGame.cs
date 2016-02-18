@@ -11,6 +11,7 @@ namespace NeonArkanoid
         private Credits _credits;
         private MainMenu _menu;
         private WinScreen _winScreen;
+        private GameOver _gameOver;
         private string _state;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
@@ -42,14 +43,17 @@ namespace NeonArkanoid
                     _menu = null;
                     break;
                 case "Level1":
+                    _level.StopMusic();
                     _level.Destroy();
                     _level = null;
                     break;
                 case "Level2":
+                    _level.StopMusic();
                     _level.Destroy();
                     _level = null;
                     break;
                 case "Credits":
+                    _credits.StopMusic();
                     _credits.Destroy();
                     _credits = null;
                     break;
@@ -92,6 +96,12 @@ namespace NeonArkanoid
         {
             _winScreen = new WinScreen(this);
             AddChild(_winScreen);
+        }
+
+        public void StartGameOver()
+        {
+            _gameOver = new GameOver(this);
+            AddChild(_gameOver);
         }
     }
 }
