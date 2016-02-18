@@ -19,13 +19,13 @@ namespace NeonArkanoid.Level
     {
         private readonly Vec2 _acceleration = new Vec2(0, 0.1f); //Gravity
         private readonly Ball _ball;
-        private readonly PrivateFontCollection _fonts;
+        private PrivateFontCollection _fonts;
         private readonly NeonArkanoidGame _game;
         private readonly float maxSpeed = 10;
 
         private readonly string _levelName; //useless for now
         private readonly Map _map;
-        private readonly Font _Myfont;
+        private Font _Myfont;
         private readonly Tweener _tweener = new Tweener();
         private Paddle _paddle;
         private List<Polygon> _polyList;
@@ -36,11 +36,11 @@ namespace NeonArkanoid.Level
         private Canvas _drawingField;
 
         private AnimationSprite[] _bumperSprites;
-        private readonly SolidBrush _brushTime;
-        private readonly SolidBrush _brushScore;
+        private SolidBrush _brushTime;
+        private SolidBrush _brushScore;
 
-        private readonly Color _colorTime;
-        private readonly Color _colorScore;
+        private Color _colorTime;
+        private Color _colorScore;
 
         //private Canvas _go1 = new Canvas("../assets/sprite/ui/GO1.png");
         //private Canvas _go2 = new Canvas("../assets/sprite/ui/GO2.png");
@@ -55,7 +55,7 @@ namespace NeonArkanoid.Level
         private float _bottomYBoundary;
 
         private int _invincibilityTimer;
-        private bool _stuckToPaddle = false;
+        private bool _stuckToPaddle;
 
         private int _score;
         private int _timerMinutes;
@@ -77,16 +77,7 @@ namespace NeonArkanoid.Level
 
             SetBackground();
             SetPolyField();
-
-            _fonts = new PrivateFontCollection();
-            _fonts.AddFontFile("agency_fb.ttf");
-            _Myfont = new Font(_fonts.Families[0], 30);
-
-            _colorTime = Color.FromArgb(255, Color.White);
-            _brushTime = new SolidBrush(_colorTime);
-            _colorScore = Color.FromArgb(50, Color.DeepSkyBlue);
-            _brushScore = new SolidBrush(_colorScore);
-
+            SetTextBoxSettings();
             BoundaryCreator();
 
             _gameEnded = false;
@@ -115,9 +106,21 @@ namespace NeonArkanoid.Level
 
             _ball = new Ball(30, new AnimationSprite("../assets/sprite/player/ball.png", 5, 1), new Vec2(200, 200));
             AddChild(_ball);
+            _stuckToPaddle = true;
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
             AddChild(_paddle);
+        }
+
+        private void SetTextBoxSettings()
+        {
+            _fonts = new PrivateFontCollection();
+            _fonts.AddFontFile("agency_fb.ttf");
+            _Myfont = new Font(_fonts.Families[0], 30);
+            _colorTime = Color.FromArgb(255, Color.White);
+            _brushTime = new SolidBrush(_colorTime);
+            _colorScore = Color.FromArgb(50, Color.DeepSkyBlue);
+            _brushScore = new SolidBrush(_colorScore);
         }
 
         private void SetPolyField()
@@ -150,6 +153,7 @@ namespace NeonArkanoid.Level
                 LimitBallSpeed();
                 ApplyForces();
                 CollisionDetections();
+                ExceptionalMovement();
                 DebugInfo();
             }
             else
@@ -163,6 +167,17 @@ namespace NeonArkanoid.Level
             //_currentFrame += _currentSpeed / 50;
             //_currentFrame %= _background.frameCount;
             //_background.SetFrame((int)_currentFrame);
+        }
+
+        private void ExceptionalMovement()
+        {
+            if (_stuckToPaddle)
+            {
+                _ball.Acceleration = Vec2.zero;
+                _ball.Velocity = Vec2.zero;
+                _ball.Position.SetXY(_paddle.Position.x, _paddle.Position.y - _ball.radius);
+                _ball.Step();
+            }
         }
 
         private void TimerTickers()
@@ -438,6 +453,11 @@ namespace NeonArkanoid.Level
                     }
                 }
 
+                if (_ball.Position.y > game.height + _ball.radius*2)//Not really a collision, but still :)
+                {
+                    LoseLife(); 
+                }
+
 
                 //AND BEFORE THIS ONE
             }
@@ -477,6 +497,12 @@ namespace NeonArkanoid.Level
                 _paddle.Position.x -= 10;
                 _paddle.Step();
             }
+            if(_stuckToPaddle)
+                if (Input.GetKeyDown(Key.F))
+                {
+                    _stuckToPaddle = false;
+                    _ball.Velocity = new Vec2(0,10);
+                }
         }
 
         /// <summary>
@@ -561,13 +587,13 @@ namespace NeonArkanoid.Level
             _leftXBoundary = border;
             _rightXBoundary = width - border;
             _topYBoundary = border;
-            _bottomYBoundary = height - border;
+            //_bottomYBoundary = height - border;
 
             _borderList = new List<LineSegment>();
             CreateVisualXBoundary(_leftXBoundary);
             CreateVisualXBoundary(_rightXBoundary);
             CreateVisualYBoundary(_topYBoundary);
-            CreateVisualYBoundary(_bottomYBoundary);
+            //CreateVisualYBoundary(_bottomYBoundary);
             foreach (var lineSegment in _borderList)
             {
                 AddChild(lineSegment);

@@ -81,7 +81,6 @@ namespace NeonArkanoid
             }
         }
 
-
         private void Update()
         {
         }
