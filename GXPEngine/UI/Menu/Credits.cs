@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Policy;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.Utility;
@@ -10,7 +11,6 @@ namespace NeonArkanoid.UI.Menu
         private readonly NeonArkanoidGame _game;
         private readonly Button[] _buttons;
         private Background _background1;
-        private readonly SoundChannel _musicChannel;
         private readonly Sound _selectedSound;
 
         private int _selection;
@@ -29,6 +29,7 @@ namespace NeonArkanoid.UI.Menu
                 AddChild(button);
             }
             _buttons[0].Selected();
+
             _selectedSound = new Sound(UtilStrings.SoundsMenu + "sound_selected.wav");
 
         }
@@ -68,5 +69,6 @@ namespace NeonArkanoid.UI.Menu
         {
             _game.SetState(_buttons[_selection].Pressed());
         }
+
     }
 }

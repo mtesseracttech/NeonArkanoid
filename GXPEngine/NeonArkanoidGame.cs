@@ -1,7 +1,8 @@
 using System;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.UI.Menu;
-using NeonArkanoid.Utility;
+
 namespace NeonArkanoid
 {
     public class NeonArkanoidGame : Game
@@ -9,6 +10,7 @@ namespace NeonArkanoid
         private Level.Level _level;
         private Credits _credits;
         private MainMenu _menu;
+        private WinScreen _winScreen;
         private string _state;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
@@ -23,6 +25,7 @@ namespace NeonArkanoid
 
         public void SetState(string state, bool restart = false)
         {
+            
             if (state == _state && !restart) return;
             StopState();
             _state = state;
@@ -50,6 +53,7 @@ namespace NeonArkanoid
                     _credits.Destroy();
                     _credits = null;
                     break;
+
             }
         }
 
@@ -81,9 +85,12 @@ namespace NeonArkanoid
             }
         }
 
+        private void Update() { }
 
-        private void Update()
+        public void StartWinScreen()
         {
+            _winScreen = new WinScreen(this);
+            AddChild(_winScreen);
         }
     }
 }

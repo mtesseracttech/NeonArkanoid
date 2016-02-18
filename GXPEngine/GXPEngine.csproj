@@ -76,25 +76,49 @@
     <Compile Include="Physics\Paddle.cs" />
     <Compile Include="Physics\Polygon.cs" />
     <Compile Include="Physics\Vec2.cs" />
+    <Compile Include="TweenEngineAPI\BaseTween.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Back.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Bounce.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Circ.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Cubic.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Elastic.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Expo.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Linear.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Quad.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Quart.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Quint.cs" />
+    <Compile Include="TweenEngineAPI\Equations\Sine.cs" />
+    <Compile Include="TweenEngineAPI\Paths\CatmullRom.cs" />
+    <Compile Include="TweenEngineAPI\Paths\Linear.cs" />
+    <Compile Include="TweenEngineAPI\Pool.cs" />
+    <Compile Include="TweenEngineAPI\Primitives\MutableFloat.cs" />
+    <Compile Include="TweenEngineAPI\Primitives\MutableInteger.cs" />
+    <Compile Include="TweenEngineAPI\SpriteAccessor.cs" />
+    <Compile Include="TweenEngineAPI\Timeline.cs" />
+    <Compile Include="TweenEngineAPI\Tween.cs" />
+    <Compile Include="TweenEngineAPI\TweenAccessor.cs" />
+    <Compile Include="TweenEngineAPI\TweenCallback.cs" />
+    <Compile Include="TweenEngineAPI\TweenEquation.cs" />
+    <Compile Include="TweenEngineAPI\TweenEquations.cs" />
+    <Compile Include="TweenEngineAPI\TweenManager.cs" />
+    <Compile Include="TweenEngineAPI\TweenPath.cs" />
+    <Compile Include="TweenEngineAPI\TweenPaths.cs" />
+    <Compile Include="TweenEngineAPI\TweenUtils.cs" />
     <Compile Include="UI\Menu\Background.cs" />
     <Compile Include="UI\Menu\Button.cs" />
     <Compile Include="UI\Menu\Credits.cs" />
     <Compile Include="UI\Menu\MainMenu.cs" />
     <Compile Include="UI\Menu\Pause.cs" />
+    <Compile Include="UI\Menu\WinScreen.cs" />
     <Compile Include="Utility\ColorUtils.cs" />
     <Compile Include="Utility\FileReader.cs" />
     <Compile Include="Utility\TiledParser\TMXMap.cs" />
     <Compile Include="Utility\TiledParser\TMXParser.cs" />
-    <Compile Include="Utility\Tween\Approach.cs" />
-    <Compile Include="Utility\Tween\Ease.cs" />
-    <Compile Include="Utility\Tween\GlideInfo.cs" />
-    <Compile Include="Utility\Tween\Lerper.cs" />
-    <Compile Include="Utility\Tween\Tween.cs" />
-    <Compile Include="Utility\Tween\Tweener.cs" />
     <Compile Include="Utility\UtilitySettings.cs" />
     <Compile Include="Utility\UtilStrings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
 </Project>
