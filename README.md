@@ -5,7 +5,7 @@ TO DO LIST:
 
 -Transition levels
 
--Saving Score in Main Class
+-Saving Score in Main Class (Done, I think...)
 
 -Visual Effects
 
