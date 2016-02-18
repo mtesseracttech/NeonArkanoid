@@ -176,9 +176,8 @@ namespace NeonArkanoid.Level
 
         public void Update()
         {
-            if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
+            if (_polyList.Count > 0 && _lifes > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
-
                 Tickers();
                 RenderVisuals();
                 Controls();
@@ -434,7 +433,7 @@ namespace NeonArkanoid.Level
                     {
                         for (var l = 0; l < _polyList[p].GetLines().Length; l++)
                         {
-                            if (LineCollisionTest(_polyList[p].GetLines()[l], 0.5f))
+                            if (LineCollisionTest(_polyList[p].GetLines()[l], 1f))
                             {
                                 //ADDING THE SCORE
                                 _score += 1;
@@ -454,6 +453,7 @@ namespace NeonArkanoid.Level
                     if (LineCollisionTest(line, 1f))
                     {
                         _hitPaddle.Play();
+                        if(_ball.Velocity.Length() <4f) _ball.Velocity.Normalize().Scale(4f);
                         //What happens when the ball hits the pedal
                     }
                 }
@@ -464,18 +464,18 @@ namespace NeonArkanoid.Level
                 {
                     if (LineCollisionTest(line, 1f))
                     {
+                        //What happens when the ball hits a border 
                         _hitPoly.Play();
-                        //What happens when the ball hits a border  
                     }
                 }
                 foreach (var ball in _bouncerBalls)
                 {
-                    if (BallCollisionTest(ball, 1f))
+                    if (BallCollisionTest(ball, 0.5f))
                     {
                         //What happens when the ball bounces against a bouncer ball
-                        //ADDING THE SCORE
-                        //_score += 10;
-                        LoseLife();
+                        _ball.Velocity.Normalize().Scale(8);
+                        _score += 10;
+
                     }
                 }
 
@@ -485,8 +485,7 @@ namespace NeonArkanoid.Level
                     {
                         if (LineCollisionTest(lineSegment, 1f))
                         {
-                            _ball.Velocity.Normalize().Scale(20);
-                            //ADDING THE SCORE
+                            _ball.Velocity.Normalize().Scale(8);
                             _score += 3;
                             _hitPoly.Play();
                         }
@@ -509,7 +508,8 @@ namespace NeonArkanoid.Level
             //Triggers the end of the game and sets counter until game pops to different state/does something
             if (_gameEnded == false)
             {
-                _game.StartWinScreen();//calls the win screen
+                if(_polyList.Count < 1)_game.StartWinScreen();//calls the win screen
+                else _game.StartGameOver();
                 _endTimer = Time.now;
                 _gameEnded = true;
             }
@@ -632,8 +632,7 @@ namespace NeonArkanoid.Level
             float border = 1;
             _leftXBoundary = border;
             _rightXBoundary = width - border;
-            _topYBoundary = border;
-            //_bottomYBoundary = height - border;
+            _topYBoundary = 20;
 
             _borderList = new List<LineSegment>();
             CreateVisualXBoundary(_leftXBoundary);

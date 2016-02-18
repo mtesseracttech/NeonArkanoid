@@ -107,7 +107,6 @@ namespace NeonArkanoid.Physics
                 _currentFrame %= _spriteOverlay.frameCount;
                 _spriteOverlay.SetFrame((int)_currentFrame);
             }
-
         }
 
         private void Draw()
