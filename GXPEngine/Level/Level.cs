@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
+using System.Media;
 using Glide;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
@@ -34,7 +35,7 @@ namespace NeonArkanoid.Level
         private AnimationSprite _background;
         private Canvas _drawingField;
 
-
+        private AnimationSprite[] _bumperSprites;
         private readonly SolidBrush _brushTime;
         private readonly SolidBrush _brushScore;
 
@@ -53,6 +54,8 @@ namespace NeonArkanoid.Level
         private float _rightXBoundary;
         private float _bottomYBoundary;
 
+        private int _invincibilityTimer;
+        private bool _stuckToPaddle = false;
 
         private int _score;
         private int _timerMinutes;
@@ -110,7 +113,7 @@ namespace NeonArkanoid.Level
             AddBouncerBalls();
             AddBumpers();
 
-            _ball = new Ball(30, new Vec2(200, 200));
+            _ball = new Ball(30, new AnimationSprite("../assets/sprite/player/ball.png", 5, 1), new Vec2(200, 200));
             AddChild(_ball);
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
@@ -123,6 +126,8 @@ namespace NeonArkanoid.Level
             _drawingField.graphics.SmoothingMode = SmoothingMode.HighQuality;
             AddChild(_drawingField);
         }
+
+
 
         private void SetBackground()
         {
@@ -137,8 +142,8 @@ namespace NeonArkanoid.Level
             _timerMinutes++;
             if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
-                _timerSeconds++;
-                _timerMinutes++;
+
+                TimerTickers();
                 //Redraw(); CAUSING TOO MUCH LAAAG AAAH 
                 RenderVisuals();
                 Controls();
@@ -155,9 +160,16 @@ namespace NeonArkanoid.Level
                 EndRound();
             }
 
-            _currentFrame += _currentSpeed / 50;
-            _currentFrame %= _background.frameCount;
-            _background.SetFrame((int)_currentFrame);
+            //_currentFrame += _currentSpeed / 50;
+            //_currentFrame %= _background.frameCount;
+            //_background.SetFrame((int)_currentFrame);
+        }
+
+        private void TimerTickers()
+        {
+            _timerSeconds++;
+            _timerMinutes++;
+            if (_invincibilityTimer > 0) _invincibilityTimer--;
         }
 
         private void RenderVisuals()
@@ -165,6 +177,18 @@ namespace NeonArkanoid.Level
             DrawTimer();
             DrawScore();
             DrawLifes();
+            SpriteEffects();
+        }
+
+        private void SpriteEffects()
+        {
+            BallEffects();
+        }
+
+        private void BallEffects()
+        {
+            if (_invincibilityTimer > 0) _ball.GetSprite().alpha = 0.5f;
+            else _ball.GetSprite().alpha = 1f;
         }
 
         private void AddBumpers()
@@ -201,22 +225,25 @@ namespace NeonArkanoid.Level
                     new Vec2(game.width, game.height),
                     new Vec2(game.width - 200, game.height)
                 }, 0xFF00FFFF, this, 20, 0, 0));
-            foreach (var polygon in _bumperList)
+            foreach (var polygon in _bumperList) AddChild(polygon);
+            _bumperSprites = new[]
             {
-                AddChild(polygon);
-            }
+                new AnimationSprite("../assets/sprite/object/bumper double.png", 17, 1),
+                new AnimationSprite("../assets/sprite/object/bumper double.png", 17, 1)
+            };
+
+            _bumperSprites[0].SetXY(0, game.height - _bumperSprites[0].height);
+            _bumperSprites[1].SetXY(game.width - _bumperSprites[1].width, game.height - _bumperSprites[1].height);
+            _bumperSprites[1].Mirror(true, false);
+            foreach (var bumperSprite in _bumperSprites) AddChild(bumperSprite);
         }
 
         private void AddBouncerBalls()
         {
             _bouncerBalls = new List<Ball>();
-            _bouncerBalls.Add(new Ball(50, new Vec2(100, 100)));
-            _bouncerBalls.Add(new Ball(50, new Vec2(game.width - 100, 100)));
-            for (var i = 0; i < _bouncerBalls.Count; i++)
-            {
-                _bouncerBalls[i].BallColor = Color.Green;
-                AddChild(_bouncerBalls[i]);
-            }
+            _bouncerBalls.Add(new Ball(45, new AnimationSprite("../assets/sprite/object/bumper round.png", 19,1), new Vec2(100, 100)));
+            _bouncerBalls.Add(new Ball(45, new AnimationSprite("../assets/sprite/object/bumper round.png", 19, 1), new Vec2(game.width - 100, 100)));
+            foreach (var bouncerBall in _bouncerBalls) AddChild(bouncerBall);
         }
 
         private void CreatePolygons(ObjectGroup objectGroup)
@@ -284,6 +311,16 @@ namespace NeonArkanoid.Level
             DrawScore();
         }
 
+        private void LoseLife(bool returnToPaddle = true)
+        {
+            if (_invincibilityTimer <= 0)
+            {
+                _lifes--;
+                _invincibilityTimer = 60;
+                if(returnToPaddle) _stuckToPaddle = true;
+            }
+        }
+
         private int ReturnLifes()
         {
             return _lifes;
@@ -301,7 +338,7 @@ namespace NeonArkanoid.Level
 
         private void DebugInfo()
         {
-            //if (UtilitySettings.DebugMode) Console.WriteLine(_ball.Velocity.Length());
+            Console.WriteLine(_invincibilityTimer);
         }
 
         public Canvas GetPolyField()
@@ -311,10 +348,13 @@ namespace NeonArkanoid.Level
 
         private void ApplyForces()
         {
-            _ball.Acceleration = _acceleration;
-            _ball.Velocity.Add(_ball.Acceleration);
-            _ball.Position.Add(_ball.Velocity);
-            _ball.Step();
+            if (!_stuckToPaddle)
+            {
+                _ball.Acceleration = _acceleration;
+                _ball.Velocity.Add(_ball.Acceleration);
+                _ball.Position.Add(_ball.Velocity);
+                _ball.Step();
+            }
         }
 
         /// <summary>
@@ -380,7 +420,8 @@ namespace NeonArkanoid.Level
                     {
                         //What happens when the ball bounces against a bouncer ball
                         //ADDING THE SCORE
-                        _score += 10;
+                        //_score += 10;
+                        LoseLife();
                     }
                 }
 
@@ -396,6 +437,8 @@ namespace NeonArkanoid.Level
                         }
                     }
                 }
+
+
                 //AND BEFORE THIS ONE
             }
         }
@@ -423,7 +466,7 @@ namespace NeonArkanoid.Level
             if (Input.GetKey(Key.RIGHT)) _ball.Velocity.x += 1; //FOR DEBUG ONLY
             if (Input.GetKeyDown(Key.R)) if (_polyList.Count > 0) RemovePolyAt(0); //FOR DEBUG ONLY
             if (Input.GetKeyDown(Key.T)) _game.SetState("Level1", true); //FOR DEBUG ONLY
-
+            if (Input.GetKeyDown(Key.B)) _stuckToPaddle = !_stuckToPaddle;
             if (Input.GetKey(Key.D))
             {
                 _paddle.Position.x += 10;

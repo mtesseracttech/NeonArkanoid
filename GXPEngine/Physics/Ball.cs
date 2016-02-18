@@ -23,30 +23,37 @@ namespace NeonArkanoid.Physics
 		 * Note the Color? this means that pColor can be null (which is not possible normally for structs since they are value types).
 		 */
 
-        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null, bool
-            physics = false, Color? pColor = null)
-            : base(pRadius*2, pRadius*2)
+        public Ball(int pRadius, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null, Color? pColor = null)
+        : base(pRadius*2, pRadius*2)
         {
-            graphics.SmoothingMode= SmoothingMode.HighSpeed;
-            Physics = physics;
+            graphics.SmoothingMode= SmoothingMode.HighQuality;
+            radius = pRadius;
+            Position = position;
+            Velocity = velocity;
+            Acceleration = acceleration;
+            _ballColor = pColor ?? Color.Blue;
+
+            //Draw();
+            if (Position != null)
+            {
+                x = Position.x;
+                y = Position.y;
+            }
+            Step();
+        }
+
+        public Ball(int pRadius, AnimationSprite sprite, Vec2 position = null, Vec2 velocity = null, Vec2 acceleration = null)
+        : base(pRadius * 2, pRadius * 2)
+        {
+            _spriteOverlay = sprite;
+            _spriteOverlay.SetOrigin(_spriteOverlay.width / 2, _spriteOverlay.height / 2);
+            AddChild(_spriteOverlay);
             radius = pRadius;
             Position = position;
             Velocity = velocity;
             Acceleration = acceleration;
 
-            _spriteOverlay = new AnimationSprite("../assets/sprite/player/ball.png", 5, 1);
-            _spriteOverlay.SetOrigin(_spriteOverlay.width/2, _spriteOverlay.height/2);
-            if (!UtilitySettings.DebugMode) AddChild(_spriteOverlay);
-            
-
-
-            //?? means: assign pColor unless pColor is null then take Color.Blue instead
-            //basically this is short for if (pColor == null) { _ballColor = Color.Blue} else { _ballColor = Color.Blue }
-            //another short way to write this is _ballColor = (pColor == null?Color.Blue:pColor);
-            //use whatever you feel comfortable with and are able to explain.
-            // _ballColor = pColor ?? Color.Blue;
-
-            _ballColor = pColor ?? Color.Blue;
+            _ballColor = Color.FromArgb(0x000000);
 
             Draw();
             if (Position != null)
@@ -55,6 +62,11 @@ namespace NeonArkanoid.Physics
                 y = Position.y;
             }
             Step();
+        }
+
+        public AnimationSprite GetSprite()
+        {
+            return _spriteOverlay;
         }
 
         public Vec2 Gravity { get; }
@@ -91,14 +103,13 @@ namespace NeonArkanoid.Physics
 
         private void Update()
         {
-            // if (_spriteOverlay.currentFrame <= _spriteOverlay.frameCount)
-            // {
-            //_spriteOverlay.currentFrame ++;
-            _currentFrame += _currentSpeed/50;
-            _currentFrame %= _spriteOverlay.frameCount;
-            _spriteOverlay.SetFrame((int) _currentFrame);
-            //   }
-            //else _spriteOverlay.currentFrame = 0;
+            if (_spriteOverlay != null)
+            {
+                _currentFrame += _currentSpeed / 50;
+                _currentFrame %= _spriteOverlay.frameCount;
+                _spriteOverlay.SetFrame((int)_currentFrame);
+            }
+
         }
 
         private void Draw()
