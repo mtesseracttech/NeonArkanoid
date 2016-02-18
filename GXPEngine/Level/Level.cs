@@ -6,6 +6,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.Media;
 using Glide;
+using NeonArkanoid.Utility;
 using GXPEngine.Utility.TiledParser;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
@@ -34,6 +35,9 @@ namespace NeonArkanoid.Level
         private List<LineSegment> _borderList;
         private AnimationSprite _background;
         private Canvas _drawingField;
+
+        private readonly SoundChannel _musicChannel;
+        private readonly Sound _music, _hitPoly, _hitPaddle;
 
         private AnimationSprite[] _bumperSprites;
         private SolidBrush _brushTime;
@@ -110,6 +114,11 @@ namespace NeonArkanoid.Level
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
             AddChild(_paddle);
+
+            _hitPoly = new Sound(UtilStrings.SoundsLevel + "1_tile hit.wav");
+            _hitPaddle = new Sound(UtilStrings.SoundsLevel + "1_pedal hit.wav");
+            _music = new Sound(UtilStrings.SoundsLevel + "8.wav", true, true);
+            _musicChannel = _music.Play();
         }
 
         private void SetTextBoxSettings()
@@ -189,6 +198,7 @@ namespace NeonArkanoid.Level
 
         private void RenderVisuals()
         {
+            Redraw();
             DrawTimer();
             DrawScore();
             DrawLifes();
@@ -322,8 +332,8 @@ namespace NeonArkanoid.Level
             {
                 polygon.DrawOnCanvas();
             }
-            DrawTimer();
-            DrawScore();
+
+
         }
 
         private void LoseLife(bool returnToPaddle = true)
@@ -404,6 +414,7 @@ namespace NeonArkanoid.Level
                                 _score += 1;
                                 //What happens when the ball hits a polygon
                                 _polyList[p].RemovePoly();
+                                _hitPoly.Play();
                                 break; //Needed to avoid ArgumentOutOfRangeException
                             }
                         }
@@ -416,6 +427,7 @@ namespace NeonArkanoid.Level
                 {
                     if (LineCollisionTest(line, 1f))
                     {
+                        _hitPaddle.Play();
                         //What happens when the ball hits the pedal
                     }
                 }
@@ -636,6 +648,11 @@ namespace NeonArkanoid.Level
         private void DrawLifes()
         {
             _drawingField.graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width/8, 20));
+        }
+
+        public void StopMusic()
+        {
+            _musicChannel.Stop();
         }
     }
 }
