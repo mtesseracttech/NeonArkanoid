@@ -36,8 +36,10 @@ namespace NeonArkanoid.Level
         private AnimationSprite _background;
         private Canvas _drawingField;
 
-        private readonly SoundChannel _musicChannel;
-        private readonly Sound _music, _hitPoly, _hitPaddle;
+        private SoundChannel _musicChannel;
+        private Sound _music;
+        private Sound _hitPoly;
+        private Sound _hitPaddle;
 
         private AnimationSprite[] _bumperSprites;
         private SolidBrush _brushTime;
@@ -51,6 +53,7 @@ namespace NeonArkanoid.Level
 
 
         private int _lifes = 5;
+        private int _oldLifes;
         private int _endTimer;
         private bool _gameEnded;
 
@@ -62,6 +65,7 @@ namespace NeonArkanoid.Level
         private bool _stuckToPaddle;
 
         private int _score;
+        private int _oldScore;
         private int _timerMinutes;
         private int _timerSeconds;
         private float _topYBoundary;
@@ -74,6 +78,7 @@ namespace NeonArkanoid.Level
         private float _currentFrame;
         private readonly float _currentSpeed = 15f; // change the speed of animation
 
+
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
         {
             width = game.width;
@@ -83,6 +88,7 @@ namespace NeonArkanoid.Level
             SetPolyField();
             SetTextBoxSettings();
             BoundaryCreator();
+            SetSounds();
 
             _gameEnded = false;
             _levelName = filename.Remove(filename.Length - 4);
@@ -108,13 +114,17 @@ namespace NeonArkanoid.Level
             AddBouncerBalls();
             AddBumpers();
 
-            _ball = new Ball(30, new AnimationSprite("../assets/sprite/player/ball.png", 5, 1), new Vec2(200, 200));
+            _ball = new Ball(30, new AnimationSprite(UtilStrings.SpritesPlayer + "ball.png", 5, 1), new Vec2(200, 200));
             AddChild(_ball);
             _stuckToPaddle = true;
 
             _paddle = new Paddle(this, new Vec2(game.width/2, game.height - 100));
             AddChild(_paddle);
+            Redraw();
+        }
 
+        private void SetSounds()
+        {
             _hitPoly = new Sound(UtilStrings.SoundsLevel + "1_tile hit.wav");
             _hitPaddle = new Sound(UtilStrings.SoundsLevel + "1_pedal hit.wav");
             _music = new Sound(UtilStrings.SoundsLevel + "8.wav", true, true);
@@ -143,19 +153,15 @@ namespace NeonArkanoid.Level
 
         private void SetBackground()
         {
-            _background = new AnimationSprite("../assets/sprite/background/background game.png", 7, 3);
-
+            _background = new AnimationSprite(UtilStrings.SpritesBack + "background game.png", 7, 3);
             AddChild(_background);
         }
 
         public void Update()
         {
-            _timerSeconds++;
-            _timerMinutes++;
             if (_polyList.Count > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
-
-                TimerTickers();
+                Tickers();
                 //Redraw(); CAUSING TOO MUCH LAAAG AAAH 
                 RenderVisuals();
                 Controls();
@@ -184,23 +190,21 @@ namespace NeonArkanoid.Level
             {
                 _ball.Acceleration = Vec2.zero;
                 _ball.Velocity = Vec2.zero;
-                _ball.Position.SetXY(_paddle.Position.x, _paddle.Position.y - _ball.radius);
+                _ball.Position.SetXY(_paddle.Position.x, _paddle.Position.y - _ball.radius - 1);
                 _ball.Step();
             }
         }
 
-        private void TimerTickers()
+        private void Tickers()
         {
             _timerSeconds++;
-            _timerMinutes++;
             if (_invincibilityTimer > 0) _invincibilityTimer--;
         }
 
         private void RenderVisuals()
         {
-            Redraw();
-            DrawTimer();
-            DrawScore();
+            CheckTimer();
+            CheckScore();
             DrawLifes();
             SpriteEffects();
         }
@@ -253,8 +257,8 @@ namespace NeonArkanoid.Level
             foreach (var polygon in _bumperList) AddChild(polygon);
             _bumperSprites = new[]
             {
-                new AnimationSprite("../assets/sprite/object/bumper double.png", 17, 1),
-                new AnimationSprite("../assets/sprite/object/bumper double.png", 17, 1)
+                new AnimationSprite(UtilStrings.SpritesObject + "bumper double.png", 17, 1),
+                new AnimationSprite(UtilStrings.SpritesObject + "bumper double.png", 17, 1)
             };
 
             _bumperSprites[0].SetXY(0, game.height - _bumperSprites[0].height);
@@ -266,8 +270,8 @@ namespace NeonArkanoid.Level
         private void AddBouncerBalls()
         {
             _bouncerBalls = new List<Ball>();
-            _bouncerBalls.Add(new Ball(45, new AnimationSprite("../assets/sprite/object/bumper round.png", 19,1), new Vec2(100, 100)));
-            _bouncerBalls.Add(new Ball(45, new AnimationSprite("../assets/sprite/object/bumper round.png", 19, 1), new Vec2(game.width - 100, 100)));
+            _bouncerBalls.Add(new Ball(45, new AnimationSprite(UtilStrings.SpritesObject + "bumper round.png", 19,1), new Vec2(100, 100)));
+            _bouncerBalls.Add(new Ball(45, new AnimationSprite(UtilStrings.SpritesObject + "bumper round.png", 19, 1), new Vec2(game.width - 100, 100)));
             foreach (var bouncerBall in _bouncerBalls) AddChild(bouncerBall);
         }
 
@@ -324,6 +328,7 @@ namespace NeonArkanoid.Level
         public void Redraw()
         {
             _drawingField.graphics.Clear(Color.FromArgb(0x00000000));
+
             foreach (var polygon in _polyList)
             {
                 polygon.DrawOnCanvas();
@@ -332,8 +337,11 @@ namespace NeonArkanoid.Level
             {
                 polygon.DrawOnCanvas();
             }
+            var time = minutes.ToString("00") + ":" + seconds.ToString("00");
 
-
+            _drawingField.graphics.DrawString(time, _Myfont, _brushTime, new PointF(game.width / 2, 20));
+            _drawingField.graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore, new PointF(game.width / 2 + 2, 60));
+            _drawingField.graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width / 8, 20));
         }
 
         private void LoseLife(bool returnToPaddle = true)
@@ -509,12 +517,15 @@ namespace NeonArkanoid.Level
                 _paddle.Position.x -= 10;
                 _paddle.Step();
             }
-            if(_stuckToPaddle)
+            if (_stuckToPaddle)
+            {
                 if (Input.GetKeyDown(Key.F))
                 {
                     _stuckToPaddle = false;
-                    _ball.Velocity = new Vec2(0,10);
+                    _ball.Velocity = new Vec2(0, 10);
                 }
+            }
+
         }
 
         /// <summary>
@@ -622,32 +633,44 @@ namespace NeonArkanoid.Level
             _borderList.Add(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
         }
 
-        private void DrawTimer()
+        private void CheckTimer()
         {
-            seconds = Mathf.Floor(_timerSeconds/60);
-            minutes = Mathf.Floor(_timerMinutes/3600);
+            bool hasChanged = false;
+            int oldSeconds = seconds;
+            int oldMinutes = minutes;
+
+            seconds = Mathf.Floor(_timerSeconds/120);
+
             if (seconds > 59)
             {
                 _timerSeconds = 0;
+                minutes++;
             }
-            if (minutes > 59)
-            {
-                _timerMinutes = 0;
-            }
-            var time = minutes.ToString("00") + ":" + seconds.ToString("00");
+            if (minutes > 59) _timerMinutes = 0;
 
-            _drawingField.graphics.DrawString(time, _Myfont, _brushTime, new PointF(game.width/2, 20));
+            if (seconds != oldSeconds || minutes != oldMinutes)
+            {
+                Redraw();
+            }
         }
 
-        private void DrawScore()
+        private void CheckScore()
         {
-            _drawingField.graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore,
-                new PointF(game.width/2 + 2, 60));
+            if (_oldScore != _score)
+            {
+                Redraw();
+                _oldScore = _score;
+            }
+
         }
 
         private void DrawLifes()
         {
-            _drawingField.graphics.DrawString(_lifes.ToString(), _Myfont, _brushTime, new PointF(game.width/8, 20));
+            if (_oldLifes != _lifes)
+            {
+                Redraw();
+                _oldLifes = _lifes;
+            }
         }
 
         public void StopMusic()
