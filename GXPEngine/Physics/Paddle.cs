@@ -88,8 +88,6 @@ namespace NeonArkanoid.Physics
                 _lines[i] = new LineSegment(_position.Clone().Add(_lineVecs[i]), _position.Clone().Add(_lineVecs[i + 1]),
                     0x0000FF00);
                 _level.AddChild(_lines[i]);
-                Console.WriteLine("Creating line with startpoint: " + _lines[i].Start + " and endpoint: " +
-                                  _lines[i].End);
             }
         }
 
