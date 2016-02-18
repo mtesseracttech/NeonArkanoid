@@ -127,7 +127,7 @@ namespace NeonArkanoid.Level
         {
             _hitPoly = new Sound(UtilStrings.SoundsLevel + "1_tile hit.wav");
             _hitPaddle = new Sound(UtilStrings.SoundsLevel + "1_pedal hit.wav");
-            _music = new Sound(UtilStrings.SoundsLevel + "8.wav", true, true);
+            _music = new Sound(UtilStrings.SoundsLevel + "level2.wav", true, true);
             _musicChannel = _music.Play();
 
         }

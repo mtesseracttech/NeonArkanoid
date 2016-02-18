@@ -33,7 +33,7 @@ namespace NeonArkanoid.UI.Menu
             }
             _buttons[0].Selected();
             _selectedSound = new Sound(UtilStrings.SoundsMenu + "sound_selected.wav");
-            var music = new Sound(UtilStrings.SoundsMenu + "Menu.ogg", true, true);
+            var music = new Sound(UtilStrings.SoundsMenu + "MENU.mp3", true, true);
             _musicChannel = music.Play();
             
         }    
