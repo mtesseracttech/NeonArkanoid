@@ -241,7 +241,7 @@ namespace NeonArkanoid.Level
             {
                 _ball.Acceleration = Vec2.zero;
                 _ball.Velocity = Vec2.zero;
-                _ball.Position.SetXY(_paddle.Position.x, _paddle.Position.y - _ball.radius - 1);
+                _ball.Position.SetXY(_paddle.x, _paddle.y - _ball.radius - 1);
                 _ball.Step();
             }
         }
@@ -566,12 +566,12 @@ namespace NeonArkanoid.Level
             if (Input.GetKeyDown(Key.B)) _stuckToPaddle = !_stuckToPaddle;
             if (Input.GetKey(Key.D))
             {
-                _paddle.Position.x += 10;
+                _paddle.Position.x += 15;
                 _paddle.Step();
             }
             if (Input.GetKey(Key.A))
             {
-                _paddle.Position.x -= 10;
+                _paddle.Position.x -= 15;
                 _paddle.Step();
             }
             if (_stuckToPaddle)
