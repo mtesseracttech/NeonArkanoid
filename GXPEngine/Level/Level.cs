@@ -83,8 +83,9 @@ namespace NeonArkanoid.Level
             width = game.width;
             height = game.height;
             _game = game;
-            SetBackground();
             _score = _game.GetScore();
+            SetBackground();
+            
             _hud = new HUD(_lifes,this);
             SetPolyField();
             SetTextBoxSettings();
@@ -189,9 +190,6 @@ namespace NeonArkanoid.Level
             }
             else
             {
-                ReturnTime();
-                ReturnScore();
-                ReturnLifes();
                 EndRound();
             }
             AnimationForBackground();
@@ -369,21 +367,6 @@ namespace NeonArkanoid.Level
             }
         }
 
-        private int ReturnLifes()
-        {
-            return _lifes;
-        }
-
-        private int ReturnTime()
-        {
-            return _timerSeconds | _timerMinutes;
-        }
-
-        private int ReturnScore()
-        {
-            return _score;
-        }
-
         private void DebugInfo()
         {
             //Console.WriteLine(_invincibilityTimer);
@@ -521,9 +504,9 @@ namespace NeonArkanoid.Level
             //Sets the game to the main menu after the set time is over
             if (_gameEnded && _endTimer + 5000 < Time.now)
             {
-                
-                _game.SetState("MainMenu");
-                
+                if(_polyList.Count < 1) _game.NextLevel();
+                else _game.SetState("MainMenu");
+                _gameEnded = false;
             }
         }
 
@@ -534,7 +517,7 @@ namespace NeonArkanoid.Level
             if (Input.GetKey(Key.LEFT)) _ball.Velocity.x += -1; //FOR DEBUG ONLY
             if (Input.GetKey(Key.RIGHT)) _ball.Velocity.x += 1; //FOR DEBUG ONLY
             if (Input.GetKeyDown(Key.R)) if (_polyList.Count > 0) RemovePolyAt(0); //FOR DEBUG ONLY
-            if (Input.GetKeyDown(Key.T)) _game.SetState("Level1", true); //FOR DEBUG ONLY
+            if (Input.GetKeyDown(Key.T)) _game.SetState("Level01", true); //FOR DEBUG ONLY
             if (Input.GetKeyDown(Key.B)) _stuckToPaddle = !_stuckToPaddle;
             if (Input.GetKey(Key.D))
             {
@@ -637,7 +620,7 @@ namespace NeonArkanoid.Level
         {
             float border = 1;
             _leftXBoundary = border;
-            _rightXBoundary = width - border;
+            _rightXBoundary = game.width - border;
             _topYBoundary = 20;
 
             _borderList = new List<LineSegment>();
@@ -652,17 +635,16 @@ namespace NeonArkanoid.Level
 
         private void CreateVisualXBoundary(float xBoundary)
         {
-            _borderList.Add(new LineSegment(xBoundary, 0, xBoundary, height, 0xffffffff, 1));
+            _borderList.Add(new LineSegment(xBoundary, 0, xBoundary, height));
         }
 
         private void CreateVisualYBoundary(float yBoundary)
         {
-            _borderList.Add(new LineSegment(0, yBoundary, width, yBoundary, 0xffffffff, 1));
+            _borderList.Add(new LineSegment(0, yBoundary, game.width, yBoundary));
         }
 
         private void CheckTimer()
         {
-            bool hasChanged = false;
             int oldSeconds = seconds;
             int oldMinutes = minutes;
 
@@ -689,22 +671,6 @@ namespace NeonArkanoid.Level
                 _oldScore = _score;
             }
 
-        }
-
-        private void EndRoundGameOver()
-        {
-            //Triggers the end of the game and sets counter until game pops to different state/does something
-            if (_gameEnded == false)
-            {
-                _game.StartGameOver();
-                _endTimer = Time.now;
-                _gameEnded = true;
-            }
-            //Sets the game to the main menu after the set time is over
-            if (_gameEnded && _endTimer + 5000 < Time.now)
-            {
-                _game.SetState("MainMenu");
-            }
         }
 
         private void BallLoseLife()

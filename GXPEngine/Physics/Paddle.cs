@@ -86,7 +86,7 @@ namespace NeonArkanoid.Physics
             for (var i = 0; i < _lines.Length; i++)
             {
                 _lines[i] = new LineSegment(_position.Clone().Add(_lineVecs[i]), _position.Clone().Add(_lineVecs[i + 1]),
-                    0x0000FF00);
+                    0xFF00FF00);
                 _level.AddChild(_lines[i]);
             }
         }

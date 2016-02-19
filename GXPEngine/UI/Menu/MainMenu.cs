@@ -23,7 +23,7 @@ namespace NeonArkanoid.UI.Menu
             SetHeader();
             _buttons = new[]
             {
-                new Button(UtilStrings.SpritesMenu + "Start.png", 2, 1500, 207, "Level1"),
+                new Button(UtilStrings.SpritesMenu + "Start.png", 2, 1500, 207, "Level01"),
                 new Button(UtilStrings.SpritesMenu + "credits.png", 2, 1498, 370, "Credits"),
                 new Button(UtilStrings.SpritesMenu + "quit.png", 2, 1502, 537, "Exit")
             };

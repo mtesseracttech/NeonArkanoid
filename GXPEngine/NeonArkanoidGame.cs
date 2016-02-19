@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NeonArkanoid.GXPEngine;
+using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.UI.Menu;
 
 namespace NeonArkanoid
@@ -11,12 +14,31 @@ namespace NeonArkanoid
         private MainMenu _menu;
         private WinScreen _winScreen;
         private GameOver _gameOver;
+        private string[] _levelNames;
         private string _state;
         private int _score = 100;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
         {
+            PopulateLevelNames();
             SetState("MainMenu");
+        }
+
+        private void PopulateLevelNames()
+        {
+            _levelNames = new []
+            {
+                "Level01",
+                "Level02",
+                "Level03",
+                "Level04",
+                "Level05",
+                "Level06",
+                "Level07",
+                "Level08",
+                "Level09",
+                "Level10"
+            };
         }
 
         private static void Main()
@@ -42,12 +64,52 @@ namespace NeonArkanoid
                     _menu.Destroy();
                     _menu = null;
                     break;
-                case "Level1":
+                case "Level01":
                     _level.StopMusic();
                     _level.Destroy();
                     _level = null;
                     break;
-                case "Level2":
+                case "Level02":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level03":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level04":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level05":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level06":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level07":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level08":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level09":
+                    _level.StopMusic();
+                    _level.Destroy();
+                    _level = null;
+                    break;
+                case "Level10":
                     _level.StopMusic();
                     _level.Destroy();
                     _level = null;
@@ -57,7 +119,6 @@ namespace NeonArkanoid
                     _credits.Destroy();
                     _credits = null;
                     break;
-
             }
         }
 
@@ -69,12 +130,44 @@ namespace NeonArkanoid
                     _menu = new MainMenu(this);
                     AddChild(_menu);
                     break;
-                case "Level1":
-                    _level = new Level.Level("tiger 4.tmx", this);
+                case "Level01":
+                    _level = new Level.Level("level01 mirror.tmx", this);
                     AddChild(_level);
                     break;
-                case "Level2":
-                    _level = new Level.Level("rocket.tmx", this);
+                case "Level02":
+                    _level = new Level.Level("level02 diamonds.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level03":
+                    _level = new Level.Level("level03 eye.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level04":
+                    _level = new Level.Level("level04 invader.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level05":
+                    _level = new Level.Level("level05 squashing bugs.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level06":
+                    _level = new Level.Level("level06 bear.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level07":
+                    _level = new Level.Level("level07 cardinal.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level08":
+                    _level = new Level.Level("level08 Tiger.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level09":
+                    _level = new Level.Level("level09 butterfly.tmx", this);
+                    AddChild(_level);
+                    break;
+                case "Level10":
+                    _level = new Level.Level("level10 wolf.tmx", this);
                     AddChild(_level);
                     break;
                 case "Credits":
@@ -89,7 +182,10 @@ namespace NeonArkanoid
             }
         }
 
-        private void Update(){}
+        private void Update()
+        {
+            if (Input.GetKeyDown(Key.Q)) NextLevel();
+        }
 
         public void StartWinScreen()
         {
@@ -113,9 +209,26 @@ namespace NeonArkanoid
             return _score;
         }
 
-        public void NextLevel(string currentLevel)
+        
+        public void NextLevel()
         {
-            currentLevel
+            for (int i = 0; i < _levelNames.Length; i++)
+            {
+                if (_levelNames[i] == _state)
+                {
+                    if (i < _levelNames.Length - 1)
+                    {
+                        SetState(_levelNames[i + 1]);
+                        break;
+                    }
+                    else
+                    {
+                        SetState("Credits");
+                        break;
+                    }
+                }
+            }
         }
+        
     }
 }
