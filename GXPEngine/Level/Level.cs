@@ -20,7 +20,6 @@ namespace NeonArkanoid.Level
     {
         private readonly Vec2 _acceleration = new Vec2(0, 0.1f); //Gravity
         private readonly Ball _ball;
-        private readonly float _currentSpeed = 5f; // change the speed of animation
         private readonly NeonArkanoidGame _game;
 
         private readonly HUD _hud;
@@ -46,6 +45,20 @@ namespace NeonArkanoid.Level
 
         private float _currentFrame;
         private Canvas _drawingField;
+
+        private int[] _defaultFrames = { 0};
+        private int _currentDefaultFrame;
+
+        private int[] _hitFrames = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+        private int _currenthitFrame;
+
+        private int _state = 1;
+
+        private float _currentFrame2 = 0;
+        private readonly float _currentSpeed = 8f; // change the speed of animation
+
+        private int _lifes = 5;
+        private int _oldLifes;
         private int _endTimer;
         private PrivateFontCollection _fonts;
         private bool _gameEnded;
@@ -56,13 +69,11 @@ namespace NeonArkanoid.Level
 
         private float _leftXBoundary;
 
-        private int _lifes = 5;
         private Sound _music;
 
         private SoundChannel _musicChannel;
 
-        private Font _Myfont;
-        private int _oldLifes;
+        private Font _myfont;
         private int _oldScore;
         private readonly Paddle _paddle;
         private readonly List<Polygon> _polyList;
@@ -77,8 +88,7 @@ namespace NeonArkanoid.Level
         private float _topYBoundary;
 
         private int seconds, minutes;
-
-
+ 
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
         {
             width = game.width;
@@ -140,7 +150,7 @@ namespace NeonArkanoid.Level
         {
             _fonts = new PrivateFontCollection();
             _fonts.AddFontFile("agency_fb.ttf");
-            _Myfont = new Font(_fonts.Families[0], 30);
+            _myfont = new Font(_fonts.Families[0], 30);
             _colorTime = Color.FromArgb(255, Color.White);
             _brushTime = new SolidBrush(_colorTime);
             _colorScore = Color.FromArgb(255, Color.Aqua);
@@ -161,13 +171,17 @@ namespace NeonArkanoid.Level
         }
 
         private void AnimationForBackground()
-        {
+        {/*
             _currentFrame += _currentSpeed/50;
             _currentFrame %= _background.frameCount;
             _background.SetFrame((int) _currentFrame);
+            */
+            _currentFrame2 += _currentSpeed / 50;
+            _currentFrame2 %= _background.frameCount;
+            _background.SetFrame((int)_currentFrame2);
         }
 
-        private void AnimtaionForBumperRound()
+        private void BreakFrames()
         {
             _currentFrame += _currentSpeed/50;
             _currentFrame %= _bumperSprites[0].frameCount;
@@ -176,10 +190,30 @@ namespace NeonArkanoid.Level
             _bumperSprites[1].SetFrame((int) _currentFrame);
         } //TODO
 
+        private void HitFrames()
+        {
+            if (_currenthitFrame < _hitFrames.Length*3 - 1) _currenthitFrame++;
+            else _state = 1;
+            _bumperSprites[0].currentFrame = _hitFrames[_currenthitFrame / 3];
+            _bumperSprites[1].currentFrame = _hitFrames[_currenthitFrame / 3];
+            Console.WriteLine("+ " + _state);
+            
+        }
+
+        private void CheckStateFrame()
+        {
+            if (_state == 1)
+            {
+                BreakFrames();
+            }
+            else  HitFrames();
+        }
+
+
         public void Update()
         {
-            if (_polyList.Count > 0 && _lifes > 0)
-                //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
+            CheckStateFrame();
+            if (_polyList.Count > 0 && _lifes > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
                 Tickers();
                 RenderVisuals();
@@ -195,7 +229,15 @@ namespace NeonArkanoid.Level
                 EndRound();
             }
             AnimationForBackground();
-            AnimtaionForBumperRound();
+            AnimationBumpers();
+        }
+
+        private void AnimationBumpers()
+        {
+            if (_currentDefaultFrame < _defaultFrames.Length * 30 - 1) _currentDefaultFrame++;
+            else _currentDefaultFrame = 0;
+            _bumperSprites[0].currentFrame = _defaultFrames[_currentDefaultFrame / 30];
+            _bumperSprites[1].currentFrame = _defaultFrames[_currentDefaultFrame / 30];
         }
 
         private void ExceptionalMovement()
@@ -355,8 +397,8 @@ namespace NeonArkanoid.Level
             }
             var time = minutes.ToString("00") + ":" + seconds.ToString("00");
 
-            _drawingField.graphics.DrawString(time, _Myfont, _brushTime, new PointF(game.width/2, 3));
-            _drawingField.graphics.DrawString(_score.ToString("0000"), _Myfont, _brushScore, new PointF(1100, 4));
+            _drawingField.graphics.DrawString(time, _myfont, _brushTime, new PointF(game.width/2, 3));
+            _drawingField.graphics.DrawString(_score.ToString("0000"), _myfont, _brushScore, new PointF(1100, 4));
         }
 
         private void LoseLife(bool returnToPaddle = true)
@@ -465,10 +507,13 @@ namespace NeonArkanoid.Level
 
                 foreach (var polygon in _bumperList)
                 {
+                    
                     foreach (var lineSegment in polygon.GetLines())
-                    {
+                    {                       
                         if (LineCollisionTest(lineSegment, 1f))
                         {
+                            _state = 0;
+                            Console.WriteLine(_state);
                             _ball.Velocity.Normalize().Scale(8);
                             _score += 3;
                             _hitPoly.Play();
@@ -476,12 +521,9 @@ namespace NeonArkanoid.Level
                     }
                 }
 
-                if (_ball.Position.y > game.height + _ball.radius*2) //Not really a collision, but still :)
-                {
-                    LoseLife();
-                }
-
-
+                //Not really a collision, but still :)
+                if (_ball.Position.y > game.height + _ball.radius*2) LoseLife();
+                
                 //AND BEFORE THIS ONE
             }
         }
