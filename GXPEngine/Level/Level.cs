@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
+using GXPEngine.Object;
 using GXPEngine.Utility;
 using GXPEngine.UI;
 using NeonArkanoid.Utility;
@@ -49,6 +50,7 @@ namespace NeonArkanoid.Level
 
         private Color _colorTime;
         private Color _colorScore;
+        private Vec2 _sparkPoint;
 
         private readonly HUD _hud;
 
@@ -422,6 +424,7 @@ namespace NeonArkanoid.Level
                                 _score += 1;
                                 //What happens when the ball hits a polygon
                                 _polyList[p].RemovePoly();
+                                if (_sparkPoint != null) CreateSpark();
                                 _hitPoly.Play();
                                 break; //Needed to avoid ArgumentOutOfRangeException
                             }
@@ -484,6 +487,11 @@ namespace NeonArkanoid.Level
 
                 //AND BEFORE THIS ONE
             }
+        }
+
+        private void CreateSpark()
+        {
+            AddChild(new Spark(_sparkPoint));
         }
 
         private void EndRound()
@@ -569,6 +577,7 @@ namespace NeonArkanoid.Level
                 if (ballDistanceAlongLine < 0) ballDistanceAlongLine = 0;
                 if (ballDistanceAlongLine > lineLength) ballDistanceAlongLine = lineLength;
                 var closestPointOnLine = line.Start.Clone().Add(lineVectorNormalized.Scale(ballDistanceAlongLine));
+                _sparkPoint = closestPointOnLine;
                 var difference = _ball.Position.Clone().Subtract(closestPointOnLine);
                 if (difference.Length() < _ball.radius)
                 {

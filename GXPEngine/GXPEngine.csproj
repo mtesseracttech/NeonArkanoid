@@ -69,6 +69,7 @@
     <Compile Include="GXPEngine\Utils\MouseHandler.cs" />
     <Compile Include="GXPEngine\Utils\Time.cs" />
     <Compile Include="GXPEngine\Utils\Utils.cs" />
+    <Compile Include="Object\Spark.cs" />
     <Compile Include="Physics\Arrow.cs" />
     <Compile Include="Physics\Ball.cs" />
     <Compile Include="Physics\LineSegment.cs" />

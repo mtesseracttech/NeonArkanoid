@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
 using NeonArkanoid.UI.Menu;
@@ -16,7 +14,7 @@ namespace NeonArkanoid
         private GameOver _gameOver;
         private string[] _levelNames;
         private string _state;
-        private int _score = 100;
+        private int _score = 0;
 
         public NeonArkanoidGame() : base(1280, 800, false, false)
         {
