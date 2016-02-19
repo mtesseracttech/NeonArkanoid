@@ -1,6 +1,7 @@
 ﻿using System;
 using NeonArkanoid.GXPEngine;
 using NeonArkanoid.GXPEngine.Utils;
+using NeonArkanoid.Utility;
 using TweenEngine;
 using TweenGameUTE;
 
@@ -15,9 +16,12 @@ namespace NeonArkanoid.UI.Menu
         TweenManager tm;
         Timeline myTimelime = Timeline.CreateSequence();
         Timeline myTimelime2 = Timeline.CreateSequence();
+        private Sound _sound;
         public WinScreen(NeonArkanoidGame game) : base()
         {
             _game = game;
+            _sound = new Sound(UtilStrings.SoundsMenu + "Win.wav");
+            _sound.Play();
             tm = new TweenManager();
             Tween.RegisterAccessor(typeof(Sprite), new SpriteAccessor());
 

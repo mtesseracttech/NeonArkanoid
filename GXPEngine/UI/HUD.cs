@@ -24,7 +24,7 @@ namespace GXPEngine.UI
             _lifeHearts = new List<HUDheart>();
             for (int i = 0; i < _lives; i++)
             {
-                _lifeHearts.Add(new HUDheart(x + 30 + (i * 64), 30));
+                _lifeHearts.Add(new HUDheart(x + 100 + (i * 64), 0));
             }
             foreach (HUDheart heart in _lifeHearts)
             {
