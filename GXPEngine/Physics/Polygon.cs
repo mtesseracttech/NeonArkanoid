@@ -64,8 +64,8 @@ namespace NeonArkanoid.Physics
                 if (i < relativePoints.Length - 1)
                 {
                     if (UtilitySettings.DebugMode)
-                        Console.WriteLine("Creating Line " + i + " with coords: " + relativePoints[i] +
-                                          relativePoints[i + 1]);
+                    Console.WriteLine("Creating Line " + i + " with coords: " + relativePoints[i] +
+                    relativePoints[i + 1]);
                     _lines[i] = new LineSegment(relativePoints[i], relativePoints[i + 1], this, _color);
                     if (!UtilitySettings.DebugMode) _lines[i].Color = 0x00000000;
                 }
