@@ -18,18 +18,15 @@ namespace NeonArkanoid.Level
 {
     internal class Level : GameObject
     {
-        private readonly Vec2 _acceleration = new Vec2(0, 0.1f); //Gravity
+        private readonly Vec2 _acceleration = new Vec2(0, 0.08f); //Gravity
         private readonly Ball _ball;
         private readonly NeonArkanoidGame _game;
 
         private readonly HUD _hud;
 
         private readonly string _levelName; //useless for now
-        private readonly Map _map;
-        private readonly float height;
-        private readonly float maxSpeed = 10;
+        private readonly float maxSpeed = 8;
 
-        private readonly float width;
         private AnimationSprite _background;
         private List<LineSegment> _borderList;
         private float _bottomYBoundary;
@@ -91,8 +88,6 @@ namespace NeonArkanoid.Level
  
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
         {
-            width = game.width;
-            height = game.height;
             _game = game;
             _score = _game.GetScore();
             SetBackground();
@@ -111,14 +106,14 @@ namespace NeonArkanoid.Level
 
 
             var tmxParser = new TMXParser();
-            _map = tmxParser.Parse(filename);
+            var map = tmxParser.Parse(filename);
 
-            for (var i = 0; i < _map.ObjectGroup.Length; i++)
+            for (var i = 0; i < map.ObjectGroup.Length; i++)
             {
-                if (_map.ObjectGroup[i].Name.ToLower() == "polygons" || _map.ObjectGroup[i].Name.ToLower() == "polygon")
+                if (map.ObjectGroup[i].Name.ToLower() == "polygons" || map.ObjectGroup[i].Name.ToLower() == "polygon")
                 {
                     _polyList = new List<Polygon>();
-                    CreatePolygons(_map.ObjectGroup[i]);
+                    CreatePolygons(map.ObjectGroup[i]);
                 }
             }
             foreach (var polygon in _polyList)
@@ -685,7 +680,7 @@ namespace NeonArkanoid.Level
 
         private void CreateVisualXBoundary(float xBoundary)
         {
-            _borderList.Add(new LineSegment(xBoundary, 0, xBoundary, height));
+            _borderList.Add(new LineSegment(xBoundary, 0, xBoundary, game.height));
         }
 
         private void CreateVisualYBoundary(float yBoundary)

@@ -157,7 +157,7 @@ namespace NeonArkanoid
                     AddChild(_level);
                     break;
                 case "Level08":
-                    _level = new Level.Level("level08 Tiger.tmx", this);
+                    _level = new Level.Level("level08 tiger.tmx", this);
                     AddChild(_level);
                     break;
                 case "Level09":
