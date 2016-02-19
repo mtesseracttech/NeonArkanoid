@@ -54,10 +54,10 @@ namespace NeonArkanoid.Level
 
         private readonly HUD _hud;
 
-        private int[] _defaultFrames = { 0,1};
+        private int[] _defaultFrames = { 0};
         private int _currentDefaultFrame;
 
-        private int[] _hitFrames = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+        private int[] _hitFrames = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
         private int _currenthitFrame;
 
         private int _state = 1;
@@ -186,24 +186,21 @@ namespace NeonArkanoid.Level
 
         private void HitFrames()
         {
-            if (_currenthitFrame < _hitFrames.Length * 5 - 1) _currenthitFrame++;
-            else _currenthitFrame = 0;
-            _bumperSprites[0].currentFrame = _hitFrames[_currenthitFrame / 5];
-            _bumperSprites[1].currentFrame = _hitFrames[_currenthitFrame / 5];
-            Console.WriteLine(_currenthitFrame);
+            if (_currenthitFrame < _hitFrames.Length*3 - 1) _currenthitFrame++;
+            else _state = 1;
+            _bumperSprites[0].currentFrame = _hitFrames[_currenthitFrame / 3];
+            _bumperSprites[1].currentFrame = _hitFrames[_currenthitFrame / 3];
+            Console.WriteLine("+ " + _state);
+            
         }
 
         private void CheckStateFrame()
         {
-            switch (_state)
+            if (_state == 1)
             {
-                case 1:
-                    BreakFrames();
-                    break;
-                case 2:
-                    HitFrames();
-                    break;
+                BreakFrames();
             }
+            else  HitFrames();
         }
 
 
@@ -226,9 +223,6 @@ namespace NeonArkanoid.Level
                 EndRound();
             }
             AnimationForBackground();
-           // _state = 1;
-
-
         }
 
         private void ExceptionalMovement()
@@ -499,10 +493,10 @@ namespace NeonArkanoid.Level
                 {
                     
                     foreach (var lineSegment in polygon.GetLines())
-                    {
-                        _state = 2;
+                    {                       
                         if (LineCollisionTest(lineSegment, 1f))
                         {
+                            _state = 0;
                             Console.WriteLine(_state);
                             _ball.Velocity.Normalize().Scale(8);
                             _score += 3;
@@ -510,7 +504,6 @@ namespace NeonArkanoid.Level
                         }
                     }
                 }
-
                 if (_ball.Position.y > game.height + _ball.radius*2)//Not really a collision, but still :)
                 {
                     LoseLife(); 
