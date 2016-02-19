@@ -54,6 +54,17 @@ namespace NeonArkanoid.Level
 
         private readonly HUD _hud;
 
+        private int[] _defaultFrames = { 0,1};
+        private int _currentDefaultFrame;
+
+        private int[] _hitFrames = {1,2,3,4,5,6,7,8,9,10,11,12,13,14};
+        private int _currenthitFrame;
+
+        private int _state = 1;
+
+        private float _currentFrame2 = 0;
+        private readonly float _currentSpeed = 8f; // change the speed of animation
+
         private int _lifes = 5;
         private int _oldLifes;
         private int _endTimer;
@@ -76,11 +87,7 @@ namespace NeonArkanoid.Level
         private int seconds, minutes;
 
         private readonly float width;
-
-        private float _currentFrame;
-        private readonly float _currentSpeed = 5f; // change the speed of animation
-
-
+ 
         public Level(string filename, NeonArkanoidGame game) //: base(game.width, game.height)
         {
             width = game.width;
@@ -164,24 +171,45 @@ namespace NeonArkanoid.Level
 
         private void AnimationForBackground()
         {
-            _currentFrame += _currentSpeed / 50;
-            _currentFrame %= _background.frameCount;
-            _background.SetFrame((int)_currentFrame);
+            _currentFrame2 += _currentSpeed / 50;
+            _currentFrame2 %= _background.frameCount;
+            _background.SetFrame((int)_currentFrame2);
         }
 
-        private void AnimtaionForBumperRound()
+        private void BreakFrames()
         {
+            if (_currentDefaultFrame < _defaultFrames.Length*30 - 1) _currentDefaultFrame++;
+            else _currentDefaultFrame = 0;
+            _bumperSprites[0].currentFrame = _defaultFrames[_currentDefaultFrame / 30];
+            _bumperSprites[1].currentFrame = _defaultFrames[_currentDefaultFrame / 30];
+        }
 
-            _currentFrame += _currentSpeed / 50;
-            _currentFrame %= _bumperSprites[0].frameCount;
-            _bumperSprites[0].SetFrame((int)_currentFrame);
-            _currentFrame %= _bumperSprites[1].frameCount;
-            _bumperSprites[1].SetFrame((int)_currentFrame);
+        private void HitFrames()
+        {
+            if (_currenthitFrame < _hitFrames.Length * 5 - 1) _currenthitFrame++;
+            else _currenthitFrame = 0;
+            _bumperSprites[0].currentFrame = _hitFrames[_currenthitFrame / 5];
+            _bumperSprites[1].currentFrame = _hitFrames[_currenthitFrame / 5];
+            Console.WriteLine(_currenthitFrame);
+        }
 
-        } //TODO
+        private void CheckStateFrame()
+        {
+            switch (_state)
+            {
+                case 1:
+                    BreakFrames();
+                    break;
+                case 2:
+                    HitFrames();
+                    break;
+            }
+        }
+
 
         public void Update()
         {
+            CheckStateFrame();
             if (_polyList.Count > 0 && _lifes > 0) //IN THIS BLOCK, ALL THE CODE THAT HAPPENS WHILE THE GAME PLAYS FITS IN
             {
                 Tickers();
@@ -198,8 +226,9 @@ namespace NeonArkanoid.Level
                 EndRound();
             }
             AnimationForBackground();
-            AnimtaionForBumperRound();
-            
+           // _state = 1;
+
+
         }
 
         private void ExceptionalMovement()
@@ -468,10 +497,13 @@ namespace NeonArkanoid.Level
 
                 foreach (var polygon in _bumperList)
                 {
+                    
                     foreach (var lineSegment in polygon.GetLines())
                     {
+                        _state = 2;
                         if (LineCollisionTest(lineSegment, 1f))
                         {
+                            Console.WriteLine(_state);
                             _ball.Velocity.Normalize().Scale(8);
                             _score += 3;
                             _hitPoly.Play();
@@ -483,8 +515,6 @@ namespace NeonArkanoid.Level
                 {
                     LoseLife(); 
                 }
-
-
                 //AND BEFORE THIS ONE
             }
         }
